@@ -1,0 +1,271 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.nhom4.pojo;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
+
+/**
+ *
+ * @author Administrator
+ */
+@Entity
+@Table(name = "users")
+@NamedQueries({
+    @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
+    @NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
+    @NamedQuery(name = "Users.findByFirstName", query = "SELECT u FROM Users u WHERE u.firstName = :firstName"),
+    @NamedQuery(name = "Users.findByLastName", query = "SELECT u FROM Users u WHERE u.lastName = :lastName"),
+    @NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
+    @NamedQuery(name = "Users.findByPhone", query = "SELECT u FROM Users u WHERE u.phone = :phone"),
+    @NamedQuery(name = "Users.findByJoinDate", query = "SELECT u FROM Users u WHERE u.joinDate = :joinDate"),
+    @NamedQuery(name = "Users.findBySex", query = "SELECT u FROM Users u WHERE u.sex = :sex"),
+    @NamedQuery(name = "Users.findByUserRole", query = "SELECT u FROM Users u WHERE u.userRole = :userRole"),
+    @NamedQuery(name = "Users.findByIsDel", query = "SELECT u FROM Users u WHERE u.isDel = :isDel"),
+    @NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
+    @NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password")})
+public class Users implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "first_name")
+    private String firstName;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "last_name")
+    private String lastName;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 100)
+    @Column(name = "email")
+    private String email;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Size(max = 20)
+    @Column(name = "phone")
+    private String phone;
+    @Column(name = "join_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date joinDate;
+    @Size(max = 10)
+    @Column(name = "sex")
+    private String sex;
+    @Size(max = 15)
+    @Column(name = "user_role")
+    private String userRole;
+    @Column(name = "is_del")
+    private Boolean isDel;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "username")
+    private String username;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "password")
+    private String password;
+    @OneToMany(mappedBy = "employeeId")
+    private Set<Repair> repairSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
+    private Set<RepairSchedule> repairScheduleSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
+    private Set<MaintenanceSchedule> maintenanceScheduleSet;
+    @OneToMany(mappedBy = "customerId")
+    private Set<RentedDevice> rentedDeviceSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderId")
+    private Set<Incident> incidentSet;
+
+    public Users() {
+    }
+
+    public Users(Integer id) {
+        this.id = id;
+    }
+
+    public Users(Integer id, String firstName, String lastName, String username, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Date getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(Date joinDate) {
+        this.joinDate = joinDate;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+    public Boolean getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Boolean isDel) {
+        this.isDel = isDel;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Repair> getRepairSet() {
+        return repairSet;
+    }
+
+    public void setRepairSet(Set<Repair> repairSet) {
+        this.repairSet = repairSet;
+    }
+
+    public Set<RepairSchedule> getRepairScheduleSet() {
+        return repairScheduleSet;
+    }
+
+    public void setRepairScheduleSet(Set<RepairSchedule> repairScheduleSet) {
+        this.repairScheduleSet = repairScheduleSet;
+    }
+
+    public Set<MaintenanceSchedule> getMaintenanceScheduleSet() {
+        return maintenanceScheduleSet;
+    }
+
+    public void setMaintenanceScheduleSet(Set<MaintenanceSchedule> maintenanceScheduleSet) {
+        this.maintenanceScheduleSet = maintenanceScheduleSet;
+    }
+
+    public Set<RentedDevice> getRentedDeviceSet() {
+        return rentedDeviceSet;
+    }
+
+    public void setRentedDeviceSet(Set<RentedDevice> rentedDeviceSet) {
+        this.rentedDeviceSet = rentedDeviceSet;
+    }
+
+    public Set<Incident> getIncidentSet() {
+        return incidentSet;
+    }
+
+    public void setIncidentSet(Set<Incident> incidentSet) {
+        this.incidentSet = incidentSet;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Users)) {
+            return false;
+        }
+        Users other = (Users) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.nhom4.pojo.Users[ id=" + id + " ]";
+    }
+    
+}

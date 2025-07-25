@@ -1,0 +1,15 @@
+<!<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>
+            Trang Chủ
+        </title>
+    </head>
+    <body>
+        <h1>WELLCOME TO E-ECOMMERCE WEBSITE!</h1>
+        <h1 th:text="${msg}"></h1>
+        <ul>
+            <li th:each="c: ${units}" th:text="${c.fullName}"></li>
+        </ul>
+    </body>
+</html>
