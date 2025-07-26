@@ -67,23 +67,38 @@ public class IndexController {
 
     @GetMapping("/devices/{id}")
     public String getDeviceDetail(@PathVariable("id") int id, Model model) {
-        Device device = DeviceService.getDeviceById(id);
-        List<RepairCost> repairCosts = DeviceService.getRepairType(id);
-        List<RepairType> repairTypes = repairTypeService.getRepairType(); // ví dụ
+        Device device = this.DeviceService.getDeviceById(id);
+        List<RepairCost> repairCosts = this.DeviceService.getRepairType(id);
+        List<RepairType> repairTypes = this.repairTypeService.getRepairType(); // ví dụ
 
         model.addAttribute("device", device);
         model.addAttribute("repairCosts", repairCosts);
         model.addAttribute("repairCost", new RepairCost());
-        model.addAttribute("allRepairTypes", repairTypes); // dùng cho form thêm
+        model.addAttribute("repairTypes", repairTypes);
 
         return "deviceDetail";
     }
 
-    public String addRepairCost(@ModelAttribute("repairCost") RepairCost repairCost) {
-        
-        DeviceService.addOrUpdateRepairCost(repairCost);
+    @PostMapping("/devices/{id}/add-repair")
+    public String addRepairCost(@PathVariable("id") int deviceId, RepairCost r) {
 
-        return "redirect:/devices/" + repairCost.getDeviceId().getId();
+        Device device = this.DeviceService.getDeviceById(deviceId);
+        r.setId(null);
+        r.setDeviceId(device);
+
+        this.DeviceService.addOrUpdateRepairCost(r);
+
+        return "redirect:/devices/" + r.getDeviceId().getId();
+    }
+
+    @PostMapping("/devices/{id}/update-repair")
+    public String updateRepairCost(@ModelAttribute RepairCost repairCost,
+            @PathVariable("id") int deviceId) {
+        Device device = DeviceService.getDeviceById(deviceId);
+        repairCost.setDeviceId(device); 
+
+         this.DeviceService.addOrUpdateRepairCost(repairCost);
+        return "redirect:/devices/" + deviceId;
     }
 
 }

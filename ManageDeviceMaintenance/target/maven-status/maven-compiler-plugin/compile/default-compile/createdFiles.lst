@@ -21,12 +21,14 @@ com\nhom4\pojo\User.class
 com\nhom4\repositories\RepairRepository.class
 com\nhom4\pojo\AdministrativeUnits.class
 com\nhom4\pojo\MaintenanceSchedule.class
+com\nhom4\formatters\CategoryFormatter.class
 com\nhom4\pojo\Wards.class
 com\nhom4\controllers\UserController.class
 utils\JwtUtils.class
 com\nhom4\repositories\impl\CategoryRepositoryImpl.class
 com\nhom4\repositories\impl\DeviceRepositoryImpl.class
 com\nhom4\repositories\impl\RepairScheduleRepository.class
+com\nhom4\controllers\DeviceController.class
 com\nhom4\controllers\CategoryController.class
 com\nhom4\repositories\impl\LocationRepositoryImpl.class
 com\nhom4\repositories\RepairScheduleRepository.class

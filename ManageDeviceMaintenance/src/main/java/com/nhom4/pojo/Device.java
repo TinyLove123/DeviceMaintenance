@@ -19,11 +19,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -86,7 +88,19 @@ public class Device implements Serializable {
     private Category categoryId;
     @OneToMany(mappedBy = "deviceId")
     private Set<Incident> incidentSet;
+    
+   @Transient
+    private MultipartFile file;
 
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+    
+    
     public Device() {
     }
 
