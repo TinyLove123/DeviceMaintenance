@@ -84,10 +84,7 @@ public class SpringSecurityConfigs {
         return new HandlerMappingIntrospector();
     }
 
-    @Bean
-    public StandardServletMultipartResolver multipartResolver() {
-        return new StandardServletMultipartResolver();
-    }
+    
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -102,7 +99,12 @@ public class SpringSecurityConfigs {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return source;
+    }
+    
+    @Bean
+    @Order(0)
+    public StandardServletMultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
     }
 }

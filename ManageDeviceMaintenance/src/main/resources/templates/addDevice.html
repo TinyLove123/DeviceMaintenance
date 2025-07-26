@@ -44,8 +44,8 @@
 
                     <div class="mb-3">
                         <label for="purchase_date" class="form-label">Ngày mua:</label>
-                        <input type="datetime-local" class="form-control" id="purchase_date" 
-                               th:field="*{purchaseDate}">
+                        <input type="datetime-local" class="form-control" id="purchase_date"
+                               name="purchaseDate"  th:value="${device.purchaseDate != null ? #temporals.format(device.purchaseDate, 'yyyy-MM-dd''T''HH:mm') : ''}" />
                     </div>
 
                     <div class="mb-3">
@@ -55,7 +55,6 @@
                     </div>
                 </div>
 
-                <!-- Right Column -->
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="status_device" class="form-label">Trạng thái:</label>
@@ -70,7 +69,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="frequency" class="form-label">Tần suất sử dụng:</label>
+                        <label for="frequency" class="form-label">Tần suất bảo trì:</label>
                         <input type="number" class="form-control" id="frequency" 
                                th:field="*{frequency}" min="0">
                     </div>
@@ -87,7 +86,8 @@
                         <input type="file" class="form-control" th:field="*{file}"  />
                         <img th:if="${device.image != null}" th:src="${device.image}" width="200" />
                     </div>
-                   
+                    
+
                 </div>
             </div>
 
@@ -106,7 +106,7 @@
 
         <div th:replace="base :: footer"></div>
 
-       
+
     </main>
 </body>
 </html>
