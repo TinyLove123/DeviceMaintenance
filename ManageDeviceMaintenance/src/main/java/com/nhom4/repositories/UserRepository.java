@@ -4,14 +4,15 @@
  */
 package com.nhom4.repositories;
 
-import com.nhom4.pojo.Users;
+import com.nhom4.pojo.User;
+
 
 /**
  *
  * @author Administrator
  */
 public interface UserRepository {
-    Users getUserByUsername(String username);
-    Users addUser(Users u);
+    User getUserByUsername(String username);
+    User addUser(User u);
     boolean authenticate(String username, String password);
 }

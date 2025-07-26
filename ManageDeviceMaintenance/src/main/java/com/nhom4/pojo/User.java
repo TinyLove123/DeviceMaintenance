@@ -28,21 +28,22 @@ import java.util.Set;
  * @author Administrator
  */
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @NamedQueries({
-    @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
-    @NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
-    @NamedQuery(name = "Users.findByFirstName", query = "SELECT u FROM Users u WHERE u.firstName = :firstName"),
-    @NamedQuery(name = "Users.findByLastName", query = "SELECT u FROM Users u WHERE u.lastName = :lastName"),
-    @NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
-    @NamedQuery(name = "Users.findByPhone", query = "SELECT u FROM Users u WHERE u.phone = :phone"),
-    @NamedQuery(name = "Users.findByJoinDate", query = "SELECT u FROM Users u WHERE u.joinDate = :joinDate"),
-    @NamedQuery(name = "Users.findBySex", query = "SELECT u FROM Users u WHERE u.sex = :sex"),
-    @NamedQuery(name = "Users.findByUserRole", query = "SELECT u FROM Users u WHERE u.userRole = :userRole"),
-    @NamedQuery(name = "Users.findByIsDel", query = "SELECT u FROM Users u WHERE u.isDel = :isDel"),
-    @NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
-    @NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password")})
-public class Users implements Serializable {
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
+    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
+    @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName"),
+    @NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName"),
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+    @NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phone = :phone"),
+    @NamedQuery(name = "User.findByJoinDate", query = "SELECT u FROM User u WHERE u.joinDate = :joinDate"),
+    @NamedQuery(name = "User.findBySex", query = "SELECT u FROM User u WHERE u.sex = :sex"),
+    @NamedQuery(name = "User.findByUserRole", query = "SELECT u FROM User u WHERE u.userRole = :userRole"),
+    @NamedQuery(name = "User.findByIsDel", query = "SELECT u FROM User u WHERE u.isDel = :isDel"),
+    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
+    @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
+    @NamedQuery(name = "User.findByAvatar", query = "SELECT u FROM User u WHERE u.avatar = :avatar")})
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -89,6 +90,9 @@ public class Users implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "password")
     private String password;
+    @Size(max = 200)
+    @Column(name = "avatar")
+    private String avatar;
     @OneToMany(mappedBy = "employeeId")
     private Set<Repair> repairSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
@@ -100,14 +104,14 @@ public class Users implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderId")
     private Set<Incident> incidentSet;
 
-    public Users() {
+    public User() {
     }
 
-    public Users(Integer id) {
+    public User(Integer id) {
         this.id = id;
     }
 
-    public Users(Integer id, String firstName, String lastName, String username, String password) {
+    public User(Integer id, String firstName, String lastName, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -203,6 +207,14 @@ public class Users implements Serializable {
         this.password = password;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public Set<Repair> getRepairSet() {
         return repairSet;
     }
@@ -253,10 +265,10 @@ public class Users implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Users)) {
+        if (!(object instanceof User)) {
             return false;
         }
-        Users other = (Users) object;
+        User other = (User) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -265,7 +277,7 @@ public class Users implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nhom4.pojo.Users[ id=" + id + " ]";
+        return "com.nhom4.pojo.User[ id=" + id + " ]";
     }
     
 }

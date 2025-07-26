@@ -4,7 +4,7 @@
  */
 package com.nhom4.repositories.impl;
 
-import com.nhom4.pojo.Users;
+import com.nhom4.pojo.User;
 import com.nhom4.repositories.UserRepository;
 import jakarta.persistence.Query;
 import org.hibernate.Session;
@@ -14,41 +14,41 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+
 /**
  *
  * @author Administrator
  */
 @Repository
-@Transactional
-public class UserRepositoryImpl implements UserRepository {
-
-    @Autowired
+    @Transactional
+public class UserRepositoryImpl implements UserRepository{
+     @Autowired
     private LocalSessionFactoryBean factory;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public Users getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         Session s = this.factory.getObject().getCurrentSession();
-        Query q = s.createNamedQuery("Users.findByUsername", Users.class);
+        Query q = s.createNamedQuery("User.findByUsername", User.class);
         q.setParameter("username", username);
 
-        return (Users) q.getSingleResult();
+        return (User) q.getSingleResult();
+
     }
 
     @Override
-    public Users addUser(Users u) {
+    public User addUser(User u) {
         Session s = this.factory.getObject().getCurrentSession();
         s.persist(u);
-
+        
         return u;
     }
 
     @Override
     public boolean authenticate(String username, String password) {
-        Users u = this.getUserByUsername(username);
+        User u = this.getUserByUsername(username);
 
         return this.passwordEncoder.matches(password, u.getPassword());
     }
-
 }

@@ -18,5 +18,6 @@
     <class>com.nhom4.pojo.Incident</class>
     <class>com.nhom4.pojo.MaintenanceSchedule</class>
     <class>com.nhom4.pojo.RepairDetail</class>
+    <class>com.nhom4.pojo.User</class>
   </persistence-unit>
 </persistence>

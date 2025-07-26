@@ -4,10 +4,16 @@
  */
 package com.nhom4.repositories;
 
+import com.nhom4.pojo.RepairType;
+import java.util.List;
+
 /**
  *
  * @author Administrator
  */
-public class RepairTypeRepository {
-    
+
+public interface RepairTypeRepository {
+    List<RepairType> getRepairType();
+    RepairType addRepairType(RepairType RId);
+    RepairType getRepairTypeById(int RId);
 }

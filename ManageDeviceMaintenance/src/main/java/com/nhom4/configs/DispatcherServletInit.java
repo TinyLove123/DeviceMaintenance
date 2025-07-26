@@ -4,18 +4,24 @@
  */
 package com.nhom4.configs;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.ServletRegistration;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
  *
- * @author Administrator
+ * @author admin
  */
-public class DispatcherServletInit extends  AbstractAnnotationConfigDispatcherServletInitializer{
+public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{ThymeleafConfig.class,
-                             HibernateConfigs.class,};
+        return new Class[]{
+            ThymeleafConfig.class,
+            HibernateConfigs.class,
+            SpringSecurityConfigs.class
+        };
     }
 
     @Override
@@ -27,8 +33,21 @@ public class DispatcherServletInit extends  AbstractAnnotationConfigDispatcherSe
 
     @Override
     protected String[] getServletMappings() {
-         return new String[]{"/"};
+        return new String[]{"/"};
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        String location = "/";
+        long maxFileSize = 5242880; // 5MB
+        long maxRequestSize = 20971520; // 20MB
+        int fileSizeThreshold = 0;
+
+        registration.setMultipartConfig(new MultipartConfigElement(location, maxFileSize, maxRequestSize, fileSizeThreshold));
     }
     
+//    @Override
+//    protected Filter[] getServletFilters() {
+//        return new Filter[] { new JwtFilter() }; // Filter sẽ áp dụng cho mọi request
+//    }
 }
-

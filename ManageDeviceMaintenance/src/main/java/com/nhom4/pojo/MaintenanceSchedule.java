@@ -51,7 +51,7 @@ public class MaintenanceSchedule implements Serializable {
     private Device deviceId;
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Users employeeId;
+    private User employeeId;
 
     public MaintenanceSchedule() {
     }
@@ -92,11 +92,11 @@ public class MaintenanceSchedule implements Serializable {
         this.deviceId = deviceId;
     }
 
-    public Users getEmployeeId() {
+    public User getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Users employeeId) {
+    public void setEmployeeId(User employeeId) {
         this.employeeId = employeeId;
     }
 

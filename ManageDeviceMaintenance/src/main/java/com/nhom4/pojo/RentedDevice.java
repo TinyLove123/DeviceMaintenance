@@ -53,7 +53,7 @@ public class RentedDevice implements Serializable {
     private Device deviceId;
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     @ManyToOne
-    private Users customerId;
+    private User customerId;
 
     public RentedDevice() {
     }
@@ -99,11 +99,11 @@ public class RentedDevice implements Serializable {
         this.deviceId = deviceId;
     }
 
-    public Users getCustomerId() {
+    public User getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Users customerId) {
+    public void setCustomerId(User customerId) {
         this.customerId = customerId;
     }
 

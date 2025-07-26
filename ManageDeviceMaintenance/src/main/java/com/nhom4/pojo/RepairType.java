@@ -43,8 +43,6 @@ public class RepairType implements Serializable {
     @Size(min = 1, max = 40)
     @Column(name = "type")
     private String type;
-    @OneToMany(mappedBy = "repairTypeId")
-    private Set<Repair> repairSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "repairTypeId")
     private Set<RepairCost> repairCostSet;
 
@@ -74,14 +72,6 @@ public class RepairType implements Serializable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Set<Repair> getRepairSet() {
-        return repairSet;
-    }
-
-    public void setRepairSet(Set<Repair> repairSet) {
-        this.repairSet = repairSet;
     }
 
     public Set<RepairCost> getRepairCostSet() {

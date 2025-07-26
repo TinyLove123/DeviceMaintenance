@@ -38,7 +38,9 @@ import java.util.Set;
     @NamedQuery(name = "Device.findByPurchaseDate", query = "SELECT d FROM Device d WHERE d.purchaseDate = :purchaseDate"),
     @NamedQuery(name = "Device.findByManufacturer", query = "SELECT d FROM Device d WHERE d.manufacturer = :manufacturer"),
     @NamedQuery(name = "Device.findByStatusDevice", query = "SELECT d FROM Device d WHERE d.statusDevice = :statusDevice"),
-    @NamedQuery(name = "Device.findByFrequency", query = "SELECT d FROM Device d WHERE d.frequency = :frequency")})
+    @NamedQuery(name = "Device.findByFrequency", query = "SELECT d FROM Device d WHERE d.frequency = :frequency"),
+    @NamedQuery(name = "Device.findByImage", query = "SELECT d FROM Device d WHERE d.image = :image"),
+    @NamedQuery(name = "Device.findByPrice", query = "SELECT d FROM Device d WHERE d.price = :price")})
 public class Device implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,6 +67,12 @@ public class Device implements Serializable {
     private String statusDevice;
     @Column(name = "frequency")
     private Integer frequency;
+    @Size(max = 200)
+    @Column(name = "image")
+    private String image;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "price")
+    private Double price;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deviceId")
     private Set<RepairCost> repairCostSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deviceId")
@@ -138,6 +146,22 @@ public class Device implements Serializable {
 
     public void setFrequency(Integer frequency) {
         this.frequency = frequency;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public Set<RepairCost> getRepairCostSet() {

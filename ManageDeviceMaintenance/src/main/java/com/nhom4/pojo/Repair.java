@@ -51,15 +51,15 @@ public class Repair implements Serializable {
     @Size(max = 20)
     @Column(name = "progress")
     private String progress;
+    @JoinColumn(name = "incident_id", referencedColumnName = "id")
+    @ManyToOne
+    private Incident incidentId;
     @JoinColumn(name = "repair_schedule_id", referencedColumnName = "id")
     @ManyToOne
     private RepairSchedule repairScheduleId;
-    @JoinColumn(name = "repair_type_id", referencedColumnName = "id")
-    @ManyToOne
-    private RepairType repairTypeId;
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @ManyToOne
-    private Users employeeId;
+    private User employeeId;
     @OneToMany(mappedBy = "repairId")
     private Set<RepairDetail> repairDetailSet;
 
@@ -99,6 +99,14 @@ public class Repair implements Serializable {
         this.progress = progress;
     }
 
+    public Incident getIncidentId() {
+        return incidentId;
+    }
+
+    public void setIncidentId(Incident incidentId) {
+        this.incidentId = incidentId;
+    }
+
     public RepairSchedule getRepairScheduleId() {
         return repairScheduleId;
     }
@@ -107,19 +115,11 @@ public class Repair implements Serializable {
         this.repairScheduleId = repairScheduleId;
     }
 
-    public RepairType getRepairTypeId() {
-        return repairTypeId;
-    }
-
-    public void setRepairTypeId(RepairType repairTypeId) {
-        this.repairTypeId = repairTypeId;
-    }
-
-    public Users getEmployeeId() {
+    public User getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Users employeeId) {
+    public void setEmployeeId(User employeeId) {
         this.employeeId = employeeId;
     }
 

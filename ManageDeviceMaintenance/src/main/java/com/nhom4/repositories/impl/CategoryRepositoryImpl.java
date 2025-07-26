@@ -27,15 +27,20 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public List<Category> getCates() {
-        
-        return null;
+       Session s = this.factory.getObject().getCurrentSession();
+       Query   q = s.createQuery("FROM Category", Category.class);
+       return q.getResultList();
         
     }
 
     @Override
     public Category addOrUpdateCategory(Category c) {
-     
-        return null;
+        Session s = this.factory.getObject().getCurrentSession();
+        if(c.getId()==null)
+            s.persist(c);
+        else
+            s.merge(c);
+        return c;
      
     }
 

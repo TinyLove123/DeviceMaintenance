@@ -15,7 +15,7 @@ import java.util.Map;
 public interface IncidentRepository {
     List<Incident> getIncident(Map<String,String> params);
     Incident getIncidentById(int id);
-    Incident addOrUpdateIncident(Incident I);
+    Incident addIncident(Incident I);
     void deleteIncident(int id);
     
 }

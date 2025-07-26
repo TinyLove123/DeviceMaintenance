@@ -59,13 +59,15 @@ public class Incident implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date reportDate;
     @OneToMany(mappedBy = "incidentId")
+    private Set<Repair> repairSet;
+    @OneToMany(mappedBy = "incidentId")
     private Set<RepairSchedule> repairScheduleSet;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
     private Device deviceId;
     @JoinColumn(name = "sender_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Users senderId;
+    private User senderId;
 
     public Incident() {
     }
@@ -112,6 +114,14 @@ public class Incident implements Serializable {
         this.reportDate = reportDate;
     }
 
+    public Set<Repair> getRepairSet() {
+        return repairSet;
+    }
+
+    public void setRepairSet(Set<Repair> repairSet) {
+        this.repairSet = repairSet;
+    }
+
     public Set<RepairSchedule> getRepairScheduleSet() {
         return repairScheduleSet;
     }
@@ -128,11 +138,11 @@ public class Incident implements Serializable {
         this.deviceId = deviceId;
     }
 
-    public Users getSenderId() {
+    public User getSenderId() {
         return senderId;
     }
 
-    public void setSenderId(Users senderId) {
+    public void setSenderId(User senderId) {
         this.senderId = senderId;
     }
 

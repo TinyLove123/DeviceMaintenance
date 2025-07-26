@@ -1,15 +1,85 @@
-<!<!doctype html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>
-            Trang Chủ
-        </title>
-    </head>
-    <body>
-        <h1>WELLCOME TO E-ECOMMERCE WEBSITE!</h1>
-        <h1 th:text="${msg}"></h1>
-        <ul>
-            <li th:each="c: ${units}" th:text="${c.fullName}"></li>
-        </ul>
-    </body>
+        <title>Trang chủ</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container">
+        <form id="searchForm" th:action="@{/}" method="get">
+            <div class="mb-3 mt-3">
+                <input type="text" class="form-control" name="kw" placeholder="Từ khóa" th:value="${param.kw}" />
+            </div>
+            <div class="mb-3 mt-3">
+                <button class="btn btn-info" type="submit">Tìm kiếm</button>
+            </div>
+        </form>
+        <hr />  
+        <div>
+            <select name="categoryId" class="form-select mb-3"
+                    onchange="updateCategory(this.value)">
+                <option value="">-- Chọn danh mục --</option>
+                <option th:each="c : ${categories}"
+                        th:value="${c.id}"
+                        th:text="${c.type}"
+                        th:selected="${param.categoryId} == ${c.id}">
+                </option>
+            </select>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Ngày mua</th>
+                    <th>Nhà sản xuất</th>
+                    <th>Trạng thái</th>
+                    <th>Bảo trì định kì</th>
+                    <th>Xem chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="d: ${devices}">
+                    <td th:text="${d.id}"></td>
+                    <td th:text="${d.nameDevice}"></td>
+                    <td th:text="${#dates.format(d.purchaseDate, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${d.manufacturer}"></td>
+                    <td th:text="${d.statusDevice}"></td>
+                    <td th:text="${d.frequency}"></td>
+                    <td> <a th:href="@{'/devices/' + ${d.id}}" class="btn btn-primary">Xem thêm</a> </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+
+    <script th:inline="javascript">
+        function updateCategory(categoryId) {
+            const form = document.getElementById('searchForm');
+            const kwInput = form.querySelector('input[name="kw"]');
+
+            // Tạo URL với các tham số
+            let url = /*[[@{/}]]*/ '/';
+            const params = new URLSearchParams();
+
+            if (kwInput.value) {
+                params.append('kw', kwInput.value);
+            }
+
+            if (categoryId) {
+                params.append('categoryId', categoryId);
+            }
+
+            if (params.toString()) {
+                url += '?' + params.toString();
+            }
+
+            window.location.href = url;
+        }
+    </script>
+</body>
 </html>

@@ -4,10 +4,15 @@
  */
 package com.nhom4.services;
 
+import com.nhom4.pojo.RepairType;
+import java.util.List;
+
 /**
  *
  * @author Administrator
  */
-public class CategotyService {
-    
+public interface RepairTypeService {
+    List<RepairType> getRepairType();
+    RepairType addRepairType(RepairType RId);
+    RepairType getRepairTypeById(int RId);
 }
