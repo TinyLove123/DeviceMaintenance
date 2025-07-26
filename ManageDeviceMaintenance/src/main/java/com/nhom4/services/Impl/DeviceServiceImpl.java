@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
  * @author Administrator
  */
 @Service
+@Transactional
 public class DeviceServiceImpl implements DeviceService{
     
     @Autowired
@@ -36,7 +38,9 @@ public class DeviceServiceImpl implements DeviceService{
 
     @Override
     public Device addOrUpdateDevice(Device d) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//        d.setImage("https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248652/dkeolz3ghc0eino87iec.jpg");
+        this.deviceRepository.addOrUpdateDevice(d);
+        return d;
     }
 
    

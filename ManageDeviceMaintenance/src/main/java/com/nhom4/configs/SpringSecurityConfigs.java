@@ -85,7 +85,6 @@ public class SpringSecurityConfigs {
     }
 
     @Bean
-    @Order(0)
     public StandardServletMultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
     }

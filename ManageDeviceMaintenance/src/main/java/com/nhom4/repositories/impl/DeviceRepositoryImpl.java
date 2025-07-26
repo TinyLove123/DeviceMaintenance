@@ -185,12 +185,17 @@ public class DeviceRepositoryImpl implements DeviceRepository {
 
     @Override
     public RepairCost addOrUpdateRepairCost(RepairCost repairCost) {
-     Session s = this.factory.getObject().getCurrentSession();
-    if(repairCost==null)
-        s.persist(repairCost);
-    else
-        s.merge(repairCost);
-    return repairCost;
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            if (repairCost.getId() == null) {
+                s.persist(repairCost);
+            } else {
+                s.merge(repairCost);
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi lưu RepairCost: " + e.getMessage());
+        }
+        return repairCost;
     }
 
 }
