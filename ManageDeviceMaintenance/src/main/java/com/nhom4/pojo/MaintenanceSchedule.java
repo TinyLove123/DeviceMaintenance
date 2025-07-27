@@ -50,7 +50,7 @@ public class MaintenanceSchedule implements Serializable {
     @ManyToOne(optional = false)
     private Device deviceId;
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User employeeId;
 
     public MaintenanceSchedule() {

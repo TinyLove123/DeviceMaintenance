@@ -4,6 +4,12 @@
  */
 package com.nhom4.pojo;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,10 +28,6 @@ import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -34,15 +36,15 @@ import org.springframework.web.multipart.MultipartFile;
 @Entity
 @Table(name = "device")
 @NamedQueries({
-    @NamedQuery(name = "Device.findAll", query = "SELECT d FROM Device d"),
-    @NamedQuery(name = "Device.findById", query = "SELECT d FROM Device d WHERE d.id = :id"),
-    @NamedQuery(name = "Device.findByNameDevice", query = "SELECT d FROM Device d WHERE d.nameDevice = :nameDevice"),
-    @NamedQuery(name = "Device.findByPurchaseDate", query = "SELECT d FROM Device d WHERE d.purchaseDate = :purchaseDate"),
-    @NamedQuery(name = "Device.findByManufacturer", query = "SELECT d FROM Device d WHERE d.manufacturer = :manufacturer"),
-    @NamedQuery(name = "Device.findByStatusDevice", query = "SELECT d FROM Device d WHERE d.statusDevice = :statusDevice"),
-    @NamedQuery(name = "Device.findByFrequency", query = "SELECT d FROM Device d WHERE d.frequency = :frequency"),
-    @NamedQuery(name = "Device.findByImage", query = "SELECT d FROM Device d WHERE d.image = :image"),
-    @NamedQuery(name = "Device.findByPrice", query = "SELECT d FROM Device d WHERE d.price = :price")})
+        @NamedQuery(name = "Device.findAll", query = "SELECT d FROM Device d"),
+        @NamedQuery(name = "Device.findById", query = "SELECT d FROM Device d WHERE d.id = :id"),
+        @NamedQuery(name = "Device.findByNameDevice", query = "SELECT d FROM Device d WHERE d.nameDevice = :nameDevice"),
+        @NamedQuery(name = "Device.findByPurchaseDate", query = "SELECT d FROM Device d WHERE d.purchaseDate = :purchaseDate"),
+        @NamedQuery(name = "Device.findByManufacturer", query = "SELECT d FROM Device d WHERE d.manufacturer = :manufacturer"),
+        @NamedQuery(name = "Device.findByStatusDevice", query = "SELECT d FROM Device d WHERE d.statusDevice = :statusDevice"),
+        @NamedQuery(name = "Device.findByFrequency", query = "SELECT d FROM Device d WHERE d.frequency = :frequency"),
+        @NamedQuery(name = "Device.findByImage", query = "SELECT d FROM Device d WHERE d.image = :image"),
+        @NamedQuery(name = "Device.findByPrice", query = "SELECT d FROM Device d WHERE d.price = :price") })
 public class Device implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -72,7 +74,8 @@ public class Device implements Serializable {
     @Size(max = 200)
     @Column(name = "image")
     private String image;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    // @Max(value=?) @Min(value=?)//if you know range of your decimal fields
+    // consider using these annotations to enforce field validation
     @Column(name = "price")
     private Double price;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deviceId")
@@ -89,11 +92,10 @@ public class Device implements Serializable {
     @OneToMany(mappedBy = "deviceId")
     private Set<Incident> incidentSet;
     
-   @Transient
+    @Transient
     private MultipartFile file;
 
-    
-    
+   
     
     public Device() {
     }
@@ -258,5 +260,5 @@ public class Device implements Serializable {
     public void setFile(MultipartFile file) {
         this.file = file;
     }
-    
+
 }

@@ -97,7 +97,7 @@ public class User implements Serializable {
     private Set<Repair> repairSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
     private Set<RepairSchedule> repairScheduleSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
+    @OneToMany(mappedBy = "employeeId")
     private Set<MaintenanceSchedule> maintenanceScheduleSet;
     @OneToMany(mappedBy = "customerId")
     private Set<RentedDevice> rentedDeviceSet;
