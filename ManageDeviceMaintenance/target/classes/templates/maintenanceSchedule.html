@@ -10,7 +10,7 @@
     <main class="container">
 
         
-        
+        <a th:href="@{/addMaintenanceSchedule}" class="btn btn-info mt-2">Thêm Lịch</a>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -22,7 +22,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="m: ${maintenanceSchedules}">
+                <tr th:each="m: ${maintenanceSchedule}">
                    <td th:text="${m.dateStart}"></td>
                     <td th:text="${m.progress}"></td>
                     <td th:text="${m.deviceId}"></td>
