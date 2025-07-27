@@ -57,7 +57,7 @@ public class IndexController {
         model.addAttribute("categories", this.cateService.getCates());
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/admin")
     @Transactional
     public String Home(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("devices", this.DeviceService.getDevice(params));
@@ -65,7 +65,7 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("/devices/{id}")
+    @GetMapping("admin/devices/{id}")
     public String getDeviceDetail(@PathVariable("id") int id, Model model) {
         Device device = this.DeviceService.getDeviceById(id);
         List<RepairCost> repairCosts = this.DeviceService.getRepairType(id);
@@ -79,7 +79,7 @@ public class IndexController {
         return "deviceDetail";
     }
 
-    @PostMapping("/devices/{id}/add-repair")
+    @PostMapping("admin/devices/{id}/add-repair")
     public String addRepairCost(@PathVariable("id") int deviceId, RepairCost r) {
 
         Device device = this.DeviceService.getDeviceById(deviceId);
@@ -88,17 +88,17 @@ public class IndexController {
 
         this.DeviceService.addOrUpdateRepairCost(r);
 
-        return "redirect:/devices/" + r.getDeviceId().getId();
+        return "redirect:/admin/devices/" + r.getDeviceId().getId();
     }
 
-    @PostMapping("/devices/{id}/update-repair")
+    @PostMapping("/admin/devices/{id}/update-repair")
     public String updateRepairCost(@ModelAttribute RepairCost repairCost,
             @PathVariable("id") int deviceId) {
         Device device = DeviceService.getDeviceById(deviceId);
         repairCost.setDeviceId(device); 
 
          this.DeviceService.addOrUpdateRepairCost(repairCost);
-        return "redirect:/devices/" + deviceId;
+        return "redirect:/admin/devices/" + deviceId;
     }
 
 }

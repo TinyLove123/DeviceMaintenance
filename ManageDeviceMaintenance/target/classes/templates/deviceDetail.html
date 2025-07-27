@@ -90,7 +90,7 @@
 
         <!-- Form cập nhật chi phí -->
         <div th:each="r : ${repairCosts}">
-            <form th:action="@{/devices/{id}/update-repair(id=${device.id})}"
+            <form th:action="@{/admin/devices/{id}/update-repair(id=${device.id})}"
                   method="post"
                   th:object="${repairCost}"
                   th:id="'form-update-' + ${r.id}"
@@ -131,7 +131,7 @@
         <!-- Form thêm chi phí sửa chữa -->
         <div class="form-section mt-4">
             <h5 class="mb-3">Thêm chi phí sửa chữa</h5>
-            <form th:action="@{/devices/{id}/add-repair(id=${device.id})}" method="post" th:object="${repairCost}">
+            <form th:action="@{/admin/devices/{id}/add-repair(id=${device.id})}" method="post" th:object="${repairCost}">
                 <div class="mb-3">
                     <label for="repairType" class="form-label">Loại sửa chữa:</label>
                     <select class="form-select" th:field="*{repairTypeId.id}" id="repairType" required>
@@ -150,7 +150,7 @@
             </form>
         </div>
 
-        <a th:href="@{/}" class="btn btn-secondary mt-4">← Quay lại</a>
+        <a th:href="@{/admin}" class="btn btn-secondary mt-4">← Quay lại</a>
     </main>
 
     <div th:replace="base :: footer"></div>

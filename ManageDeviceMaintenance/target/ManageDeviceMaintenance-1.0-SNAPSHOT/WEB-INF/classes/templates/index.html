@@ -8,7 +8,7 @@
     <div th:replace="base :: header"></div>
 
     <main class="container">
-        <form id="searchForm" th:action="@{/}" method="get">
+        <form id="searchForm" th:action="@{/admin}" method="get">
             <div class="mb-3 mt-3">
                 <input type="text" class="form-control" name="kw" placeholder="Từ khóa" th:value="${param.kw}" />
             </div>
@@ -49,7 +49,7 @@
                     <td th:text="${d.manufacturer}"></td>
                     <td th:text="${d.statusDevice}"></td>
                     <td th:text="${d.frequency}"></td>
-                    <td> <a th:href="@{'/devices/' + ${d.id}}" class="btn btn-primary">Xem thêm</a> </td>
+                    <td> <a th:href="@{'/admin/devices/' + ${d.id}}" class="btn btn-primary">Xem thêm</a> </td>
                 </tr>
             </tbody>
         </table>

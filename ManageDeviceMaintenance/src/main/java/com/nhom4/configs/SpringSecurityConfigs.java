@@ -54,13 +54,13 @@ public class SpringSecurityConfigs {
                 .csrf(c -> c.disable()).authorizeHttpRequests(requests
                 -> requests.requestMatchers("/", "/home").authenticated()
                         .requestMatchers("/api/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/devices").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,
                                 "/devi/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/", true)
+                .defaultSuccessUrl("/admin", true)
                 .failureUrl("/login?error=true").permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/login").permitAll());
         return http.build();

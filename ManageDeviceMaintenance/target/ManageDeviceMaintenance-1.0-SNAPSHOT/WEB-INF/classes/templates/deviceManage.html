@@ -10,7 +10,7 @@
     <main class="container mt-4">
         <!-- Thanh tìm kiếm và nút thêm -->
         <div class="d-flex justify-content-between mb-3">
-            <form th:action="@{/devices-manager}" method="get" class="w-50">
+            <form th:action="@{/admin/devices-manager}" method="get" class="w-50">
                 <div class="input-group">
                     <input type="text" name="kw" class="form-control" placeholder="Tìm kiếm..." th:value="${param.kw}">
 
@@ -28,7 +28,7 @@
                                     </select>
                                 </div>-->
             </form>
-            <a th:href="@{/devices-manager/add}" class="btn btn-success">+ Thêm mới</a>
+            <a th:href="@{/admin/devices-manager/add}" class="btn btn-success">+ Thêm mới</a>
         </div>
 
         <!-- Bảng danh sách -->

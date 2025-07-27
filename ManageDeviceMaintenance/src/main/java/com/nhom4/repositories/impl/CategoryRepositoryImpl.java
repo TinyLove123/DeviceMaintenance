@@ -43,11 +43,19 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return c;
      
     }
+    @Override
+    public Category getCatesById(int cateId) {
+        Session s = this.factory.getObject().getCurrentSession();
+
+        return s.get(Category.class, cateId);
+    }
+
 
     @Override
     public void deleteCats(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    
 
 }

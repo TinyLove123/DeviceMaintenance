@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Quản lý thiết bị</title>
@@ -19,12 +20,13 @@
     </style>
 </head>
 <body>
+    <div th:replace="base :: header"></div>
     <main class="container">
-        <div th:replace="base :: header"></div>
+        
         <h1 class="text-center text-info mt-1">QUẢN LÝ THIẾT BỊ</h1>
 
         <!--enctype="multipart/form-data"-->
-        <form method="post" th:action="@{/devices-manager/add-device}" enctype="multipart/form-data" th:object="${device}"  id="deviceForm">
+        <form method="post" th:action="@{/admin/devices-manager/add-device}" enctype="multipart/form-data" th:object="${device}"  id="deviceForm">
             <div class="row">
                 <!-- Left Column -->
                 <div class="col-md-6">
@@ -36,8 +38,8 @@
 
                     <div class="mb-3">
                         <label for="category_id" class="form-label">Danh mục:</label>
-                        <select class="form-select" id="category_id" th:field="*{categoryId}" required>
-                            <option value="">-- Chọn danh mục --</option>
+                        <select class="form-select" th:field="*{categoryId.id}" id="categoryId" required>
+                            <option value="" disabled selected>-- Chọn danh mục --</option>
                             <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.type}"></option>
                         </select>
                     </div>
@@ -86,7 +88,7 @@
                         <input type="file" class="form-control" th:field="*{file}"  />
                         <img th:if="${device.image != null}" th:src="${device.image}" width="200" />
                     </div>
-                    
+
 
                 </div>
             </div>
@@ -100,13 +102,14 @@
                     <span th:unless="${device.id == null}">Cập nhật thiết bị</span>
                 </button>
 
-                <a th:href="@{/devices-manager}" class="btn btn-secondary">Quay lại</a>
+                <a th:href="@{/admin/devices-manager}" class="btn btn-secondary">Quay lại</a>
             </div>
         </form>
+        
+    </main>
 
         <div th:replace="base :: footer"></div>
 
 
-    </main>
 </body>
 </html>
