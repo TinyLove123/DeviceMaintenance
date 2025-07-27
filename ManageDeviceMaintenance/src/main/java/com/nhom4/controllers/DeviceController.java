@@ -55,7 +55,6 @@ public class DeviceController {
 
     @PostMapping("/add-device")
     public String add(@ModelAttribute("device") Device d) {
-        System.out.println(d.getCategoryId());
         this.deviceService.addOrUpdateDevice(d);
         return "redirect:/devices-manager";
     }

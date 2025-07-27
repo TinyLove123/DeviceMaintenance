@@ -1,0 +1,37 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>LỊCH BẢO TRÌ</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container">
+
+        
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ngày bắt đầu</th>
+                    <th>tiến trình</th>
+                    <th>thiết bị</th>
+                    <th>nhân viên</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="m: ${maintenanceSchedules}">
+                   <td th:text="${m.dateStart}"></td>
+                    <td th:text="${m.progress}"></td>
+                    <td th:text="${m.deviceId}"></td>
+                    <td th:text="${m.employeeId}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

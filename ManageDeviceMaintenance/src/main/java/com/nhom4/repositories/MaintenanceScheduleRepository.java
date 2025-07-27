@@ -4,10 +4,18 @@
  */
 package com.nhom4.repositories;
 
+import com.nhom4.pojo.MaintenanceSchedule;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author Administrator
  */
-public class MaintenanceScheduleRepository {
+public interface MaintenanceScheduleRepository {
+    List<MaintenanceSchedule> getMaintenanceSchedules(Map<String,String> params);
     
+    
+    MaintenanceSchedule addMaintenanceSchedule();
+    MaintenanceSchedule autoUpdateMaintenanceSchedule();
 }

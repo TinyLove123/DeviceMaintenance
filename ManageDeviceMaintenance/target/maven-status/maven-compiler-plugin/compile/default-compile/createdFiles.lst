@@ -11,7 +11,10 @@ com\nhom4\repositories\MaintenanceScheduleRepository.class
 com\nhom4\services\DeviceService.class
 com\nhom4\controllers\IndexController.class
 com\nhom4\pojo\Device.class
+com\nhom4\services\Impl\MaintenanceScheduleServiceImpl.class
 com\nhom4\services\Impl\CategoryServiceImpl.class
+com\nhom4\services\MaintenanceScheduleService.class
+com\nhom4\controllers\MaintenanceScheduleController.class
 com\nhom4\pojo\Location.class
 com\nhom4\services\Impl\UserServiceImpl.class
 com\nhom4\pojo\Incident.class
