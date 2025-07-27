@@ -1,62 +1,62 @@
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\DispatcherServletInit.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\HibernateConfigs.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\SecurityWebApplicationInitializer.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\SpringSecurityConfigs.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\ThymeleafConfig.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\WebAppContextConfigs.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\controllers\CategoryController.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\controllers\DeviceController.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\controllers\IndexController.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\controllers\UserController.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\formatters\CategoryFormatter.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\managedevicemaintenance\JakartaRestConfiguration.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\managedevicemaintenance\resources\JakartaEE11Resource.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\AdministrativeUnits.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Category.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Device.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Incident.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Location.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\MaintenanceSchedule.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Provinces.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RentedDevice.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Repair.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RepairCost.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RepairDetail.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RepairSchedule.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RepairType.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\User.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Wards.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\CategoryRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\DeviceRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\CategoryRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\DeviceRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\IncidentRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\LocationRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\MaintenanceScheduleRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\ProvinceRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\RepairCostRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\RepairScheduleRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\RepairTypeRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\UserRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\WardRepositoryImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\IncidentRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\LocationRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\MaintenanceScheduleRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\ProvinceRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RentedDeviceRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairCostRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairScheduleRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairTypeRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\UserRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\WardRepository.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\CategoryService.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\DeviceService.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\Impl\CategoryServiceImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\Impl\DeviceServiceImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\Impl\RepairTypeServiceImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\Impl\UserServiceImpl.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\RepairTypeService.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\UserService.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\filters\JwtFilter.java
-C:\Users\Administrator\Documents\NetBeansProjects\pthtweb\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\utils\JwtUtils.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\DispatcherServletInit.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\HibernateConfigs.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\SecurityWebApplicationInitializer.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\SpringSecurityConfigs.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\ThymeleafConfig.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\configs\WebAppContextConfigs.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\controllers\CategoryController.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\controllers\DeviceController.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\controllers\IndexController.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\controllers\UserController.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\formatters\CategoryFormatter.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\managedevicemaintenance\JakartaRestConfiguration.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\managedevicemaintenance\resources\JakartaEE11Resource.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\AdministrativeUnits.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Category.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Device.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Incident.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Location.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\MaintenanceSchedule.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Provinces.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RentedDevice.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Repair.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RepairCost.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RepairDetail.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RepairSchedule.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\RepairType.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\User.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\pojo\Wards.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\CategoryRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\DeviceRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\CategoryRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\DeviceRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\IncidentRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\LocationRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\MaintenanceScheduleRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\ProvinceRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\RepairCostRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\RepairScheduleRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\RepairTypeRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\UserRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\WardRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\IncidentRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\LocationRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\MaintenanceScheduleRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\ProvinceRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RentedDeviceRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairCostRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairScheduleRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairTypeRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\UserRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\WardRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\CategoryService.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\DeviceService.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\Impl\CategoryServiceImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\Impl\DeviceServiceImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\Impl\RepairTypeServiceImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\Impl\UserServiceImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\RepairTypeService.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\UserService.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\filters\JwtFilter.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\utils\JwtUtils.java

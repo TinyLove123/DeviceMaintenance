@@ -32,6 +32,7 @@ public class DeviceController {
             @RequestParam Map<String, String> params) {
         model.addAttribute("devices", deviceService.getDevice(params));
         model.addAttribute("categories", categoryService.getCates());
+        
         return "deviceManage";
     }
 
@@ -54,7 +55,7 @@ public class DeviceController {
 
     @PostMapping("/add-device")
     public String add(@ModelAttribute("device") Device d) {
-        
+        System.out.println(d.getCategoryId());
         this.deviceService.addOrUpdateDevice(d);
         return "redirect:/devices-manager";
     }
