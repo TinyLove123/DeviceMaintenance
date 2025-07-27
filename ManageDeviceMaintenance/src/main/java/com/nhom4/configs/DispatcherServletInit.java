@@ -36,6 +36,14 @@ public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherSer
         return new String[]{"/"};
     }
 
+    
+    
+    
+//    @Override
+//    protected Filter[] getServletFilters() {
+//        return new Filter[] { new JwtFilter() }; // Filter sẽ áp dụng cho mọi request
+//    }
+
     @Override
     protected void customizeRegistration(ServletRegistration.Dynamic registration) {
         String location = "/";
@@ -44,10 +52,6 @@ public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherSer
         int fileSizeThreshold = 0;
 
         registration.setMultipartConfig(new MultipartConfigElement(location, maxFileSize, maxRequestSize, fileSizeThreshold));
-    }
     
-//    @Override
-//    protected Filter[] getServletFilters() {
-//        return new Filter[] { new JwtFilter() }; // Filter sẽ áp dụng cho mọi request
-//    }
+    }
 }

@@ -1,0 +1,62 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Đăng nhập</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+    <main class="container">
+        <h2 class="mb-4">Danh sách người dùng</h2>
+        <div class="d-flex justify-content-between mb-3">
+            <form th:action="@{/user-manager}" method="get" class="w-50">
+                <div class="input-group">
+                    <input type="text" name="kw" class="form-control" placeholder="Tìm kiếm..." th:value="${param.kw}">
+
+                    <button class="btn btn-primary" type="submit">Tìm</button>
+                </div>
+              
+            </form>
+            <a th:href="@{/admin/user-manager/add-user}" class="btn btn-success">+ Thêm mới</a>
+        </div>
+
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Họ</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Ngày tạo</th>
+                    <th>Giới tính</th>
+                    <th>Vai trò</th>
+                    <th>Tên đăng nhập</th>
+                    <th>Trạng thái</th>
+                    <th>Ảnh đại diện</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.phone}"></td>
+                    <td th:text="${#dates.format(user.joinDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${user.sex}"></td>
+                    <td th:text="${user.userRole}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.isDel == false ? 'Hoạt động' : 'Đã xóa'}"></td>
+                    <td>
+                        <img th:if="${user.avatar != null}" th:src="@{${user.avatar}}" alt="avatar"
+                             width="50" height="50" class="rounded-circle"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+
+</body> 

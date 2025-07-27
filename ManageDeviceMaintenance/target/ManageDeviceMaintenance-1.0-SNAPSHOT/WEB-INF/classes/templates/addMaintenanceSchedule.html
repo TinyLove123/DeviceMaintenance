@@ -6,7 +6,7 @@
 </head>
 <body>
 
-     <main class="container">
+    <main class="container">
         <div th:replace="base :: header"></div>
         <h1 class="text-center text-info mt-1">QUẢN LÝ LỊCH BẢO TRÌ</h1>
         <form  method="post" th:action="@{/add}" th:object="${maintenanceSchedules}" enctype="multipart/form-data">
@@ -14,12 +14,7 @@
                 <label for="startDate" class="form-label">Ngày bắt đầu: </label>
                 <input type="datetime-local" class="form-control" id="startDate"  th:field="*{startDate}" />
             </div>
-            <div class="mb-3 mt-3">
-                <label for="progress" class="form-label">Tiến độ </label>
-                <select class="form-select" th:field="*{progress}" id="progress">
-                    <option th:each="p: ${progress}" th:value="${progress}" th:text="${progress}">1</option>
-                </select>
-            </div>
+            
             <div class="mb-3 mt-3">
                 <label for="device" class="form-label">Thiết bị: </label>
                 <select class="form-select" th:field="*{deviceId}" id="device">
@@ -32,19 +27,19 @@
                     <option th:each="e: ${employee}" th:value="${e.id}" th:text="${e.name}">1</option>
                 </select>
             </div>
-<!--            <div class="mb-3 mt-3">
-                <input type="hidden" class="form-control" th:field="*{id}"  />
-                <input type="hidden" class="form-control" th:field="*{image}"  />
-                <button class="btn btn-success mt-1" type="submit">
-                    <span th:if="${product.id == null}">Thêm sản phẩm</span>
-                    <span th:unless="${product.id == null}">Cập nhật sản phẩm</span>
-                </button>
-            </div>-->
+            <!--            <div class="mb-3 mt-3">
+                            <input type="hidden" class="form-control" th:field="*{id}"  />
+                            <input type="hidden" class="form-control" th:field="*{image}"  />
+                            <button class="btn btn-success mt-1" type="submit">
+                                <span th:if="${product.id == null}">Thêm sản phẩm</span>
+                                <span th:unless="${product.id == null}">Cập nhật sản phẩm</span>
+                            </button>
+                        </div>-->
         </form>
 
         <div th:replace="base :: footer"></div>
-        
-        
+
+
     </main>
 </html>
 

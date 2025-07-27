@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Chi tiết thiết bị</title>
+<head>
+    <title>Chi tiết thiết bị</title>
     <th:block th:replace="base :: bootstrap"></th:block>
     <style>
         .device-info p {
@@ -17,6 +17,30 @@
         .table thead th {
             background-color: #e9ecef;
         }
+
+        .device-image {
+            margin-top: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        .btn-action {
+            margin-right: 5px;
+        }
+
+        .update-form {
+            display: none;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fdfdfd;
+        }
+
+        .update-form h5 {
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -31,9 +55,9 @@
             <p><strong>Nhà sản xuất:</strong> <span th:text="${device.manufacturer}"></span></p>
             <p><strong>Ngày mua:</strong> <span th:text="${#dates.format(device.purchaseDate, 'dd/MM/yyyy')}"></span></p>
             <p><strong>Giá mua:</strong> <span th:text="${#numbers.formatDecimal(device.price, 0, 'POINT', 0, 'COMMA')}"></span> VNĐ</p>
+            <img class="device-image" th:src="${device.image}" width="200" />
         </div>
 
-        <!-- Danh sách chi phí sửa chữa -->
         <!-- Danh sách chi phí sửa chữa -->
         <h4 class="mb-3">Chi phí sửa chữa</h4>
         <div class="table-responsive">
@@ -47,18 +71,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Kiểm tra nếu danh sách rỗng -->
                     <tr th:if="${repairCosts.empty}">
                         <td colspan="4" class="text-center text-muted">Chưa có chi phí sửa chữa nào.</td>
                     </tr>
-
-                    <!-- Hiển thị từng chi phí sửa chữa -->
                     <tr th:each="r : ${repairCosts}" th:if="${r != null}">
                         <td th:text="${r.id}"></td>
                         <td th:text="${r.repairTypeId.type}"></td>
                         <td th:text="${#numbers.formatDecimal(r.price, 0, 'POINT', 0, 'COMMA')}"></td>
                         <td>
-                            <button class="btn btn-warning btn-sm"
+                            <button class="btn btn-warning btn-sm btn-action"
                                     type="button"
                                     th:attr="onclick='showUpdateForm(' + ${r.id} + ')'">Cập nhật</button>
                         </td>
@@ -67,17 +88,17 @@
             </table>
         </div>
 
-        <!-- Các form cập nhật (đặt bên ngoài bảng) -->
+        <!-- Form cập nhật chi phí -->
         <div th:each="r : ${repairCosts}">
-            <form th:action="@{/devices/{id}/update-repair(id=${device.id})}"
+            <form th:action="@{/admin/devices/{id}/update-repair(id=${device.id})}"
                   method="post"
                   th:object="${repairCost}"
                   th:id="'form-update-' + ${r.id}"
-                  style="display: none; margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+                  class="update-form">
 
                 <input type="hidden" name="id" th:value="${r.id}" />
 
-                <h5 class="mb-3">Cập nhật chi phí sửa chữa #<span th:text="${r.id}"></span></h5>
+                <h5>Cập nhật chi phí sửa chữa #<span th:text="${r.id}"></span></h5>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -100,7 +121,8 @@
 
                     <div class="col-md-2 d-flex align-items-end mb-3">
                         <button type="submit" class="btn btn-primary me-2">Lưu</button>
-                        <button type="button" class="btn btn-secondary" th:attr="onclick='hideUpdateForm(' + ${r.id} + ')'">Hủy</button>
+                        <button type="button" class="btn btn-secondary"
+                                th:attr="onclick='hideUpdateForm(' + ${r.id} + ')'">Hủy</button>
                     </div>
                 </div>
             </form>
@@ -109,11 +131,7 @@
         <!-- Form thêm chi phí sửa chữa -->
         <div class="form-section mt-4">
             <h5 class="mb-3">Thêm chi phí sửa chữa</h5>
-            <form th:action="@{/devices/{id}/add-repair(id=${device.id})}"
-                  method="post"
-                  th:object="${repairCost}">
-
-                <!-- Chọn loại sửa chữa -->
+            <form th:action="@{/admin/devices/{id}/add-repair(id=${device.id})}" method="post" th:object="${repairCost}">
                 <div class="mb-3">
                     <label for="repairType" class="form-label">Loại sửa chữa:</label>
                     <select class="form-select" th:field="*{repairTypeId.id}" id="repairType" required>
@@ -122,31 +140,29 @@
                     </select>
                 </div>
 
-                <!-- Nhập giá -->
                 <div class="mb-3">
                     <label for="price" class="form-label">Giá sửa chữa (VNĐ):</label>
                     <input type="number" step="1000" min="0" class="form-control" id="price"
                            th:field="*{price}" placeholder="Nhập giá sửa chữa..." required />
                 </div>
 
-                <!-- Nút thêm -->
                 <button type="submit" class="btn btn-success">Thêm sửa chữa</button>
             </form>
         </div>
 
-        <a th:href="@{/}" class="btn btn-secondary mt-4">← Quay lại</a>
-
-        <script>
-            function showUpdateForm(id) {
-                document.getElementById("form-update-" + id).style.display = "block";
-            }
-
-            function hideUpdateForm(id) {
-                document.getElementById("form-update-" + id).style.display = "none";
-            }
-        </script>
+        <a th:href="@{/admin}" class="btn btn-secondary mt-4">← Quay lại</a>
     </main>
 
     <div th:replace="base :: footer"></div>
+
+    <script>
+        function showUpdateForm(id) {
+            document.getElementById("form-update-" + id).style.display = "block";
+        }
+
+        function hideUpdateForm(id) {
+            document.getElementById("form-update-" + id).style.display = "none";
+        }
+    </script>
 </body>
 </html>

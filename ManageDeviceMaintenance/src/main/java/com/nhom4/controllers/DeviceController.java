@@ -1,14 +1,20 @@
 package com.nhom4.controllers;
 
+import com.nhom4.pojo.Category;
 import com.nhom4.pojo.Device;
 import com.nhom4.services.CategoryService;
 import com.nhom4.services.DeviceService;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/devices-manager")
+@RequestMapping("/admin/devices-manager")
 public class DeviceController {
 
     @Autowired
@@ -40,10 +46,10 @@ public class DeviceController {
     public String deviceDetail(@PathVariable Integer id, Model model) {
         Device device = deviceService.getDeviceById(id);
         if (device == null) {
-            return "redirect:/devices-manager"; // Nếu không tìm thấy, quay về trang danh sách
+            return "redirect:/admin/devices-manager";
         }
         model.addAttribute("device", device);
-        return "deviceDetail"; // Trả về trang chi tiết
+        return "deviceDetail";
     }
 
     @GetMapping("/add")
@@ -53,11 +59,17 @@ public class DeviceController {
         return "addDevice";
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
     @PostMapping("/add-device")
     public String add(@ModelAttribute("device") Device d) {
         this.deviceService.addOrUpdateDevice(d);
-        return "redirect:/devices-manager";
+        return "redirect:/admin/devices-manager";
     }
-
 
 }

@@ -5,6 +5,8 @@
 package com.nhom4.repositories;
 
 import com.nhom4.pojo.User;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -15,5 +17,6 @@ public interface UserRepository {
     User getUserByUsername(String username);
     User addUser(User u);
     boolean authenticate(String username, String password);
-    
+    List<User> getUsers(Map<String,String> params);
+    List<User> getEmployees();
 }
