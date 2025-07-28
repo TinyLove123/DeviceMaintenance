@@ -24,6 +24,8 @@ com\nhom4\pojo\User.class
 com\nhom4\repositories\RepairRepository.class
 com\nhom4\pojo\AdministrativeUnits.class
 com\nhom4\pojo\MaintenanceSchedule.class
+com\nhom4\repositories\StatsRepository.class
+com\nhom4\repositories\impl\StatsRepositoryImpl.class
 com\nhom4\pojo\Wards.class
 com\nhom4\controllers\UserController.class
 utils\JwtUtils.class

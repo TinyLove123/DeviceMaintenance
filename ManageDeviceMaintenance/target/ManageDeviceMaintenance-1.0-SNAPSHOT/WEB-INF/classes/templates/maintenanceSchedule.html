@@ -9,8 +9,7 @@
 
     <main class="container">
 
-        
-        <a th:href="@{/addMaintenanceSchedule}" class="btn btn-info mt-2">Thêm Lịch</a>
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -18,17 +17,35 @@
                     <th>tiến trình</th>
                     <th>thiết bị</th>
                     <th>nhân viên</th>
+                    <th>Đổi nhân viên</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="m: ${maintenanceSchedule}">
-                   <td th:text="${m.dateStart}"></td>
-                    <td th:text="${m.progress}"></td>
-                    <td th:text="${m.deviceId}"></td>
-                    <td th:text="${m.employeeId}"></td>
+                <tr th:each="m : ${maintenanceSchedules}">
+                    <td th:text="${m.startDate}"></td>
+                    <td th:text="
+                        ${m.progress == 'in_progress'} ? 'Đang thực hiện' :
+                        (${m.progress == 'completed'} ? 'Hoàn thành' :
+                        (${m.progress == 'in_completed'} ? 'Chưa xử lý' : 'Không xác định'))
+                        "
+                        th:classappend="
+                        ${m.progress == 'in_progress'} ? 'text-warning fw-bold bg-light' :
+                        (${m.progress == 'completed'} ? 'text-success fw-bold bg-light' :
+                        (${m.progress == 'in_completed'} ? 'text-danger fw-bold bg-light' : 'text-dark fw-bold bg-light'))
+                        ">
+                    </td>
+
+                    <td th:text="${m.deviceId.nameDevice}"></td>
+                    <td th:text="${m.employeeId != null ? m.employeeId.firstName + ' ' + m.employeeId.lastName : 'Chưa xếp'}"
+                        th:classappend="${m.employeeId == null} ? 'text-danger fw-bold' : ''"></td>
+                    <td><a th:href="@{/admin/devices/edit/{id}(id=${m.employeeId})}" 
+                           class="btn btn-sm btn-warning">Đổi</a></td>
                 </tr>
             </tbody>
+
+
+
         </table>
     </main>
 

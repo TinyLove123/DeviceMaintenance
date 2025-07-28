@@ -15,7 +15,7 @@ import java.util.Map;
  */
 
 public interface DeviceService {
-     List<Device> getDevice(Map<String,String> params);
+    List<Device> getDevice(Map<String,String> params);
     Device getDeviceById(int id);
     Device addOrUpdateDevice(Device d);
     void deleteDevice(int id);

@@ -38,6 +38,7 @@ D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\RepairCostRepositoryImpl.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\RepairScheduleRepository.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\RepairTypeRepositoryImpl.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\StatsRepositoryImpl.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\UserRepositoryImpl.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\impl\WardRepositoryImpl.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\IncidentRepository.java
@@ -49,6 +50,7 @@ D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairRepository.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairScheduleRepository.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\RepairTypeRepository.java
+D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\StatsRepository.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\UserRepository.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\repositories\WardRepository.java
 D:\pthtw\New folder\DeviceMaintenance\ManageDeviceMaintenance\src\main\java\com\nhom4\services\CategoryService.java

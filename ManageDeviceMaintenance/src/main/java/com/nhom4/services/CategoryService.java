@@ -13,5 +13,8 @@ import java.util.List;
  */
 public interface CategoryService {
     List<Category> getCates();
+    Category addOrUpdateCategory(Category c);
     Category getCateById(int cateId);
+    void deleteCates(int id);
+
 }
