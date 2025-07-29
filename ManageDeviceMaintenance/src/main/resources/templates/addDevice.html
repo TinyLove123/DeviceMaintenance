@@ -22,7 +22,7 @@
 <body>
     <div th:replace="base :: header"></div>
     <main class="container">
-        
+
         <h1 class="text-center text-info mt-1">QUẢN LÝ THIẾT BỊ</h1>
 
         <!--enctype="multipart/form-data"-->
@@ -93,6 +93,8 @@
                 </div>
             </div>
 
+           
+
             <div class="d-flex justify-content-between mt-4">
                 <input type="hidden" th:field="*{id}">
                 <input type="hidden" th:field="*{image}"  />
@@ -104,11 +106,17 @@
 
                 <a th:href="@{/admin/devices-manager}" class="btn btn-secondary">Quay lại</a>
             </div>
+
+
         </form>
-        
+
+
     </main>
 
-        <div th:replace="base :: footer"></div>
+    <div th:replace="base :: footer"></div>
+
+    
+
 
 
 </body>

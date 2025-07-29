@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Chi tiết thiết bị</title>
+    <head>
+        <title>Chi tiết thiết bị</title>
     <th:block th:replace="base :: bootstrap"></th:block>
     <style>
         .device-info p {
@@ -82,6 +82,11 @@
                             <button class="btn btn-warning btn-sm btn-action"
                                     type="button"
                                     th:attr="onclick='showUpdateForm(' + ${r.id} + ')'">Cập nhật</button>
+                            <a th:href="@{/admin/devices-manager/{deviceId}/repair/{repairCostId}/delete(deviceId=${device.id}, repairCostId=${r.id})}"
+                               class="btn btn-danger btn-sm btn-action"
+                               onclick="return confirm('Bạn có chắc chắn muốn xoá chi phí sửa chữa này?');">
+                                Xoá
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -90,11 +95,10 @@
 
         <!-- Form cập nhật chi phí -->
         <div th:each="r : ${repairCosts}">
-            <form th:action="@{/admin/devices/{id}/update-repair(id=${device.id})}"
-                  method="post"
-                  th:object="${repairCost}"
-                  th:id="'form-update-' + ${r.id}"
-                  class="update-form">
+            <form th:action="@{/admin/devices-manager/devices/{id}/update-repair(id=${device.id})}" method="post"
+                  th:id="'form-update-' + ${r.id}" 
+                  class="update-form"
+                  th:object="${repairCost}">
 
                 <input type="hidden" name="id" th:value="${r.id}" />
 
@@ -131,7 +135,7 @@
         <!-- Form thêm chi phí sửa chữa -->
         <div class="form-section mt-4">
             <h5 class="mb-3">Thêm chi phí sửa chữa</h5>
-            <form th:action="@{/admin/devices/{id}/add-repair(id=${device.id})}" method="post" th:object="${repairCost}">
+            <form th:action="@{/admin/devices-manager/{id}/repair/add(id=${device.id})}" method="post" th:object="${repairCost}">
                 <div class="mb-3">
                     <label for="repairType" class="form-label">Loại sửa chữa:</label>
                     <select class="form-select" th:field="*{repairTypeId.id}" id="repairType" required>
@@ -149,8 +153,39 @@
                 <button type="submit" class="btn btn-success">Thêm sửa chữa</button>
             </form>
         </div>
+        <!-- Form cập nhật vị trí thiết bị -->
+        <h5 class="mt-5">Cập nhật vị trí thiết bị</h5>
+        <form id="locationForm" th:action="@{/admin/devices-manager/devices/{id}/update-location(id=${device.id})}" method="post" th:object="${location}">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Chọn Tỉnh/Thành phố:</label>
+                    <select id="provinceSelect" class="form-select" name="provinceCode" required>
+                        <option value="">-- Chọn tỉnh/thành phố --</option>
+                        <option th:each="p : ${provinces}" 
+                                th:value="${p.code}" 
+                                th:text="${p.fullName}"></option>
+                    </select>
+                </div>
 
-        <a th:href="@{/admin}" class="btn btn-secondary mt-4">← Quay lại</a>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Chọn Xã/Phường:</label>
+                    <select id="wardSelect" class="form-select" th:field="*{wardId.code}" name="wardCode.code" required>
+                        <option value="">-- Chọn xã/phường --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Địa chỉ cụ thể</label>
+                    <input type="text" class="form-control" name="address" th:field="*{address}" placeholder="Số nhà, đường..." required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Cập nhật vị trí</button>
+        </form>
+
+
+        <a th:href="@{/admin/devices-manager}" class="btn btn-secondary mt-4">← Quay lại</a>
+
     </main>
 
     <div th:replace="base :: footer"></div>
@@ -164,5 +199,56 @@
             document.getElementById("form-update-" + id).style.display = "none";
         }
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const provinceSelect = document.getElementById('provinceSelect');
+            const wardSelect = document.getElementById('wardSelect');
+
+            // Xử lý khi chọn tỉnh
+            provinceSelect.addEventListener('change', function () {
+                const provinceCode = this.value;
+                wardSelect.innerHTML = '<option value="">-- Chọn xã/phường --</option>';
+
+                if (!provinceCode)
+                    return;
+
+                // Gọi API để lấy danh sách xã/phường theo tỉnh
+                fetch(`/ManageDeviceMaintenance/admin/devices-manager/wards?provinceId=${provinceCode}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Không thể tải danh sách xã/phường');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            data.forEach(ward => {
+                                const option = document.createElement('option');
+                                option.value = ward.code;
+                                option.textContent = ward.fullName;
+                                wardSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Lỗi:', error);
+                            alert('Có lỗi xảy ra khi tải danh sách xã/phường');
+                        });
+            });
+
+            // Nếu đã có giá trị tỉnh được chọn trước đó (khi edit), tự động load xã/phường
+            const selectedProvince = provinceSelect.value;
+            if (selectedProvince) {
+                provinceSelect.dispatchEvent(new Event('change'));
+
+                // Sau khi load xã xong, chọn giá trị đã có (nếu có)
+                setTimeout(() => {
+                    const selectedWard = wardSelect.querySelector(`option[value="${wardSelect.dataset.selected}"]`);
+                    if (selectedWard) {
+                        selectedWard.selected = true;
+                    }
+                }, 500);
+            }
+        });
+    </script>
+
 </body>
 </html>

@@ -4,6 +4,7 @@
  */
 package com.nhom4.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,8 +59,11 @@ public class AdministrativeUnits implements Serializable {
     @Size(max = 255)
     @Column(name = "code_name_en")
     private String codeNameEn;
+    @JsonIgnore
     @OneToMany(mappedBy = "administrativeUnitId")
     private Set<Provinces> provincesSet;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "administrativeUnitId")
     private Set<Wards> wardsSet;
 
@@ -166,5 +170,5 @@ public class AdministrativeUnits implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.AdministrativeUnits[ id=" + id + " ]";
     }
-    
+
 }
