@@ -28,13 +28,18 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
     }
 
     @Override
-    public MaintenanceSchedule addMaintenanceSchedule() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public MaintenanceSchedule addMaintenanceSchedule(MaintenanceSchedule m) {
+       return this.maintenanceScheduleRepo.addMaintenanceSchedule(m);
     }
 
     @Override
     public MaintenanceSchedule autoUpdateMaintenanceSchedule() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public MaintenanceSchedule getDeviceById(int id) {
+        return this.maintenanceScheduleRepo.getDeviceById(id);
     }
     
 }

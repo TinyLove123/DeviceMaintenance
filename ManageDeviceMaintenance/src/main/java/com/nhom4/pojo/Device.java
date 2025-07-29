@@ -4,7 +4,14 @@
  */
 package com.nhom4.pojo;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -23,10 +30,6 @@ import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -97,7 +100,7 @@ public class Device implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "deviceId")
     private Set<Incident> incidentSet;
-    
+
     @Transient
     private MultipartFile file;
 

@@ -4,24 +4,31 @@
  */
 package com.nhom4.repositories.impl;
 
-import com.nhom4.pojo.Device;
-import com.nhom4.pojo.RentedDevice;
-import com.nhom4.pojo.RepairCost;
-import com.nhom4.repositories.DeviceRepository;
-import jakarta.persistence.Query;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.nhom4.pojo.Device;
+import com.nhom4.pojo.MaintenanceSchedule;
+import com.nhom4.pojo.RentedDevice;
+import com.nhom4.pojo.RepairCost;
+import com.nhom4.repositories.DeviceRepository;
+import com.nhom4.repositories.MaintenanceScheduleRepository;
+import com.nhom4.repositories.UserRepository;
+
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 /**
  *
@@ -35,6 +42,10 @@ public class DeviceRepositoryImpl implements DeviceRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
+    @Autowired
+    private MaintenanceScheduleRepository maintenanceScheduleRepo;
+    @Autowired
+    private UserRepository UserRepo;
 
     @Override
     public List<Device> getDevice(Map<String, String> params) {
@@ -92,7 +103,19 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     public Device addOrUpdateDevice(Device d) {
         Session s = this.factory.getObject().getCurrentSession();
         if (d.getId() == null) {
+            
+     
+            MaintenanceSchedule ms = new MaintenanceSchedule();
+            ms.setDeviceId(d);
+            d.getFrequency();
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE,d.getFrequency());
+            Date calulatedDate = cal.getTime();
+            ms.setStartDate(calulatedDate);
+            ms.setDeviceId(d);
+            ms.setProgress("in_completed");
             s.persist(d);
+            this.maintenanceScheduleRepo.addMaintenanceSchedule(ms);
         } else {
             s.merge(d);
         }

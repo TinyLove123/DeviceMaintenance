@@ -75,13 +75,31 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
     }
 
     @Override
-    public MaintenanceSchedule addMaintenanceSchedule() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public MaintenanceSchedule addMaintenanceSchedule(MaintenanceSchedule m) {
+        Session s = this.factory.getObject().getCurrentSession();
+        if (m.getId() == null) {
+            s.persist(m);
+        } else {
+            s.merge(m);
+        }
+        return m;
     }
 
     @Override
     public MaintenanceSchedule autoUpdateMaintenanceSchedule() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public MaintenanceSchedule autoAddMaintenanceSchedule(MaintenanceSchedule m) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public MaintenanceSchedule getDeviceById(int id) {
+         Session s = this.factory.getObject().getCurrentSession();
+
+        return s.get(MaintenanceSchedule.class, id);
     }
     
 }

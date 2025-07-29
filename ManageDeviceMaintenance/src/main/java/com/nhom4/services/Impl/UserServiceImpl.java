@@ -120,4 +120,9 @@ public class UserServiceImpl implements UserService {
         return this.userRepo.getUsers(params);
     }
 
+    @Override
+    public List<User> getEmployee() {
+        return this.userRepo.getEmployees();
+    }
+
 }
