@@ -5,12 +5,17 @@
 package com.nhom4.controllers;
 
 import com.nhom4.dto.DeviceDTO;
+import com.nhom4.pojo.Category;
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RentedDevice;
+import com.nhom4.pojo.User;
+import com.nhom4.services.CategoryService;
 import com.nhom4.services.DeviceService;
 import com.nhom4.services.IncidentService;
+import com.nhom4.services.UserService;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,29 +39,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 @CrossOrigin
 public class ApiDevice {
+    
+    @Autowired
+    private CategoryService catService;
 
     @Autowired
     private DeviceService deviceService;
 
     @Autowired
     private IncidentService incidentService;
+    
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/devices")
-    public ResponseEntity<List<DeviceDTO>> list(@RequestParam Map<String, String> params) {
+    public ResponseEntity<List<DeviceDTO>> listDevs(@RequestParam Map<String, String> params) {
         return new ResponseEntity<>(this.deviceService.getDeviceDTO(params), HttpStatus.OK);
+    }
+    
+    @GetMapping("/secure/categories")
+    public ResponseEntity<List<Category>> listCats() {
+        return new ResponseEntity<>(this.catService.getCates(), HttpStatus.OK);
     }
 
     
     @GetMapping("/devices/{deviceId}")
-    public ResponseEntity<Device> retrieve(@PathVariable(value = "deviceId") int id) {
-        return new ResponseEntity<>(this.deviceService.getDeviceById(id), HttpStatus.OK);
+    public ResponseEntity<DeviceDTO> retrieve(@PathVariable(value = "deviceId") int id) {
+        return new ResponseEntity<>(this.deviceService.getDeviceDIOById(id),HttpStatus.OK);
     }
 
     @PostMapping("/secure/devices/{id}/rented-device")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RentedDevice> addRenedDevice(@PathVariable("id") int deviceId,
-            @RequestBody RentedDevice rented,
-            Location loc) {
+            @RequestBody RentedDevice rented,Principal principal){
+        String username = principal.getName();
+        User user = this.userService.getUserByUsername(username);
+        rented.setCustomerId(user);
+//            Location loc) {
         RentedDevice rentedSave = deviceService.addRentedDevice(deviceId, rented);
         
         return new ResponseEntity<>(rentedSave, HttpStatus.CREATED);

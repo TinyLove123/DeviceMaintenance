@@ -62,6 +62,8 @@ public class Location implements Serializable {
     @JoinColumn(name = "ward_id", referencedColumnName = "code")
     @ManyToOne
     private Wards wardId;
+    @OneToMany(mappedBy = "currentLocationId")
+    private Set<Device> deviceSet;
 
     public Location() {
     }
@@ -132,6 +134,14 @@ public class Location implements Serializable {
 
     public void setWardId(Wards wardId) {
         this.wardId = wardId;
+    }
+
+    public Set<Device> getDeviceSet() {
+        return deviceSet;
+    }
+
+    public void setDeviceSet(Set<Device> deviceSet) {
+        this.deviceSet = deviceSet;
     }
 
     @Override

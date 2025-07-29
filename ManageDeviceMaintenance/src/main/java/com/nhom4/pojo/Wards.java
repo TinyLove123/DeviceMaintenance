@@ -178,5 +178,5 @@ public class Wards implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.Wards[ code=" + code + " ]";
     }
-
+    
 }

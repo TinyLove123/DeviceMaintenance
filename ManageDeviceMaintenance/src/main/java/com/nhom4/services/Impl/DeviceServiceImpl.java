@@ -92,6 +92,15 @@ public class DeviceServiceImpl implements DeviceService {
         List<Device> devices = deviceRepository.getDevice(params);
         return devices.stream().map(this::toDTO).toList();
     }
+    
+    @Override
+    public DeviceDTO getDeviceDIOById(int id) {
+
+        Device device= deviceRepository.getDeviceById(id);
+        return toDTO(device);
+    }
+    
+    
 
     @Override
     public List<Device> getDevicesByCatesId(int id, Map<String, String> params) {
@@ -112,5 +121,8 @@ public class DeviceServiceImpl implements DeviceService {
     public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice) {
         return this.deviceRepository.addRentedDevice(deviceId, rentedDevice);
     }
+
+    
+    
 
 }

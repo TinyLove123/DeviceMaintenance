@@ -39,5 +39,6 @@ public interface DeviceService {
     
     public List<DeviceDTO> getDeviceDTO(Map<String, String> params);
 
+    public DeviceDTO getDeviceDIOById(int id);
 
 }

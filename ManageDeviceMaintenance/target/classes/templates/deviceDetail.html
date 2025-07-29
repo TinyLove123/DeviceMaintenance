@@ -56,6 +56,10 @@
             <p><strong>Ngày mua:</strong> <span th:text="${#dates.format(device.purchaseDate, 'dd/MM/yyyy')}"></span></p>
             <p><strong>Giá mua:</strong> <span th:text="${#numbers.formatDecimal(device.price, 0, 'POINT', 0, 'COMMA')}"></span> VNĐ</p>
             <img class="device-image" th:src="${device.image}" width="200" />
+            <p>
+                <strong>Vị trí hiện tại:</strong>
+                <span th:text="${device.currentLocationId != null ? device.currentLocationId.wardId.fullName + ', ' + device.currentLocationId.wardId.provinceCode.fullName + ', ' + device.currentLocationId.address : 'Chưa cập nhật'}"></span>
+            </p>
         </div>
 
         <!-- Danh sách chi phí sửa chữa -->
@@ -82,7 +86,7 @@
                             <button class="btn btn-warning btn-sm btn-action"
                                     type="button"
                                     th:attr="onclick='showUpdateForm(' + ${r.id} + ')'">Cập nhật</button>
-                            <a th:href="@{/admin/devices-manager/{deviceId}/repair/{repairCostId}/delete(deviceId=${device.id}, repairCostId=${r.id})}"
+                            <a th:href="@{/admin/devices-manager/devices/{deviceId}/repaircost/{repairCostId}/delete(deviceId=${device.id}, repairCostId=${r.id})}"
                                class="btn btn-danger btn-sm btn-action"
                                onclick="return confirm('Bạn có chắc chắn muốn xoá chi phí sửa chữa này?');">
                                 Xoá
@@ -135,7 +139,7 @@
         <!-- Form thêm chi phí sửa chữa -->
         <div class="form-section mt-4">
             <h5 class="mb-3">Thêm chi phí sửa chữa</h5>
-            <form th:action="@{/admin/devices-manager/{id}/repair/add(id=${device.id})}" method="post" th:object="${repairCost}">
+            <form th:action="@{/admin/devices-manager/devices/{id}/add-repair(id=${device.id})}" method="post" th:object="${repairCost}">
                 <div class="mb-3">
                     <label for="repairType" class="form-label">Loại sửa chữa:</label>
                     <select class="form-select" th:field="*{repairTypeId.id}" id="repairType" required>

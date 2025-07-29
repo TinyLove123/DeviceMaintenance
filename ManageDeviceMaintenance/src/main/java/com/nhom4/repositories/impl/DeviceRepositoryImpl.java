@@ -82,8 +82,10 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     @Override
     public Device getDeviceById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
-
-        return s.get(Device.class, id);
+        Device device=    s.get(Device.class, id);
+        device.getRepairCostSet().size();
+        device.getLocationSet().size();
+        return device;
     }
 
     @Override
@@ -186,8 +188,9 @@ public class DeviceRepositoryImpl implements DeviceRepository {
         Session s = this.factory.getObject().getCurrentSession();
 
         Device device = s.get(Device.class, deviceId);
-
-        if (device != null && "active".equalsIgnoreCase(device.getStatusDevice())) {
+        System.out.print(device);
+        
+        if (device != null && "active".equals(device.getStatusDevice())) {
 
             rentedDevice.setDeviceId(device);
 

@@ -44,6 +44,7 @@ public class JwtFilter implements Filter {
             try {
                 String username = JwtUtils.validateTokenAndGetUsername(token);
                 String role = JwtUtils.getRoleFromToken(token);  // lấy role
+                System.out.print(role+username);
 
                 if (username != null && role != null) {
                     // Tạo GrantedAuthority từ role

@@ -65,7 +65,6 @@ public class Provinces implements Serializable {
     @JoinColumn(name = "administrative_unit_id", referencedColumnName = "id")
     @ManyToOne
     private AdministrativeUnits administrativeUnitId;
-    
     @JsonIgnore
     @OneToMany(mappedBy = "provinceCode")
     private Set<Wards> wardsSet;
@@ -171,5 +170,5 @@ public class Provinces implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.Provinces[ code=" + code + " ]";
     }
-
+    
 }

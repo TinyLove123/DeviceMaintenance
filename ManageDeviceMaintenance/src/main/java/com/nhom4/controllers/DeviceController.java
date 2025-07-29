@@ -97,7 +97,8 @@ public class DeviceController {
         List<RepairType> repairTypes = this.repairTypeService.getRepairType();
 
         model.addAttribute("device", device);
-        model.addAttribute("repairCosts", repairCosts);
+        model.addAttribute("repairCosts", device.getRepairCostSet());
+        model.addAttribute("currentLocation", device.getLocationSet());
         model.addAttribute("repairCost", new RepairCost());
         model.addAttribute("location", new Location());
         model.addAttribute("repairTypes", repairTypes);

@@ -62,7 +62,6 @@ public class AdministrativeUnits implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "administrativeUnitId")
     private Set<Provinces> provincesSet;
-
     @JsonIgnore
     @OneToMany(mappedBy = "administrativeUnitId")
     private Set<Wards> wardsSet;
@@ -170,5 +169,5 @@ public class AdministrativeUnits implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.AdministrativeUnits[ id=" + id + " ]";
     }
-
+    
 }

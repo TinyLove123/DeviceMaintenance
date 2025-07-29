@@ -103,15 +103,16 @@ public class LocationRepositoryImpl implements LocationRepository {
             session.merge(currentLoc);
         }
 
-        // Gắn lại entity từ DB để đảm bảo không bị detached
         Device device = session.get(Device.class, deviceId);
-
+        
         newLocation.setDeviceId(device);
         newLocation.setIsCurrentLocation(true);
         newLocation.setLastUpdate(new Date());
 
         newLocation.setId(null); 
         session.persist(newLocation);
+        device.setCurrentLocationId(newLocation);
+        session.persist(device);
     }
 
     @Override
