@@ -4,10 +4,13 @@
  */
 package com.nhom4.repositories;
 
+import com.nhom4.pojo.Wards;
+import java.util.List;
+
 /**
  *
  * @author Administrator
  */
-public class WardRepository {
-    
+public interface WardRepository {
+    List<Wards> getWard(int provinceId);
 }

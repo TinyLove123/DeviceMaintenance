@@ -14,5 +14,6 @@ import java.util.List;
 public interface CategoryRepository {
     List<Category> getCates();
     Category addOrUpdateCategory(Category c);
-    void deleteCats(int id);
+    Category getCatesById(int cateId);
+    void deleteCates(int id);
 }

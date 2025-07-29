@@ -5,6 +5,7 @@
 package com.nhom4.repositories;
 
 import com.nhom4.pojo.Device;
+import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.RepairCost;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +19,11 @@ public interface DeviceRepository {
     Device getDeviceById(int id);
     Device addOrUpdateDevice(Device d);
     List<Device> getDevicesByCatesId(int id, Map<String,String> params);
-    void deleteDevice(int id);
-    List<RepairCost> getRepairType(int id);
-    void updateRepairType(int id,Map<String,String>params);
+    void deleteDevice(int deviceId);
+    List<RepairCost> getRepairTypeByDeviceId(int deviceId);
     RepairCost addOrUpdateRepairCost(RepairCost repairCost);
+    RepairCost getRepairCostById(int repairCostId);
+    void deleteRepairCost(int repairId);
+    RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice);
 
 }

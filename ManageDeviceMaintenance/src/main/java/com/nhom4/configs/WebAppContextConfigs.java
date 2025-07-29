@@ -4,11 +4,14 @@
  */
 package com.nhom4.configs;
 
+//import com.nhom4.formatters.CategoryFormatter;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -26,4 +29,19 @@ public class WebAppContextConfigs implements WebMvcConfigurer{
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
+
+//    @Override
+//    public void addFormatters(FormatterRegistry registry) {
+//        registry.addFormatter(new CategoryFormatter());
+//    }
+    
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
+                
+    }
+    
+    
+    
+    
 }

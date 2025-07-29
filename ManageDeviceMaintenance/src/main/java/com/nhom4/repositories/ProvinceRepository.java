@@ -4,10 +4,13 @@
  */
 package com.nhom4.repositories;
 
+import com.nhom4.pojo.Provinces;
+import java.util.List;
+
 /**
  *
  * @author Administrator
  */
-public class ProvinceRepository {
-    
+public interface ProvinceRepository {
+    List<Provinces> getProvince();
 }

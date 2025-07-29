@@ -57,7 +57,7 @@ public class IndexController {
         model.addAttribute("categories", this.cateService.getCates());
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/admin")
     @Transactional
     public String Home(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("devices", this.DeviceService.getDevice(params));
@@ -65,25 +65,52 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("/devices/{id}")
+    @GetMapping("admin/devices/{id}")
     public String getDeviceDetail(@PathVariable("id") int id, Model model) {
-        Device device = DeviceService.getDeviceById(id);
-        List<RepairCost> repairCosts = DeviceService.getRepairType(id);
-        List<RepairType> repairTypes = repairTypeService.getRepairType(); // ví dụ
+        Device device = this.DeviceService.getDeviceById(id);
+        List<RepairCost> repairCosts = this.DeviceService.getRepairTypeByDeviceId(id);
+        List<RepairType> repairTypes = this.repairTypeService.getRepairType(); // ví dụ
 
         model.addAttribute("device", device);
         model.addAttribute("repairCosts", repairCosts);
         model.addAttribute("repairCost", new RepairCost());
-        model.addAttribute("allRepairTypes", repairTypes); // dùng cho form thêm
+        model.addAttribute("repairTypes", repairTypes);
 
         return "deviceDetail";
     }
 
-    public String addRepairCost(@ModelAttribute("repairCost") RepairCost repairCost) {
-        
-        DeviceService.addOrUpdateRepairCost(repairCost);
+    @PostMapping("admin/devices/{id}/add-repair")
+    public String addRepairCost(@PathVariable("id") int deviceId, RepairCost r) {
 
-        return "redirect:/devices/" + repairCost.getDeviceId().getId();
+        Device device = this.DeviceService.getDeviceById(deviceId);
+        r.setId(null);
+        r.setDeviceId(device);
+
+        this.DeviceService.addOrUpdateRepairCost(r);
+
+        return "redirect:/admin/devices/" + r.getDeviceId().getId();
     }
 
+    @PostMapping("/admin/devices/{id}/update-repair")
+    public String updateRepairCost(@ModelAttribute RepairCost repairCost,
+            @PathVariable("id") int deviceId) {
+        Device device = DeviceService.getDeviceById(deviceId);
+        repairCost.setDeviceId(device);
+
+        this.DeviceService.addOrUpdateRepairCost(repairCost);
+        return "redirect:/admin/devices/" + deviceId;
+    }
+
+    @GetMapping("/admin/devices/{id}/delete")
+    public String deleteDevice(@PathVariable("id") Integer id) {
+        DeviceService.deleteDevice(id);
+        return "redirect:/admin/devices-manager";
+    }
+
+    @GetMapping("/admin/devices/{deviceId}/repaircost/{repairCostId}/delete")
+    public String deleteRepairCost(@PathVariable("deviceId") Integer deviceId,
+            @PathVariable("repairCostId") Integer repairCostId) {
+        DeviceService.deleteRepairCost(repairCostId);
+        return "redirect:/admin/devices/" + deviceId;
+    }
 }

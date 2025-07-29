@@ -33,7 +33,8 @@ import java.util.Set;
     @NamedQuery(name = "Location.findAll", query = "SELECT l FROM Location l"),
     @NamedQuery(name = "Location.findById", query = "SELECT l FROM Location l WHERE l.id = :id"),
     @NamedQuery(name = "Location.findByLastUpdate", query = "SELECT l FROM Location l WHERE l.lastUpdate = :lastUpdate"),
-    @NamedQuery(name = "Location.findByAddress", query = "SELECT l FROM Location l WHERE l.address = :address")})
+    @NamedQuery(name = "Location.findByAddress", query = "SELECT l FROM Location l WHERE l.address = :address"),
+    @NamedQuery(name = "Location.findByIsCurrentLocation", query = "SELECT l FROM Location l WHERE l.isCurrentLocation = :isCurrentLocation")})
 public class Location implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,6 +49,8 @@ public class Location implements Serializable {
     @Size(max = 30)
     @Column(name = "address")
     private String address;
+    @Column(name = "is_current_location")
+    private Boolean isCurrentLocation;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
     private Device deviceId;
@@ -59,6 +62,8 @@ public class Location implements Serializable {
     @JoinColumn(name = "ward_id", referencedColumnName = "code")
     @ManyToOne
     private Wards wardId;
+    @OneToMany(mappedBy = "currentLocationId")
+    private Set<Device> deviceSet;
 
     public Location() {
     }
@@ -91,6 +96,14 @@ public class Location implements Serializable {
         this.address = address;
     }
 
+    public Boolean getIsCurrentLocation() {
+        return isCurrentLocation;
+    }
+
+    public void setIsCurrentLocation(Boolean isCurrentLocation) {
+        this.isCurrentLocation = isCurrentLocation;
+    }
+
     public Device getDeviceId() {
         return deviceId;
     }
@@ -121,6 +134,14 @@ public class Location implements Serializable {
 
     public void setWardId(Wards wardId) {
         this.wardId = wardId;
+    }
+
+    public Set<Device> getDeviceSet() {
+        return deviceSet;
+    }
+
+    public void setDeviceSet(Set<Device> deviceSet) {
+        this.deviceSet = deviceSet;
     }
 
     @Override

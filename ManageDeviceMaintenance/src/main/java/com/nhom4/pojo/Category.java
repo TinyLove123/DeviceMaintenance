@@ -4,6 +4,11 @@
  */
 package com.nhom4.pojo;
 
+import java.io.Serializable;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,14 +16,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Set;
 
 /**
  *
@@ -43,6 +47,11 @@ public class Category implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "type")
     private String type;
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "description")
+    private String description;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoryId")
     private Set<Device> deviceSet;
 
@@ -72,6 +81,14 @@ public class Category implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<Device> getDeviceSet() {

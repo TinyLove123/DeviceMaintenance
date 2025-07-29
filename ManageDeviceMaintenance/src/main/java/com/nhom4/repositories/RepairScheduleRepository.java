@@ -4,10 +4,17 @@
  */
 package com.nhom4.repositories;
 
+import com.nhom4.pojo.RepairSchedule;
+import java.util.List;
+
 /**
  *
  * @author Administrator
  */
-public class RepairScheduleRepository {
+
+public interface RepairScheduleRepository {
+    void addOrUpdateRepairSchedule(int incidentId, RepairSchedule repair);
+    void addRepair(int repairChedule);
+    List<RepairSchedule> getRepairScheduleByDevice(int deviceId);
     
 }
