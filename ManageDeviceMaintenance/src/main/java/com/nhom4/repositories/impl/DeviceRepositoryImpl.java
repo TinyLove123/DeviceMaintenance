@@ -109,7 +109,7 @@ public class DeviceRepositoryImpl implements DeviceRepository {
             ms.setDeviceId(d);
             ms.setProgress("in_completed");
             s.persist(d);
-            this.maintenanceScheduleRepo.addMaintenanceSchedule(ms);
+            this.maintenanceScheduleRepo.addOrUpdateMaintenanceSchedule(ms);
         } else {
             s.merge(d);
         }

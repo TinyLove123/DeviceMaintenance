@@ -19,4 +19,5 @@ public interface UserRepository {
     boolean authenticate(String username, String password);
     List<User> getUsers(Map<String,String> params);
     List<User> getEmployees();
+    User getUserById(int id);
 }
