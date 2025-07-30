@@ -61,7 +61,7 @@ public class IndexController {
     @GetMapping("admin/devices/{id}")
     public String getDeviceDetail(@PathVariable("id") int id, Model model) {
         Device device = this.DeviceService.getDeviceById(id);
-        List<RepairCost> repairCosts = this.DeviceService.getRepairType(id);
+        List<RepairCost> repairCosts = this.DeviceService.getRepairTypeByDeviceId(id);
         List<RepairType> repairTypes = this.repairTypeService.getRepairType(); // ví dụ
 
         model.addAttribute("device", device);
@@ -88,10 +88,22 @@ public class IndexController {
     public String updateRepairCost(@ModelAttribute RepairCost repairCost,
             @PathVariable("id") int deviceId) {
         Device device = DeviceService.getDeviceById(deviceId);
-        repairCost.setDeviceId(device); 
+        repairCost.setDeviceId(device);
 
-         this.DeviceService.addOrUpdateRepairCost(repairCost);
+        this.DeviceService.addOrUpdateRepairCost(repairCost);
         return "redirect:/admin/devices/" + deviceId;
     }
 
+    @GetMapping("/admin/devices/{id}/delete")
+    public String deleteDevice(@PathVariable("id") Integer id) {
+        DeviceService.deleteDevice(id);
+        return "redirect:/admin/devices-manager";
+    }
+
+    @GetMapping("/admin/devices/{deviceId}/repaircost/{repairCostId}/delete")
+    public String deleteRepairCost(@PathVariable("deviceId") Integer deviceId,
+            @PathVariable("repairCostId") Integer repairCostId) {
+        DeviceService.deleteRepairCost(repairCostId);
+        return "redirect:/admin/devices/" + deviceId;
+    }
 }

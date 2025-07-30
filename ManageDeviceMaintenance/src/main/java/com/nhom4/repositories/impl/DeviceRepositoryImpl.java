@@ -4,27 +4,31 @@
  */
 package com.nhom4.repositories.impl;
 
-import com.nhom4.pojo.Device;
-import com.nhom4.pojo.MaintenanceSchedule;
-import com.nhom4.pojo.RepairCost;
-import com.nhom4.repositories.DeviceRepository;
-import com.nhom4.repositories.MaintenanceScheduleRepository;
-import com.nhom4.repositories.UserRepository;
-import jakarta.persistence.Query;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.nhom4.pojo.Device;
+import com.nhom4.pojo.MaintenanceSchedule;
+import com.nhom4.pojo.RentedDevice;
+import com.nhom4.pojo.RepairCost;
+import com.nhom4.repositories.DeviceRepository;
+import com.nhom4.repositories.MaintenanceScheduleRepository;
+import com.nhom4.repositories.UserRepository;
+
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 /**
  *
@@ -89,8 +93,10 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     @Override
     public Device getDeviceById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
-
-        return s.get(Device.class, id);
+        Device device=    s.get(Device.class, id);
+        device.getRepairCostSet().size();
+        device.getLocationSet().size();
+        return device;
     }
 
     @Override
@@ -155,42 +161,7 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     }
 
     @Override
-    public void updateRepairType(int id, Map<String, String> params) {
-//        Session session = this.factory.getObject().getCurrentSession();
-//
-//        CriteriaBuilder cb = session.getCriteriaBuilder();
-//        CriteriaQuery<RepairCost> cq = cb.createQuery(RepairCost.class);
-//        Root<RepairCost> root = cq.from(RepairCost.class);
-//
-//        // JOIN device và repairType
-//        root.fetch("device");
-//        root.fetch("repairType");
-//
-//        // WHERE device.id = :id
-//        cq.select(root).where(cb.equal(root.get("device").get("id"), id));
-//
-//        List<RepairCost> repairCosts = session.createQuery(cq).getResultList();
-//
-//        for (RepairCost rc : repairCosts) {
-//            int repairTypeId = rc.getRepairTypeId().getId();
-//
-//            if (params.containsKey(String.valueOf(repairTypeId))) {
-//                String priceStr = params.get(String.valueOf(repairTypeId));
-//
-//                try {
-//                    Integer newPrice = new Integer(priceStr);
-//                    rc.setPrice(newPrice);  // Cập nhật giá
-//
-//                    session.persist(rc);     // Cập nhật vào DB
-//                } catch (NumberFormatException e) {
-//                    System.err.printf("Invalid price for repairTypeId %d: %s\n", repairTypeId, priceStr);
-//                }
-//            }
-//        }
-    }
-
-    @Override
-    public List<RepairCost> getRepairType(int id) {
+    public List<RepairCost> getRepairTypeByDeviceId(int id) {
         Session session = this.factory.getObject().getCurrentSession();
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -216,6 +187,48 @@ public class DeviceRepositoryImpl implements DeviceRepository {
             System.err.println("❌ Lỗi khi lưu RepairCost: " + e.getMessage());
         }
         return repairCost;
+    }
+
+    @Override
+    public void deleteRepairCost(int repairId) {
+        Session s = this.factory.getObject().getCurrentSession();
+
+        RepairCost d = this.getRepairCostById(repairId);
+
+        s.remove(d);
+
+    }
+
+    @Override
+    public RepairCost getRepairCostById(int repairCostId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(RepairCost.class, repairCostId);
+
+    }
+
+    @Override
+    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice) {
+        Session s = this.factory.getObject().getCurrentSession();
+
+        Device device = s.get(Device.class, deviceId);
+        System.out.print(device);
+        
+        if (device != null && "active".equals(device.getStatusDevice())) {
+
+            rentedDevice.setDeviceId(device);
+
+            // Lưu thuê thiết bị
+            s.persist(rentedDevice);
+
+            // Cập nhật trạng thái thiết bị nếu muốn, ví dụ thành "rented"
+            device.setStatusDevice("rented");
+            s.merge(device);
+            
+            return rentedDevice;
+        } else {
+            throw new IllegalArgumentException("Thiết bị không tồn tại hoặc không ở trạng thái 'active'");
+        }
+
     }
 
 }
