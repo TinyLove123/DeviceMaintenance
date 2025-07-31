@@ -64,30 +64,19 @@ public class ApiDevice {
 
     
     @GetMapping("/devices/{deviceId}")
-    public ResponseEntity<DeviceDTO> retrieve(@PathVariable(value = "deviceId") int id) {
-        return new ResponseEntity<>(this.deviceService.getDeviceDIOById(id),HttpStatus.OK);
+    public ResponseEntity<Device> retrieve(@PathVariable(value = "deviceId") int id) {
+        return new ResponseEntity<>(this.deviceService.getDeviceById(id),HttpStatus.OK);
     }
 
-    @PostMapping("/secure/devices/{id}/rented-device")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RentedDevice> addRenedDevice(@PathVariable("id") int deviceId,
-            @RequestBody RentedDevice rented,Principal principal){
-        String username = principal.getName();
-        User user = this.userService.getUserByUsername(username);
-        rented.setCustomerId(user);
-//            Location loc) {
-        RentedDevice rentedSave = deviceService.addRentedDevice(deviceId, rented);
-        
-        return new ResponseEntity<>(rentedSave, HttpStatus.CREATED);
-    }
     
-    @PostMapping("/secure/rented-device/{id}/add-report")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Incident> addIncident(@PathVariable("id") int deviceId,
-            @RequestBody Incident incident){
-        Incident incidentSave = incidentService.addOrUpdateIncident(incident, deviceId);
-         return new ResponseEntity<>(incidentSave, HttpStatus.CREATED);
-        
-    }
+    
+//    @PostMapping("/secure/rented-device/{id}/add-report")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity<Incident> addIncident(@PathVariable("id") int deviceId,
+//            @RequestBody Incident incident){
+//        Incident incidentSave = incidentService.addOrUpdateIncident(incident, deviceId);
+//         return new ResponseEntity<>(incidentSave, HttpStatus.CREATED);
+//        
+//    }
     
 }

@@ -27,6 +27,7 @@ import com.nhom4.repositories.UserRepository;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
@@ -93,23 +94,28 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     @Override
     public Device getDeviceById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
-        Device device=    s.get(Device.class, id);
-        device.getRepairCostSet().size();
-        device.getLocationSet().size();
-        return device;
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+        CriteriaQuery<Device> cq = cb.createQuery(Device.class);
+        Root<Device> root = cq.from(Device.class);
+
+        root.fetch("repairCostSet", JoinType.LEFT);
+        root.fetch("locationSet", JoinType.LEFT);
+
+        cq.select(root).where(cb.equal(root.get("id"), id)).distinct(true);
+
+        return s.createQuery(cq).uniqueResult();
     }
 
     @Override
     public Device addOrUpdateDevice(Device d) {
         Session s = this.factory.getObject().getCurrentSession();
         if (d.getId() == null) {
-            
-     
+
             MaintenanceSchedule ms = new MaintenanceSchedule();
             ms.setDeviceId(d);
             d.getFrequency();
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DATE,d.getFrequency());
+            cal.add(Calendar.DATE, d.getFrequency());
             Date calulatedDate = cal.getTime();
             ms.setStartDate(calulatedDate);
             ms.setDeviceId(d);
@@ -203,31 +209,6 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     public RepairCost getRepairCostById(int repairCostId) {
         Session s = this.factory.getObject().getCurrentSession();
         return s.get(RepairCost.class, repairCostId);
-
-    }
-
-    @Override
-    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice) {
-        Session s = this.factory.getObject().getCurrentSession();
-
-        Device device = s.get(Device.class, deviceId);
-        System.out.print(device);
-        
-        if (device != null && "active".equals(device.getStatusDevice())) {
-
-            rentedDevice.setDeviceId(device);
-
-            // Lưu thuê thiết bị
-            s.persist(rentedDevice);
-
-            // Cập nhật trạng thái thiết bị nếu muốn, ví dụ thành "rented"
-            device.setStatusDevice("rented");
-            s.merge(device);
-            
-            return rentedDevice;
-        } else {
-            throw new IllegalArgumentException("Thiết bị không tồn tại hoặc không ở trạng thái 'active'");
-        }
 
     }
 

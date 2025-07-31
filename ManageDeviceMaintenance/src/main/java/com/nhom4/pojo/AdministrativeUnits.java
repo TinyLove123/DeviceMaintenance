@@ -35,12 +35,6 @@ import java.util.Set;
     @NamedQuery(name = "AdministrativeUnits.findByCodeNameEn", query = "SELECT a FROM AdministrativeUnits a WHERE a.codeNameEn = :codeNameEn")})
 public class AdministrativeUnits implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "id")
-    private Integer id;
     @Size(max = 255)
     @Column(name = "full_name")
     private String fullName;
@@ -59,6 +53,13 @@ public class AdministrativeUnits implements Serializable {
     @Size(max = 255)
     @Column(name = "code_name_en")
     private String codeNameEn;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id")
+    private Integer id;
     @JsonIgnore
     @OneToMany(mappedBy = "administrativeUnitId")
     private Set<Provinces> provincesSet;
@@ -169,5 +170,6 @@ public class AdministrativeUnits implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.AdministrativeUnits[ id=" + id + " ]";
     }
+
     
 }

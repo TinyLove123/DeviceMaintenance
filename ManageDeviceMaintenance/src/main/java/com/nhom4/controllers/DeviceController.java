@@ -52,6 +52,7 @@ public class DeviceController {
     public String listDevices(Model model,
             @RequestParam Map<String, String> params) {
         model.addAttribute("devices", deviceService.getDevice(params));
+        System.out.print(deviceService.getDevice(params));
         model.addAttribute("categories", categoryService.getCates());
 
         return "deviceManage";

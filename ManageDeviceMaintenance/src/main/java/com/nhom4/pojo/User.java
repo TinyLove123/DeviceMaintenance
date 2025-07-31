@@ -46,12 +46,6 @@ import java.util.Set;
     @NamedQuery(name = "User.findByAvatar", query = "SELECT u FROM User u WHERE u.avatar = :avatar")})
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -70,17 +64,12 @@ public class User implements Serializable {
     @Size(max = 20)
     @Column(name = "phone")
     private String phone;
-    @Column(name = "join_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date joinDate;
     @Size(max = 10)
     @Column(name = "sex")
     private String sex;
     @Size(max = 15)
     @Column(name = "user_role")
     private String userRole;
-    @Column(name = "is_del")
-    private Boolean isDel;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
@@ -94,22 +83,34 @@ public class User implements Serializable {
     @Size(max = 200)
     @Column(name = "avatar")
     private String avatar;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Column(name = "join_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date joinDate;
+    @Column(name = "is_del")
+    private Boolean isDel;
     @JsonIgnore
     @OneToMany(mappedBy = "employeeId")
     private Set<Repair> repairSet;
-    
+
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
     private Set<RepairSchedule> repairScheduleSet;
-    
+
     @JsonIgnore
     @OneToMany(mappedBy = "employeeId")
     private Set<MaintenanceSchedule> maintenanceScheduleSet;
-    
+
     @JsonIgnore
     @OneToMany(mappedBy = "customerId")
     private Set<RentedDevice> rentedDeviceSet;
-    
+
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderId")
     private Set<Incident> incidentSet;
@@ -153,36 +154,12 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public Date getJoinDate() {
         return joinDate;
     }
 
     public void setJoinDate(Date joinDate) {
         this.joinDate = joinDate;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
     }
 
     public String getUserRole() {
@@ -199,30 +176,6 @@ public class User implements Serializable {
 
     public void setIsDel(Boolean isDel) {
         this.isDel = isDel;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
     public Set<Repair> getRepairSet() {
@@ -289,5 +242,53 @@ public class User implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.User[ id=" + id + " ]";
     }
-    
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
 }

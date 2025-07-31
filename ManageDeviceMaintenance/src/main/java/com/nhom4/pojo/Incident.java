@@ -4,6 +4,7 @@
  */
 package com.nhom4.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -62,6 +63,7 @@ public class Incident implements Serializable {
     private Set<Repair> repairSet;
     @OneToMany(mappedBy = "incidentId")
     private Set<RepairSchedule> repairScheduleSet;
+    @JsonIgnore
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
     private Device deviceId;

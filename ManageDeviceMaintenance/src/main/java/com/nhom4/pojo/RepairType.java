@@ -4,6 +4,7 @@
  */
 package com.nhom4.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -43,6 +44,7 @@ public class RepairType implements Serializable {
     @Size(min = 1, max = 40)
     @Column(name = "type")
     private String type;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "repairTypeId")
     private Set<RepairCost> repairCostSet;
 

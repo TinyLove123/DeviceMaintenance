@@ -37,6 +37,10 @@ import java.util.Set;
     @NamedQuery(name = "Location.findByIsCurrentLocation", query = "SELECT l FROM Location l WHERE l.isCurrentLocation = :isCurrentLocation")})
 public class Location implements Serializable {
 
+    @Size(max = 30)
+    @Column(name = "address")
+    private String address;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,9 +50,6 @@ public class Location implements Serializable {
     @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdate;
-    @Size(max = 30)
-    @Column(name = "address")
-    private String address;
     @Column(name = "is_current_location")
     private Boolean isCurrentLocation;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
@@ -88,13 +89,6 @@ public class Location implements Serializable {
         this.lastUpdate = lastUpdate;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public Boolean getIsCurrentLocation() {
         return isCurrentLocation;
@@ -167,6 +161,14 @@ public class Location implements Serializable {
     @Override
     public String toString() {
         return "com.nhom4.pojo.Location[ id=" + id + " ]";
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
     
 }

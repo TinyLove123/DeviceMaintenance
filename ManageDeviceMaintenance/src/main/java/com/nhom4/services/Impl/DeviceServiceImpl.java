@@ -117,10 +117,7 @@ public class DeviceServiceImpl implements DeviceService {
         this.deviceRepository.deleteRepairCost(repairId);
     }
 
-    @Override
-    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice) {
-        return this.deviceRepository.addRentedDevice(deviceId, rentedDevice);
-    }
+    
 
     
     

@@ -4,7 +4,11 @@
  */
 package com.nhom4.controllers;
 
+import com.nhom4.services.RepairScheduleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  *
@@ -12,6 +16,11 @@ import org.springframework.stereotype.Controller;
  */
 
 @Controller
+@RequestMapping("/admin")
 public class ScheduleRepairController {
+//    @Autowired
+//    private RepairScheduleService repairScheduleSer;
+    
+//    @GetMapping("/repair-schedule")
     
 }

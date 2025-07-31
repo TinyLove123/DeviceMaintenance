@@ -36,7 +36,7 @@ public interface DeviceService {
 
     void deleteRepairCost(int repairId);
     
-    RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice);
+    
     
     public List<DeviceDTO> getDeviceDTO(Map<String, String> params);
 
