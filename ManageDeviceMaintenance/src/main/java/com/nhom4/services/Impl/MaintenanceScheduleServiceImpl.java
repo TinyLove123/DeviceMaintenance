@@ -28,8 +28,8 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
     }
 
     @Override
-    public MaintenanceSchedule addMaintenanceSchedule(MaintenanceSchedule m) {
-       return this.maintenanceScheduleRepo.addMaintenanceSchedule(m);
+    public MaintenanceSchedule addOrUpdateMaintenanceSchedule(MaintenanceSchedule m) {
+       return this.maintenanceScheduleRepo.addOrUpdateMaintenanceSchedule(m);
     }
 
     @Override
@@ -38,8 +38,8 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
     }
 
     @Override
-    public MaintenanceSchedule getDeviceById(int id) {
-        return this.maintenanceScheduleRepo.getDeviceById(id);
+    public MaintenanceSchedule getMaintenanceScheduleById(int id) {
+        return this.maintenanceScheduleRepo.getMaintenanceScheduleById(id);
     }
     
 }

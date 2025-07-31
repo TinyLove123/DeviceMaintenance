@@ -6,6 +6,7 @@ package com.nhom4.repositories;
 
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.MaintenanceSchedule;
+import com.nhom4.pojo.User;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +17,10 @@ import java.util.Map;
 public interface MaintenanceScheduleRepository {
     List<MaintenanceSchedule> getMaintenanceSchedules(Map<String,String> params);
     
-    MaintenanceSchedule getDeviceById(int id);
-    MaintenanceSchedule addMaintenanceSchedule(MaintenanceSchedule m);
+    MaintenanceSchedule getMaintenanceScheduleById(int id);
+    MaintenanceSchedule addOrUpdateMaintenanceSchedule(MaintenanceSchedule m);
     MaintenanceSchedule autoUpdateMaintenanceSchedule();
     MaintenanceSchedule autoAddMaintenanceSchedule(MaintenanceSchedule m);
+    MaintenanceSchedule setEmployee(User u);
+
 }

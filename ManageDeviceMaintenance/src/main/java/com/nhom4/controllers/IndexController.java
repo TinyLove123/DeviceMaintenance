@@ -4,21 +4,14 @@
  */
 package com.nhom4.controllers;
 
-import com.mysql.cj.conf.PropertyKey;
-import static com.mysql.cj.conf.PropertyKey.logger;
-import com.nhom4.pojo.AdministrativeUnits;
-import com.nhom4.pojo.Category;
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.RepairCost;
 import com.nhom4.pojo.RepairType;
 import com.nhom4.services.CategoryService;
 import com.nhom4.services.DeviceService;
 import com.nhom4.services.RepairTypeService;
-import jakarta.persistence.Query;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Controller;

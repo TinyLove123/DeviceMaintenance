@@ -6,6 +6,7 @@ package com.nhom4.repositories.impl;
 
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.MaintenanceSchedule;
+import com.nhom4.pojo.User;
 import com.nhom4.repositories.MaintenanceScheduleRepository;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -75,7 +76,7 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
     }
 
     @Override
-    public MaintenanceSchedule addMaintenanceSchedule(MaintenanceSchedule m) {
+    public MaintenanceSchedule addOrUpdateMaintenanceSchedule(MaintenanceSchedule m) {
         Session s = this.factory.getObject().getCurrentSession();
         if (m.getId() == null) {
             s.persist(m);
@@ -96,10 +97,16 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
     }
 
     @Override
-    public MaintenanceSchedule getDeviceById(int id) {
+    public MaintenanceSchedule getMaintenanceScheduleById(int id) {
          Session s = this.factory.getObject().getCurrentSession();
 
         return s.get(MaintenanceSchedule.class, id);
+    }
+
+    @Override
+    public MaintenanceSchedule setEmployee(User u) {
+        Session s=this.factory.getObject().getCurrentSession();
+        return null;
     }
     
 }

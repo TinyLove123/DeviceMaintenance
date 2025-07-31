@@ -78,4 +78,13 @@ public class UserRepositoryImpl implements UserRepository {
         q.select(root).where(b.equal(root.get("isDel"), false));
         return s.createQuery(q).getResultList();
     }
+
+    @Override
+    public User getUserById(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Query q = s.createNamedQuery("User.findById", User.class);
+        q.setParameter("id", id);
+
+        return (User) q.getSingleResult();
+    }
 }
