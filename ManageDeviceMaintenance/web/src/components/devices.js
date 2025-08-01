@@ -21,8 +21,6 @@ const Devices = () => {
         loadDevices();
     }, []);
 
-    
-
     return (
         <>
             <Row>
