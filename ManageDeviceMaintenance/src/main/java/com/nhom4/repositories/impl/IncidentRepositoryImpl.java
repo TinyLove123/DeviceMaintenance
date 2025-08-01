@@ -56,12 +56,9 @@ public class IncidentRepositoryImpl implements IncidentRepository {
         Device device = s.get(Device.class, deviceId);
         incident.setDeviceId(device);
         incident.setSenderId(user);
-        
+
         if (incident.getId() == null) {
-             incident.setStatus("PENDING_APPROVAL");
             s.persist(incident);
-           
-            
         } else {
             s.merge(incident);
         }

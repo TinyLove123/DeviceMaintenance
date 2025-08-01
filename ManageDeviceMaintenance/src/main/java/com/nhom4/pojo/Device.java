@@ -25,7 +25,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -82,7 +81,7 @@ public class Device implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price")
     private Double price;
-
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deviceId")
     private Set<RepairCost> repairCostSet;
     @JsonIgnore
@@ -97,9 +96,8 @@ public class Device implements Serializable {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Category categoryId;
-
-    @OneToOne
     @JoinColumn(name = "current_location_id", referencedColumnName = "id")
+    @ManyToOne
     private Location currentLocationId;
     @JsonIgnore
     @OneToMany(mappedBy = "deviceId")
@@ -145,6 +143,7 @@ public class Device implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
+
     public String getStatusDevice() {
         return statusDevice;
     }
@@ -160,6 +159,7 @@ public class Device implements Serializable {
     public void setFrequency(Integer frequency) {
         this.frequency = frequency;
     }
+
 
     public Double getPrice() {
         return price;
@@ -264,6 +264,8 @@ public class Device implements Serializable {
         this.file = file;
     }
 
+    
+
     public String getManufacturer() {
         return manufacturer;
     }
@@ -272,6 +274,8 @@ public class Device implements Serializable {
         this.manufacturer = manufacturer;
     }
 
+    
+
     public String getImage() {
         return image;
     }
@@ -279,5 +283,5 @@ public class Device implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
-
+    
 }
