@@ -10,6 +10,12 @@ export const endpoints={
     'devices':'/devices',
     'register': '/users',
     'profile':'/secure/profile',
+    'rented_devices':'/secure/rented_devices',
+    'maintenance_schedule':'/secure/maintenance_schedule',
+    'repair_schedule':'/secure/repair_schedule',
+    'deviceDetail':'/deviceDetail',
+    'deviceDetail': (id) => `/devices/${id}`
+
 }
 
 export const authApis = () => axios.create({

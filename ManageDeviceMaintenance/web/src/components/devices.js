@@ -17,6 +17,8 @@ const Devices = () => {
         loadDevices();
     }, []);
 
+    
+
     return (
         <>
             <Row>
@@ -26,7 +28,7 @@ const Devices = () => {
                         <Card.Body>
                             <Card.Title>{d.nameDevice}</Card.Title>
                             <Card.Text>{d.price} VNĐ</Card.Text>
-                            <Button variant="primary me-1">Xem chi tiết</Button>
+                            <Button variant="primary me-1" >Xem chi tiết</Button>
 
                         </Card.Body>
                     </Card>
