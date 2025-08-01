@@ -7,7 +7,9 @@ package com.nhom4.controllers;
 import com.nhom4.configs.CustomSecurityException;
 import com.nhom4.dto.DeviceDTO;
 import com.nhom4.dto.RentedDeviceDTO;
+import com.nhom4.dto.RentedDeviceRequest;
 import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.User;
 import com.nhom4.services.DeviceService;
@@ -53,16 +55,21 @@ public class ApiPersionalRentedDevice {
     private IncidentService incidentService;
 
     @PostMapping("/secure/devices/{id}/rented-device")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RentedDevice> addRenedDevice(@PathVariable("id") int deviceId,
-            @RequestBody RentedDevice rented, Principal principal) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> addRenedDevice(@PathVariable("id") int deviceId,
+            @RequestBody RentedDeviceRequest request,
+            Principal principal) {
         String username = principal.getName();
         User user = this.userService.getUserByUsername(username);
+        RentedDevice rented = request.getRentedDevice();
         rented.setCustomerId(user);
-//            Location loc) {
-        RentedDevice rentedSave = rentedDeviceService.addRentedDevice(deviceId, rented);
 
-        return new ResponseEntity<>(rentedSave, HttpStatus.CREATED);
+        Location location = request.getLocation();
+        rentedDeviceService.addRentedDevice(deviceId, rented, location);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body("{\"error\": \"" + "Tạo phiếu mượn thành công" + "\"}");
     }
 
     @GetMapping("/secure/my-rented-devices")
@@ -114,7 +121,7 @@ public class ApiPersionalRentedDevice {
                     .body(Map.of("error", "Không tìm thấy thiết bị"));
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
-                    .body(Map.of("error", "Lỗi hệ thống"));
+                    .body(Map.of("error", e));
         }
     }
 }

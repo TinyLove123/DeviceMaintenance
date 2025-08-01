@@ -39,12 +39,6 @@ import java.util.Set;
     @NamedQuery(name = "Incident.findByReportDate", query = "SELECT i FROM Incident i WHERE i.reportDate = :reportDate")})
 public class Incident implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -56,6 +50,24 @@ public class Incident implements Serializable {
     @Size(min = 1, max = 65535)
     @Column(name = "detail_describe")
     private String detailDescribe;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 16)
+    @Column(name = "status")
+    private String status;
+    @Column(name = "approval_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date approvalDate;
+    @JoinColumn(name = "approved_by", referencedColumnName = "id")
+    @ManyToOne
+    private User approvedBy;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @Column(name = "report_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date reportDate;
@@ -92,13 +104,6 @@ public class Incident implements Serializable {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getDetailDescribe() {
         return detailDescribe;
@@ -171,6 +176,40 @@ public class Incident implements Serializable {
     @Override
     public String toString() {
         return "com.nhom4.pojo.Incident[ id=" + id + " ]";
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getApprovalDate() {
+        return approvalDate;
+    }
+
+    public void setApprovalDate(Date approvalDate) {
+        this.approvalDate = approvalDate;
+    }
+
+    public User getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(User approvedBy) {
+        this.approvedBy = approvedBy;
     }
     
 }

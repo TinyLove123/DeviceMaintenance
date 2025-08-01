@@ -17,10 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin")
-public class ScheduleRepairController {
+public class RepairScheduleController {
 //    @Autowired
 //    private RepairScheduleService repairScheduleSer;
-    
+//    
 //    @GetMapping("/repair-schedule")
+//    public String addRepairSchedule(){
+//     
+//        
+//        
+//    }
     
 }
