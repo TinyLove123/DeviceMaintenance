@@ -6,10 +6,13 @@ package com.nhom4.repositories.impl;
 
 import com.nhom4.dto.RentedDeviceDTO;
 import com.nhom4.pojo.Device;
+import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.RepairCost;
 import com.nhom4.pojo.User;
+import com.nhom4.repositories.LocationRepository;
 import com.nhom4.repositories.RentedDeviceRepository;
+import com.nhom4.services.LocationService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Fetch;
@@ -34,28 +37,42 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
     @Autowired
     private LocalSessionFactoryBean factory;
 
+    @Autowired
+    private LocationRepository locRepo;
+
     @Override
-    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice) {
+    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice, Location location) {
         Session s = this.factory.getObject().getCurrentSession();
 
         Device device = s.get(Device.class, deviceId);
+        if (device == null) {
+            throw new IllegalArgumentException("Thiết bị không tồn tại!");
+        }
 
-        if (device != null && "active".equals(device.getStatusDevice())) {
+        this.locRepo.addLocation(deviceId, location);
+
+        device.setCurrentLocationId(location);
+        s.merge(device);
+
+        if (rentedDevice.getId() == null) {
+            
+            if (!"active".equalsIgnoreCase(device.getStatusDevice())) {
+                throw new IllegalArgumentException("Thiết bị không ở trạng thái 'active'!");
+            }
 
             rentedDevice.setDeviceId(device);
             rentedDevice.setIsRented(Boolean.TRUE);
 
             s.persist(rentedDevice);
 
-            // Cập nhật trạng thái thiết bị nếu muốn, ví dụ thành "rented"
             device.setStatusDevice("rented");
-            s.merge(device);
+            s.merge(device); 
 
             return rentedDevice;
         } else {
-            throw new IllegalArgumentException("Thiết bị không tồn tại hoặc không ở trạng thái 'active'");
+            
+            return s.merge(rentedDevice);
         }
-
     }
 
     @Override
@@ -87,7 +104,7 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
 
         Fetch<RentedDevice, Device> deviceFetch = root.fetch("deviceId", JoinType.LEFT);
         Fetch<Device, RepairCost> repairCostFetch = deviceFetch.fetch("repairCostSet", JoinType.LEFT);
-        repairCostFetch.fetch("repairTypeId", JoinType.LEFT); 
+        repairCostFetch.fetch("repairTypeId", JoinType.LEFT);
 
         cq.select(root)
                 .where(
@@ -99,6 +116,7 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
 
         return s.createQuery(cq).uniqueResult();
     }
+
     @Override
     public boolean checkDeviceOwnership(int deviceId, int userId) {
         Session s = this.factory.getObject().getCurrentSession();
@@ -113,7 +131,7 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
                                 cb.equal(root.get("isRented"), true)
                         ));
         Long count = s.createQuery(cq).uniqueResult();
-        return count!=null&&count>0;
+        return count != null && count > 0;
 
     }
 
