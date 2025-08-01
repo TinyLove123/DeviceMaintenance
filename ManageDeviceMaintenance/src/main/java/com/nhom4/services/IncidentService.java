@@ -5,6 +5,7 @@
 package com.nhom4.services;
 
 import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.User;
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +19,12 @@ public interface IncidentService {
 
     Incident getIncidentById(int id);
 
-    Incident addOrUpdateIncident(Incident I, int DeviceId);
+    Incident addOrUpdateIncident(Incident I, int DeviceId, User user);
 
     void deleteIncident(int id);
 
     List<Incident> GetIncidentByDeviceId(int deviceId);
 
     Incident getNewIncident(int DeviceId);
+  
 }

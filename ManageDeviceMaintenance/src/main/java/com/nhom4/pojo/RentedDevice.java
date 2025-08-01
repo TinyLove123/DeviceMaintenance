@@ -31,7 +31,8 @@ import java.util.Date;
     @NamedQuery(name = "RentedDevice.findAll", query = "SELECT r FROM RentedDevice r"),
     @NamedQuery(name = "RentedDevice.findById", query = "SELECT r FROM RentedDevice r WHERE r.id = :id"),
     @NamedQuery(name = "RentedDevice.findByStartDate", query = "SELECT r FROM RentedDevice r WHERE r.startDate = :startDate"),
-    @NamedQuery(name = "RentedDevice.findByEndDate", query = "SELECT r FROM RentedDevice r WHERE r.endDate = :endDate")})
+    @NamedQuery(name = "RentedDevice.findByEndDate", query = "SELECT r FROM RentedDevice r WHERE r.endDate = :endDate"),
+    @NamedQuery(name = "RentedDevice.findByIsRented", query = "SELECT r FROM RentedDevice r WHERE r.isRented = :isRented")})
 public class RentedDevice implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,6 +49,8 @@ public class RentedDevice implements Serializable {
     @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
+    @Column(name = "is_rented")
+    private Boolean isRented;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Device deviceId;
@@ -89,6 +92,14 @@ public class RentedDevice implements Serializable {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Boolean getIsRented() {
+        return isRented;
+    }
+
+    public void setIsRented(Boolean isRented) {
+        this.isRented = isRented;
     }
 
     public Device getDeviceId() {

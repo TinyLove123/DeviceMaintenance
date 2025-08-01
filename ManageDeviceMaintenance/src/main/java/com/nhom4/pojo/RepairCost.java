@@ -4,6 +4,7 @@
  */
 package com.nhom4.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,8 +43,10 @@ public class RepairCost implements Serializable {
     @NotNull
     @Column(name = "price")
     private int price;
+    @JsonIgnore
     @OneToMany(mappedBy = "repairCostId")
     private Set<RepairDetail> repairDetailSet;
+    @JsonIgnore
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Device deviceId;

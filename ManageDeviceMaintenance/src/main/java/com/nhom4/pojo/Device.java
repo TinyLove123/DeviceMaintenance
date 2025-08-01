@@ -11,6 +11,7 @@ import java.util.Set;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
@@ -49,20 +50,11 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Device.findByPrice", query = "SELECT d FROM Device d WHERE d.price = :price")})
 public class Device implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "name_device")
     private String nameDevice;
-    @Column(name = "purchase_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date purchaseDate;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
@@ -71,15 +63,25 @@ public class Device implements Serializable {
     @Size(max = 20)
     @Column(name = "status_device")
     private String statusDevice;
-    @Column(name = "frequency")
-    private Integer frequency;
     @Size(max = 200)
     @Column(name = "image")
     private String image;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Column(name = "purchase_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date purchaseDate;
+    @Column(name = "frequency")
+    private Integer frequency;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price")
     private Double price;
-    @JsonIgnore
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deviceId")
     private Set<RepairCost> repairCostSet;
     @JsonIgnore
@@ -94,6 +96,7 @@ public class Device implements Serializable {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Category categoryId;
+    
     @JoinColumn(name = "current_location_id", referencedColumnName = "id")
     @ManyToOne
     private Location currentLocationId;
@@ -141,13 +144,6 @@ public class Device implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
 
     public String getStatusDevice() {
         return statusDevice;
@@ -165,13 +161,6 @@ public class Device implements Serializable {
         this.frequency = frequency;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     public Double getPrice() {
         return price;
@@ -274,6 +263,26 @@ public class Device implements Serializable {
      */
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
     
 }

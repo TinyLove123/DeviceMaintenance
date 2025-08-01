@@ -5,6 +5,7 @@
 package com.nhom4.services.Impl;
 
 import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.User;
 import com.nhom4.repositories.IncidentRepository;
 import com.nhom4.services.IncidentService;
 import java.util.List;
@@ -31,12 +32,12 @@ public class IncidentServiceImpl implements IncidentService{
 
     @Override
     public Incident getIncidentById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.incidentRepo.getIncidentById(id);
     }
 
     @Override
-    public Incident addOrUpdateIncident(Incident I, int DeviceId) {
-        return this.incidentRepo.addOrUpdateIncident(I,DeviceId);
+    public Incident addOrUpdateIncident(Incident I, int DeviceId,User user) {
+        return this.incidentRepo.addOrUpdateIncident(I,DeviceId,user);
     }
 
     @Override
@@ -54,6 +55,9 @@ public class IncidentServiceImpl implements IncidentService{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    
+    
+    
    
 
    

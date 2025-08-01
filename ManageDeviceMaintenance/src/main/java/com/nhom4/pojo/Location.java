@@ -4,6 +4,7 @@
  */
 package com.nhom4.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -51,19 +53,18 @@ public class Location implements Serializable {
     private String address;
     @Column(name = "is_current_location")
     private Boolean isCurrentLocation;
+    @JsonIgnore
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
     private Device deviceId;
-    @OneToMany(mappedBy = "lastLocationId")
-    private Set<Location> locationSet;
+    @JsonIgnore
     @JoinColumn(name = "last_location_id", referencedColumnName = "id")
-    @ManyToOne
+    @OneToOne
     private Location lastLocationId;
     @JoinColumn(name = "ward_id", referencedColumnName = "code")
     @ManyToOne
     private Wards wardId;
-    @OneToMany(mappedBy = "currentLocationId")
-    private Set<Device> deviceSet;
+
 
     public Location() {
     }
@@ -112,13 +113,7 @@ public class Location implements Serializable {
         this.deviceId = deviceId;
     }
 
-    public Set<Location> getLocationSet() {
-        return locationSet;
-    }
-
-    public void setLocationSet(Set<Location> locationSet) {
-        this.locationSet = locationSet;
-    }
+    
 
     public Location getLastLocationId() {
         return lastLocationId;
@@ -136,13 +131,7 @@ public class Location implements Serializable {
         this.wardId = wardId;
     }
 
-    public Set<Device> getDeviceSet() {
-        return deviceSet;
-    }
-
-    public void setDeviceSet(Set<Device> deviceSet) {
-        this.deviceSet = deviceSet;
-    }
+  
 
     @Override
     public int hashCode() {

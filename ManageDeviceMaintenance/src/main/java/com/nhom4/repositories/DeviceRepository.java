@@ -24,6 +24,7 @@ public interface DeviceRepository {
     RepairCost addOrUpdateRepairCost(RepairCost repairCost);
     RepairCost getRepairCostById(int repairCostId);
     void deleteRepairCost(int repairId);
-    RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice);
+    
+    
 
 }

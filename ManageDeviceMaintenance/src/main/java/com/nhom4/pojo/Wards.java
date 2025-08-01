@@ -36,13 +36,6 @@ import java.util.Set;
     @NamedQuery(name = "Wards.findByCodeName", query = "SELECT w FROM Wards w WHERE w.codeName = :codeName")})
 public class Wards implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "code")
-    private String code;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -60,6 +53,14 @@ public class Wards implements Serializable {
     @Size(max = 255)
     @Column(name = "code_name")
     private String codeName;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "code")
+    private String code;
     @JoinColumn(name = "administrative_unit_id", referencedColumnName = "id")
     @ManyToOne
     private AdministrativeUnits administrativeUnitId;
@@ -90,13 +91,6 @@ public class Wards implements Serializable {
         this.code = code;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getNameEn() {
         return nameEn;
@@ -178,5 +172,14 @@ public class Wards implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.Wards[ code=" + code + " ]";
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     
 }
