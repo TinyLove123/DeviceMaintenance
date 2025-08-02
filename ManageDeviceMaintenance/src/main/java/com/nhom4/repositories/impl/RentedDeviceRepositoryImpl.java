@@ -4,24 +4,27 @@
  */
 package com.nhom4.repositories.impl;
 
+import java.util.List;
+
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.nhom4.dto.RentedDeviceDTO;
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.RepairCost;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.RentedDeviceRepository;
+
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Fetch;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
-import java.util.List;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -115,8 +118,8 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
                                 cb.equal(root.get("isRented"), true)
                         ));
         Long count = s.createQuery(cq).uniqueResult();
-        return count!=null&&count>0;
-
+        return count != null && count > 0;
+        
     }
 
 }

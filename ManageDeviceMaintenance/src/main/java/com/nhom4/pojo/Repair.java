@@ -14,7 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -22,7 +21,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 /**
  *
@@ -54,14 +52,9 @@ public class Repair implements Serializable {
     @JoinColumn(name = "incident_id", referencedColumnName = "id")
     @ManyToOne
     private Incident incidentId;
-    @JoinColumn(name = "repair_schedule_id", referencedColumnName = "id")
-    @ManyToOne
-    private RepairSchedule repairScheduleId;
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @ManyToOne
     private User employeeId;
-    @OneToMany(mappedBy = "repairId")
-    private Set<RepairDetail> repairDetailSet;
 
     public Repair() {
     }
@@ -107,28 +100,12 @@ public class Repair implements Serializable {
         this.incidentId = incidentId;
     }
 
-    public RepairSchedule getRepairScheduleId() {
-        return repairScheduleId;
-    }
-
-    public void setRepairScheduleId(RepairSchedule repairScheduleId) {
-        this.repairScheduleId = repairScheduleId;
-    }
-
     public User getEmployeeId() {
         return employeeId;
     }
 
     public void setEmployeeId(User employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public Set<RepairDetail> getRepairDetailSet() {
-        return repairDetailSet;
-    }
-
-    public void setRepairDetailSet(Set<RepairDetail> repairDetailSet) {
-        this.repairDetailSet = repairDetailSet;
     }
 
     @Override

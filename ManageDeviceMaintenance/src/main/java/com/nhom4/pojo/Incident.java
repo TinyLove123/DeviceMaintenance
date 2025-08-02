@@ -4,7 +4,10 @@
  */
 package com.nhom4.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,9 +25,6 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
 
 /**
  *
@@ -36,7 +36,9 @@ import java.util.Set;
     @NamedQuery(name = "Incident.findAll", query = "SELECT i FROM Incident i"),
     @NamedQuery(name = "Incident.findById", query = "SELECT i FROM Incident i WHERE i.id = :id"),
     @NamedQuery(name = "Incident.findByTitle", query = "SELECT i FROM Incident i WHERE i.title = :title"),
-    @NamedQuery(name = "Incident.findByReportDate", query = "SELECT i FROM Incident i WHERE i.reportDate = :reportDate")})
+    @NamedQuery(name = "Incident.findByReportDate", query = "SELECT i FROM Incident i WHERE i.reportDate = :reportDate"),
+    @NamedQuery(name = "Incident.findByStatus", query = "SELECT i FROM Incident i WHERE i.status = :status"),
+    @NamedQuery(name = "Incident.findByApprovalDate", query = "SELECT i FROM Incident i WHERE i.approvalDate = :approvalDate")})
 public class Incident implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,14 +61,25 @@ public class Incident implements Serializable {
     @Column(name = "report_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date reportDate;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 16)
+    @Column(name = "status")
+    private String status;
+    @Column(name = "approval_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date approvalDate;
     @OneToMany(mappedBy = "incidentId")
     private Set<Repair> repairSet;
-    @OneToMany(mappedBy = "incidentId")
-    private Set<RepairSchedule> repairScheduleSet;
-    @JsonIgnore
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
     private Device deviceId;
+    @JoinColumn(name = "approved_by", referencedColumnName = "id")
+    @ManyToOne
+    private User approvedBy;
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    @ManyToOne
+    private User employeeId;
     @JoinColumn(name = "sender_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User senderId;
@@ -78,10 +91,11 @@ public class Incident implements Serializable {
         this.id = id;
     }
 
-    public Incident(Integer id, String title, String detailDescribe) {
+    public Incident(Integer id, String title, String detailDescribe, String status) {
         this.id = id;
         this.title = title;
         this.detailDescribe = detailDescribe;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -116,6 +130,22 @@ public class Incident implements Serializable {
         this.reportDate = reportDate;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getApprovalDate() {
+        return approvalDate;
+    }
+
+    public void setApprovalDate(Date approvalDate) {
+        this.approvalDate = approvalDate;
+    }
+
     public Set<Repair> getRepairSet() {
         return repairSet;
     }
@@ -124,20 +154,28 @@ public class Incident implements Serializable {
         this.repairSet = repairSet;
     }
 
-    public Set<RepairSchedule> getRepairScheduleSet() {
-        return repairScheduleSet;
-    }
-
-    public void setRepairScheduleSet(Set<RepairSchedule> repairScheduleSet) {
-        this.repairScheduleSet = repairScheduleSet;
-    }
-
     public Device getDeviceId() {
         return deviceId;
     }
 
     public void setDeviceId(Device deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public User getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(User approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+
+    public User getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(User employeeId) {
+        this.employeeId = employeeId;
     }
 
     public User getSenderId() {

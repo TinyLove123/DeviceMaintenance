@@ -11,7 +11,6 @@ import java.util.Set;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
@@ -264,8 +263,6 @@ public class Device implements Serializable {
         this.file = file;
     }
 
-    
-
     public String getManufacturer() {
         return manufacturer;
     }
@@ -273,8 +270,6 @@ public class Device implements Serializable {
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
-
-    
 
     public String getImage() {
         return image;

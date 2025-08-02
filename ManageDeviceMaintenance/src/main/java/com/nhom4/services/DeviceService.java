@@ -18,7 +18,11 @@ import com.nhom4.pojo.RepairCost;
  */
 public interface DeviceService {
 
-
+    /**
+     *
+     * @param params
+     * @return
+     */
     List<Device> getDevice(Map<String,String> params);
     Device getDeviceById(int id);
 
@@ -38,8 +42,7 @@ public interface DeviceService {
     
     
     
-    public List<DeviceDTO> getDeviceDTO(Map<String, String> params);
 
-    public DeviceDTO getDeviceDIOById(int id);
+//    public DeviceDTO getDeviceDIOById(int id);
 
 }

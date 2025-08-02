@@ -4,7 +4,12 @@
  */
 package com.nhom4.pojo;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -20,9 +25,6 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
 
 /**
  *
@@ -46,6 +48,12 @@ import java.util.Set;
     @NamedQuery(name = "User.findByAvatar", query = "SELECT u FROM User u WHERE u.avatar = :avatar")})
 public class User implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -64,12 +72,17 @@ public class User implements Serializable {
     @Size(max = 20)
     @Column(name = "phone")
     private String phone;
+    @Column(name = "join_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date joinDate;
     @Size(max = 10)
     @Column(name = "sex")
     private String sex;
     @Size(max = 15)
     @Column(name = "user_role")
     private String userRole;
+    @Column(name = "is_del")
+    private Boolean isDel;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
@@ -83,37 +96,18 @@ public class User implements Serializable {
     @Size(max = 200)
     @Column(name = "avatar")
     private String avatar;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @Column(name = "join_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date joinDate;
-    @Column(name = "is_del")
-    private Boolean isDel;
     @JsonIgnore
     @OneToMany(mappedBy = "employeeId")
     private Set<Repair> repairSet;
-
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
-    private Set<RepairSchedule> repairScheduleSet;
-
+    @OneToMany(mappedBy = "approvedBy")
+    private Set<Incident> incidentSet;
     @JsonIgnore
     @OneToMany(mappedBy = "employeeId")
-    private Set<MaintenanceSchedule> maintenanceScheduleSet;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "customerId")
-    private Set<RentedDevice> rentedDeviceSet;
-
+    private Set<Incident> incidentSet1;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "senderId")
-    private Set<Incident> incidentSet;
+    private Set<Incident> incidentSet2;
 
     public User() {
     }
@@ -154,12 +148,36 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public Date getJoinDate() {
         return joinDate;
     }
 
     public void setJoinDate(Date joinDate) {
         this.joinDate = joinDate;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public String getUserRole() {
@@ -178,6 +196,30 @@ public class User implements Serializable {
         this.isDel = isDel;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public Set<Repair> getRepairSet() {
         return repairSet;
     }
@@ -186,36 +228,28 @@ public class User implements Serializable {
         this.repairSet = repairSet;
     }
 
-    public Set<RepairSchedule> getRepairScheduleSet() {
-        return repairScheduleSet;
-    }
-
-    public void setRepairScheduleSet(Set<RepairSchedule> repairScheduleSet) {
-        this.repairScheduleSet = repairScheduleSet;
-    }
-
-    public Set<MaintenanceSchedule> getMaintenanceScheduleSet() {
-        return maintenanceScheduleSet;
-    }
-
-    public void setMaintenanceScheduleSet(Set<MaintenanceSchedule> maintenanceScheduleSet) {
-        this.maintenanceScheduleSet = maintenanceScheduleSet;
-    }
-
-    public Set<RentedDevice> getRentedDeviceSet() {
-        return rentedDeviceSet;
-    }
-
-    public void setRentedDeviceSet(Set<RentedDevice> rentedDeviceSet) {
-        this.rentedDeviceSet = rentedDeviceSet;
-    }
-
     public Set<Incident> getIncidentSet() {
         return incidentSet;
     }
 
     public void setIncidentSet(Set<Incident> incidentSet) {
         this.incidentSet = incidentSet;
+    }
+
+    public Set<Incident> getIncidentSet1() {
+        return incidentSet1;
+    }
+
+    public void setIncidentSet1(Set<Incident> incidentSet1) {
+        this.incidentSet1 = incidentSet1;
+    }
+
+    public Set<Incident> getIncidentSet2() {
+        return incidentSet2;
+    }
+
+    public void setIncidentSet2(Set<Incident> incidentSet2) {
+        this.incidentSet2 = incidentSet2;
     }
 
     @Override
@@ -241,54 +275,6 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "com.nhom4.pojo.User[ id=" + id + " ]";
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
 }

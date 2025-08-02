@@ -4,7 +4,9 @@
  */
 package com.nhom4.services.Impl;
 
+import com.nhom4.dto.MaintenanceScheduleDTO;
 import com.nhom4.pojo.MaintenanceSchedule;
+import com.nhom4.pojo.User;
 import com.nhom4.repositories.MaintenanceScheduleRepository;
 import com.nhom4.services.MaintenanceScheduleService;
 import java.util.List;
@@ -40,6 +42,16 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
     @Override
     public MaintenanceSchedule getMaintenanceScheduleById(int id) {
         return this.maintenanceScheduleRepo.getMaintenanceScheduleById(id);
+    }
+
+    @Override
+    public List<MaintenanceScheduleDTO> getMaintenanceSchedulesByUser(User user) {
+        return this.maintenanceScheduleRepo.getMaintenanceSchedulesByUser(user);
+    }
+
+    @Override
+    public Boolean isMaintenanceStaff(User u, int msId) {
+        return this.maintenanceScheduleRepo.isMaintenanceStaff(u, msId);
     }
     
 }

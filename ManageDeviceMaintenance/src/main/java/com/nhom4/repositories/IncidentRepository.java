@@ -4,6 +4,7 @@
  */
 package com.nhom4.repositories;
 
+import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
 import java.util.List;
@@ -20,6 +21,6 @@ public interface IncidentRepository {
     void deleteIncident(int id);
     List<Incident> GetIncidentByDeviceId(int deviceId);
     Incident getNewIncident(int DeviceId);
-   
+    List<Device> getListDeviceHadIncidentReport();
     
 }

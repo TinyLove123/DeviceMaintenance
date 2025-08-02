@@ -4,13 +4,16 @@
  */
 package com.nhom4.repositories.impl;
 
+import com.nhom4.dto.MaintenanceScheduleDTO;
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.User;
+import com.nhom4.repositories.DeviceRepository;
 import com.nhom4.repositories.MaintenanceScheduleRepository;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
@@ -28,16 +31,19 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRepository{
+public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRepository {
 
     private static final int PAGE_SIZE = 6;
     @Autowired
     private LocalSessionFactoryBean factory;
-    
-    public List<MaintenanceSchedule> getMaintenanceSchedules(Map<String,String> params) {
-       Session s = this.factory.getObject().getCurrentSession();
-       CriteriaBuilder b = s.getCriteriaBuilder();
-       CriteriaQuery<MaintenanceSchedule> q = b.createQuery(MaintenanceSchedule.class);
+
+    @Autowired
+    private DeviceRepository deviceRepo;
+
+    public List<MaintenanceSchedule> getMaintenanceSchedules(Map<String, String> params) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<MaintenanceSchedule> q = b.createQuery(MaintenanceSchedule.class);
         Root root = q.from(MaintenanceSchedule.class);
         q.select(root);
 
@@ -46,14 +52,13 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
 
             String startDate = params.get("startDate");
             if (startDate != null && !startDate.isEmpty()) {
-                predicates.add(b.equal(root.get("startDate").as(Integer.class),startDate));
+                predicates.add(b.equal(root.get("startDate").as(Integer.class), startDate));
             }
 
 //            String cateId = params.get("categoryId");
 //            if (cateId != null && !cateId.isEmpty()) {
 //                predicates.add(b.equal(root.get("categoryId").as(Integer.class), cateId));
 //            }
-
             q.where(predicates.toArray(Predicate[]::new));
 
             String orderBy = params.get("orderBy");
@@ -71,7 +76,6 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
 //            query.setMaxResults(PAGE_SIZE);
 //            query.setFirstResult(start);
 //        }
-
         return query.getResultList();
     }
 
@@ -98,15 +102,53 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
 
     @Override
     public MaintenanceSchedule getMaintenanceScheduleById(int id) {
-         Session s = this.factory.getObject().getCurrentSession();
-
-        return s.get(MaintenanceSchedule.class, id);
+        Session s = this.factory.getObject().getCurrentSession();
+        MaintenanceSchedule ms = s.get(MaintenanceSchedule.class, id);
+        Device d = this.deviceRepo.getDeviceById(ms.getDeviceId().getId());
+        ms.setDeviceId(d);
+        return ms;
     }
 
     @Override
     public MaintenanceSchedule setEmployee(User u) {
-        Session s=this.factory.getObject().getCurrentSession();
+        Session s = this.factory.getObject().getCurrentSession();
         return null;
     }
-    
+
+    @Override
+    public List<MaintenanceScheduleDTO> getMaintenanceSchedulesByUser(User user) {
+        Session session = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<MaintenanceSchedule> cq = cb.createQuery(MaintenanceSchedule.class);
+        Root<MaintenanceSchedule> root = cq.from(MaintenanceSchedule.class);
+
+        cq.select(root).where(cb.equal(root.get("employeeId"), user));
+
+        List<MaintenanceSchedule> results = session.createQuery(cq).getResultList();
+
+        List<MaintenanceScheduleDTO> dtos = results.stream().map(ms -> {
+            return new MaintenanceScheduleDTO(
+                    ms.getId(),
+                    ms.getStartDate(),
+                    ms.getProgress(),
+                    ms.getDeviceId() != null ? ms.getDeviceId().getId() : null,
+                    ms.getDeviceId() != null ? ms.getDeviceId().getNameDevice() : null,
+                    ms.getEmployeeId() != null ? ms.getEmployeeId().getId() : null,
+                    ms.getEmployeeId() != null ? ms.getEmployeeId().getUsername() : null
+            );
+        }).toList();
+
+        return dtos;
+    }
+
+    @Override
+    public Boolean isMaintenanceStaff(User u, int msId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        MaintenanceSchedule loaded = s.get(MaintenanceSchedule.class, msId); 
+
+        return u != null && loaded != null
+                && loaded.getEmployeeId() != null
+                && u.getId().equals(loaded.getEmployeeId().getId());
+    }
+
 }
