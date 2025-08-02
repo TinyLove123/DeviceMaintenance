@@ -4,6 +4,7 @@
  */
 package com.nhom4.services;
 
+import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
 import java.util.List;
@@ -26,5 +27,7 @@ public interface IncidentService {
     List<Incident> GetIncidentByDeviceId(int deviceId);
 
     Incident getNewIncident(int DeviceId);
+    
+    List<Device> getListDeviceHadIncidentReport();
   
 }

@@ -1,0 +1,49 @@
+
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Trang chủ</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <h1>Chi tiết báo cáo</h1>
+    <main class="container mt-4">
+        <div th:if="${Incident != null}">
+            <h3 th:text="'Tiêu đề: ' + ${Incident.title}"></h3>
+            <p><strong>Mô tả chi tiết:</strong> <span th:text="${Incident.detailDescribe}"></span></p>
+            <p><strong>Người gửi:</strong> <span th:text="${Incident.senderId.firstName + ' ' + Incident.senderId.lastName}"></span></p>
+            <p><strong>Ngày báo cáo:</strong> 
+                <span th:text="${Incident.reportDate != null ? #dates.format(Incident.reportDate, 'dd/MM/yyyy HH:mm:ss') : 'Chưa có'}"></span>
+            </p>
+            <p><strong>Trạng thái:</strong> <span th:text="${Incident.status}"></span></p>
+
+            <!-- ✅ FORM cập nhật trạng thái -->
+            <form th:action="@{|/admin/incident-device/${Incident.deviceId.id}/incident-update/${Incident.id}|}" method="post">
+                <div class="mb-3">
+                    <label for="status" class="form-label">Cập nhật trạng thái:</label>
+                    <select name="status" id="status" class="form-control">
+                        <option value="PENDING_APPROVAL" th:selected="${Incident.status == 'PENDING_APPROVAL'}">PENDING_APPROVAL</option>
+                        <option value="APPROVED" th:selected="${Incident.status == 'APPROVED'}">APPROVED</option>
+                        <option value="REJECTED" th:selected="${Incident.status == 'REJECTED'}">REJECTED</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+            </form>
+        </div>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

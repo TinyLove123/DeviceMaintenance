@@ -18,6 +18,7 @@ import com.nhom4.services.UserService;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 @CrossOrigin
 public class ApiDevice {
-    
+
     @Autowired
     private CategoryService catService;
 
@@ -48,28 +49,29 @@ public class ApiDevice {
 
     @Autowired
     private IncidentService incidentService;
-    
+
     @Autowired
     private UserService userService;
 
     @GetMapping("/devices")
     public ResponseEntity<List<DeviceDTO>> listDevs(@RequestParam Map<String, String> params) {
-        return new ResponseEntity<>(this.deviceService.getDeviceDTO(params), HttpStatus.OK);
+        List<Device> devices = deviceService.getDevice(params);
+        List<DeviceDTO> dtos = devices.stream()
+                              .map(DeviceDTO::new)
+                              .collect(Collectors.toList());
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
-    
+
     @GetMapping("/secure/categories")
     public ResponseEntity<List<Category>> listCats() {
         return new ResponseEntity<>(this.catService.getCates(), HttpStatus.OK);
     }
 
-    
     @GetMapping("/devices/{deviceId}")
     public ResponseEntity<Device> retrieve(@PathVariable(value = "deviceId") int id) {
-        return new ResponseEntity<>(this.deviceService.getDeviceById(id),HttpStatus.OK);
+        return new ResponseEntity<>(this.deviceService.getDeviceById(id), HttpStatus.OK);
     }
 
-    
-    
 //    @PostMapping("/secure/rented-device/{id}/add-report")
 //    @ResponseStatus(HttpStatus.OK)
 //    public ResponseEntity<Incident> addIncident(@PathVariable("id") int deviceId,
@@ -78,5 +80,4 @@ public class ApiDevice {
 //         return new ResponseEntity<>(incidentSave, HttpStatus.CREATED);
 //        
 //    }
-    
 }

@@ -132,7 +132,7 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
                         ));
         Long count = s.createQuery(cq).uniqueResult();
         return count != null && count > 0;
-
+        
     }
 
 }

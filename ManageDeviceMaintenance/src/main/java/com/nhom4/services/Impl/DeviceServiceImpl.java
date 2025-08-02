@@ -35,17 +35,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired
     private Cloudinary cloudinary;
 
-    private DeviceDTO toDTO(Device d) {
-        DeviceDTO dto = new DeviceDTO();
-        dto.setId(d.getId());
-        dto.setNameDevice(d.getNameDevice());
-        dto.setStatusDevice(d.getStatusDevice());
-        dto.setPrice(d.getPrice());
-        dto.setImage(d.getImage());
-        dto.setManufacturer(d.getManufacturer());
-        dto.setCategoryId(d.getCategoryId().getId());
-        return dto;
-    }
+    
 
     @Override
     public List<Device> getDevice(Map<String, String> params) {
@@ -87,18 +77,18 @@ public class DeviceServiceImpl implements DeviceService {
         return this.deviceRepository.addOrUpdateRepairCost(repairCost);
     }
 
-    @Override
-    public List<DeviceDTO> getDeviceDTO(Map<String, String> params) {
-        List<Device> devices = deviceRepository.getDevice(params);
-        return devices.stream().map(this::toDTO).toList();
-    }
+//    @Override
+//    public List<Device> getDevice(Map<String, String> params) {
+//        return List<Device> devices = deviceRepository.getDevice(params);
+//        
+//    }
     
-    @Override
-    public DeviceDTO getDeviceDIOById(int id) {
-
-        Device device= deviceRepository.getDeviceById(id);
-        return toDTO(device);
-    }
+//    @Override
+//    public DeviceDTO getDeviceDIOById(int id) {
+//
+//        Device device= deviceRepository.getDeviceById(id);
+//        return toDTO(device);
+//    }
     
     
 

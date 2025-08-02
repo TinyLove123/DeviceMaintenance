@@ -4,6 +4,7 @@
  */
 package com.nhom4.services.Impl;
 
+import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.IncidentRepository;
@@ -52,7 +53,12 @@ public class IncidentServiceImpl implements IncidentService{
 
     @Override
     public Incident getNewIncident(int DeviceId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.incidentRepo.getNewIncident(DeviceId);
+    }
+
+    @Override
+    public List<Device> getListDeviceHadIncidentReport() {
+        return this.incidentRepo.getListDeviceHadIncidentReport();
     }
 
     

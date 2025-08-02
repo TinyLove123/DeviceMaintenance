@@ -7,14 +7,51 @@
 </head>
 <body>
     <div th:replace="base :: header"></div>
-    
-     <h1>Danh sách các thiết bị cần bảo trì</h1>
+
+    <h1>Danh sách các thiết bị cần bảo trì</h1>
     <main class="container mt-4">
-        
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Mã thiết bị</th>
+                    <th>Tên thiết bị</th>
+                    <th>Nhà xuất hành</th>
+                    <th>Trạng thái</th>
+                    <th>Loại thiết bị</th>
+                    <th>Vị trí</th>
+                    <th>Xem chi tiết sự cố</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="d : ${devicesIncident}">
+                    <td th:text="${d.id}"></td>
+                    <td th:text="${d.nameDevice}"></td>
+                    <td th:text="${d.manufacturer}"></td>
+                    <td th:switch="${d.statusDevice}">
+                        <span th:case="'active'">Đang hoạt động</span>
+                        <span th:case="'rented'">Đang thuê</span>
+                        <span th:case="'under_maintenance'">Đang bảo trì</span>
+                        <span th:case="'in_repair'">Đang sửa chữa</span>
+                        <span th:case="'inactive'">Ngưng sử dụng</span>
+                        <span th:case="'exclude'">Loại bỏ</span>
+                        <span th:case="*">Không xác định</span>
+                    </td>
+                    <td th:text="${d.categoryId.type}"></td>
+                    <td th:text="${d.currentLocationId != null ? d.currentLocationId.wardId.fullName + ',
+                        ' + d.currentLocationId.wardId.provinceCode.fullName + ', 
+                        ' + d.currentLocationId.address : 'Chưa cập nhật'}">
+                    </td>
+                    <td>
+                       <a th:href="@{/admin/incident-device/{id}/incident-detail(id=${d.id})}" class="btn btn-primary">Xem thêm</a>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
 
-</main>
+    </main>
 
-<div th:replace="base :: footer"></div>
+    <div th:replace="base :: footer"></div>
 </body>
 </html>

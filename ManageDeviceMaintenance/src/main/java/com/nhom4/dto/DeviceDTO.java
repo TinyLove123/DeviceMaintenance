@@ -1,9 +1,11 @@
 package com.nhom4.dto;
 
+import com.nhom4.pojo.Device;
 import java.util.Date;
 import org.springframework.web.multipart.MultipartFile;
 
 public class DeviceDTO {
+
     private Integer id;
     private String nameDevice;
     private Date purchaseDate;
@@ -16,11 +18,26 @@ public class DeviceDTO {
     private MultipartFile file; // dùng để upload ảnh
 
     // Constructors
-    public DeviceDTO() {}
+    public DeviceDTO() {
+    }
+
+    public DeviceDTO(Device device) {
+        this.id = device.getId();
+        this.nameDevice = device.getNameDevice();
+        this.purchaseDate = device.getPurchaseDate();
+        this.manufacturer = device.getManufacturer();
+        this.statusDevice = device.getStatusDevice();
+        this.frequency = device.getFrequency();
+        this.image = device.getImage();
+        this.price = device.getPrice();
+        this.categoryId = device.getCategoryId() != null ? device.getCategoryId().getId() : null;
+        this.file = null; 
+
+    }
 
     public DeviceDTO(Integer id, String nameDevice, Date purchaseDate, String manufacturer,
-                     String statusDevice, Integer frequency, String image,
-                     Double price, Integer categoryId, MultipartFile file) {
+            String statusDevice, Integer frequency, String image,
+            Double price, Integer categoryId, MultipartFile file) {
         this.id = id;
         this.nameDevice = nameDevice;
         this.purchaseDate = purchaseDate;
