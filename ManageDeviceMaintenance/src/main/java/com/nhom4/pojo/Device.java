@@ -11,13 +11,11 @@ import java.util.Set;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,7 +24,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -83,8 +80,8 @@ public class Device implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price")
     private Double price;
-//    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "deviceId", fetch = FetchType.LAZY)
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "deviceId")
     private Set<RepairCost> repairCostSet;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deviceId")
@@ -98,9 +95,8 @@ public class Device implements Serializable {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Category categoryId;
-
-    @OneToOne
     @JoinColumn(name = "current_location_id", referencedColumnName = "id")
+    @ManyToOne
     private Location currentLocationId;
     @JsonIgnore
     @OneToMany(mappedBy = "deviceId")
@@ -146,6 +142,7 @@ public class Device implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
+
     public String getStatusDevice() {
         return statusDevice;
     }
@@ -161,6 +158,7 @@ public class Device implements Serializable {
     public void setFrequency(Integer frequency) {
         this.frequency = frequency;
     }
+
 
     public Double getPrice() {
         return price;
@@ -265,8 +263,6 @@ public class Device implements Serializable {
         this.file = file;
     }
 
-   
-
     public String getManufacturer() {
         return manufacturer;
     }
@@ -275,7 +271,6 @@ public class Device implements Serializable {
         this.manufacturer = manufacturer;
     }
 
-   
     public String getImage() {
         return image;
     }
@@ -283,5 +278,5 @@ public class Device implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
-
+    
 }

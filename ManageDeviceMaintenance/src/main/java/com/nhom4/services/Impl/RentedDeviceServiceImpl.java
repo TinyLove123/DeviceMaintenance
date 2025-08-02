@@ -5,7 +5,6 @@
 package com.nhom4.services.Impl;
 
 import com.nhom4.dto.RentedDeviceDTO;
-import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.RentedDeviceRepository;
@@ -32,8 +31,8 @@ public class RentedDeviceServiceImpl implements RentedDeviceService{
     }
     
     @Override
-    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice, Location location) {
-        return this.rentedDeviceRepo.addRentedDevice(deviceId, rentedDevice, location);
+    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice) {
+        return this.rentedDeviceRepo.addRentedDevice(deviceId, rentedDevice);
     }
 
     @Override   

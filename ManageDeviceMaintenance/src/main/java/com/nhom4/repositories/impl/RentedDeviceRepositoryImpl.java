@@ -4,27 +4,27 @@
  */
 package com.nhom4.repositories.impl;
 
+import java.util.List;
+
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.nhom4.dto.RentedDeviceDTO;
 import com.nhom4.pojo.Device;
-import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.RepairCost;
 import com.nhom4.pojo.User;
-import com.nhom4.repositories.LocationRepository;
 import com.nhom4.repositories.RentedDeviceRepository;
-import com.nhom4.services.LocationService;
+
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Fetch;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
-import java.util.List;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -37,42 +37,28 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
     @Autowired
     private LocalSessionFactoryBean factory;
 
-    @Autowired
-    private LocationRepository locRepo;
-
     @Override
-    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice, Location location) {
+    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice) {
         Session s = this.factory.getObject().getCurrentSession();
 
         Device device = s.get(Device.class, deviceId);
-        if (device == null) {
-            throw new IllegalArgumentException("Thiết bị không tồn tại!");
-        }
 
-        this.locRepo.addLocation(deviceId, location);
-
-        device.setCurrentLocationId(location);
-        s.merge(device);
-
-        if (rentedDevice.getId() == null) {
-            
-            if (!"active".equalsIgnoreCase(device.getStatusDevice())) {
-                throw new IllegalArgumentException("Thiết bị không ở trạng thái 'active'!");
-            }
+        if (device != null && "active".equals(device.getStatusDevice())) {
 
             rentedDevice.setDeviceId(device);
             rentedDevice.setIsRented(Boolean.TRUE);
 
             s.persist(rentedDevice);
 
+            // Cập nhật trạng thái thiết bị nếu muốn, ví dụ thành "rented"
             device.setStatusDevice("rented");
-            s.merge(device); 
+            s.merge(device);
 
             return rentedDevice;
         } else {
-            
-            return s.merge(rentedDevice);
+            throw new IllegalArgumentException("Thiết bị không tồn tại hoặc không ở trạng thái 'active'");
         }
+
     }
 
     @Override
@@ -104,7 +90,7 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
 
         Fetch<RentedDevice, Device> deviceFetch = root.fetch("deviceId", JoinType.LEFT);
         Fetch<Device, RepairCost> repairCostFetch = deviceFetch.fetch("repairCostSet", JoinType.LEFT);
-        repairCostFetch.fetch("repairTypeId", JoinType.LEFT);
+        repairCostFetch.fetch("repairTypeId", JoinType.LEFT); 
 
         cq.select(root)
                 .where(
@@ -116,7 +102,6 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
 
         return s.createQuery(cq).uniqueResult();
     }
-
     @Override
     public boolean checkDeviceOwnership(int deviceId, int userId) {
         Session s = this.factory.getObject().getCurrentSession();

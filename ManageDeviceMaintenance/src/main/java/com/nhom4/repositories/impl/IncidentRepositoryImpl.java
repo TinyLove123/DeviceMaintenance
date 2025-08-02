@@ -4,8 +4,7 @@
  */
 package com.nhom4.repositories.impl;
 
-import com.nhom4.configs.CustomSecurityException;
-import com.nhom4.pojo.Device;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +14,8 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
-import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.IncidentRepository;
 
@@ -27,7 +26,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import java.util.Date;
 
 /**
  *
