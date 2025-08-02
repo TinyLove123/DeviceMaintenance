@@ -12,7 +12,8 @@ const Devices = () => {
 
     const loadDevices = async () => {
         setLoading(true);
-        let res = await Apis.get(endpoints['devices'])
+        let res = await Apis.get(`${endpoints['devices']}?statusDevice=active`);
+
         console.log(res.data);
         setDevices(res.data)
     }
@@ -30,7 +31,9 @@ const Devices = () => {
                         <Card.Body>
                             <Card.Title>{d.nameDevice}</Card.Title>
                             <Card.Text>{d.price} VNĐ</Card.Text>
+                            <Card.Text>{d.statusDevice} </Card.Text>
                             <Button variant="primary me-1" onClick={() => navigate(`/devices/${d.id}`)} >Xem chi tiết</Button>
+                            <Button variant="success" onClick={() => navigate(`/rentals?deviceId=${d.id}`)}>Thuê thiết bị</Button>
 
                         </Card.Body>
                     </Card>

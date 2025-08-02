@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Badge, Card, Col, Row, Spinner } from "react-bootstrap"
+import { Badge, Button, Card, Col, Row, Spinner } from "react-bootstrap"
 import { useParams } from "react-router-dom";
 import Apis, { endpoints } from "../configs/Apis";
 

@@ -81,7 +81,7 @@ public class Device implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price")
     private Double price;
-    
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deviceId")
     private Set<RepairCost> repairCostSet;
     @JsonIgnore

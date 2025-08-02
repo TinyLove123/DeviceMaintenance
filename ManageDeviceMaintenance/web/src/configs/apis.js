@@ -10,6 +10,9 @@ export const endpoints={
     'devices':'/devices',
     'register': '/users',
     'profile':'/secure/profile',
+    'deviceDetail': (id) => `/devices/${id}`,
+    'rentedDevice':'/secure/my-rented-devices'
+
 }
 
 export const authApis = () => axios.create({

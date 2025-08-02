@@ -1,5 +1,7 @@
 import Nav from 'react-bootstrap/Nav';
 import { Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const Header = () => {
     return (
@@ -22,7 +24,7 @@ const Header = () => {
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link disabled>
+                    <Nav.Link as={Link} to="/my-rented-devices">
                         Thiết bị đã thuê
                     </Nav.Link>
                 </Nav.Item>

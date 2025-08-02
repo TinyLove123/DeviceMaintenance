@@ -68,6 +68,11 @@ public class DeviceRepositoryImpl implements DeviceRepository {
             if (cateId != null && !cateId.isEmpty()) {
                 predicates.add(b.equal(root.get("categoryId").as(Integer.class), cateId));
             }
+            
+            String status = params.get("statusDevice");
+            if (status != null && !status.isEmpty()) {
+                predicates.add(b.equal(root.get("statusDevice"), status));
+            }
 
             q.where(predicates.toArray(Predicate[]::new));
 

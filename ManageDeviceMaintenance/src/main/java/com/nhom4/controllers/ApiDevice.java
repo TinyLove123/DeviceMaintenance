@@ -35,6 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Administrator
  */
+@RestController
+@RequestMapping("/api")
+@CrossOrigin
 public class ApiDevice {
     
     @Autowired
@@ -53,6 +56,8 @@ public class ApiDevice {
     public ResponseEntity<List<DeviceDTO>> listDevs(@RequestParam Map<String, String> params) {
         return new ResponseEntity<>(this.deviceService.getDeviceDTO(params), HttpStatus.OK);
     }
+    
+    
     
     @GetMapping("/secure/categories")
     public ResponseEntity<List<Category>> listCats() {
