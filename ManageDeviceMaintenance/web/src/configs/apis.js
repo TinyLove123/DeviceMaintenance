@@ -7,11 +7,14 @@ const BASE_URL="http://localhost:8080/ManageDeviceMaintenance/api/";
 export const endpoints={
     'login':'/login',
     'categories':'/categories',
-    'devices':'/devices',
+    'devices':'devices',
     'register': '/users',
     'profile':'/secure/profile',
-    'deviceDetail': (id) => `/devices/${id}`,
-    'rentedDevice':'/secure/my-rented-devices'
+    'deviceDetail': (id) => `devices/${id}`,
+    'myRentedDevice':'secure/my-rented-devices',
+    'rentedDevice': (id) => `secure/devices/${id}/rented-device`,
+    'myMaintenanceSchedules': 'secure/persional-maintenance-schedule/',
+    'maintenanceScheduleDetail':(id) => `secure/persional-maintenance-schedule/${id}/detail-maintenance-schedule`
 
 }
 
@@ -23,5 +26,5 @@ export const authApis = () => axios.create({
 })
 
 export default axios.create({
-    baseURL:BASE_URL
+    baseURL: BASE_URL
 })

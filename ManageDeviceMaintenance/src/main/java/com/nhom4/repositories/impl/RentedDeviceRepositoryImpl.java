@@ -25,6 +25,7 @@ import jakarta.persistence.criteria.Fetch;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
+import java.util.Date;
 
 /**
  *
@@ -47,6 +48,7 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
 
             rentedDevice.setDeviceId(device);
             rentedDevice.setIsRented(Boolean.TRUE);
+            rentedDevice.setStartDate(new Date());
 
             s.persist(rentedDevice);
 

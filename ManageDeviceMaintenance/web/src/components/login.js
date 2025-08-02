@@ -40,7 +40,7 @@ const Login = () => {
             console.log("==> Toàn bộ res.data:", res.data);
 
             console.info(res.data);
-            cookie.save('token', res.data.token);
+            cookie.save('token', res.data.token,{ path: '/' });
    
 
             let u = await authApis().get(endpoints['profile']);
