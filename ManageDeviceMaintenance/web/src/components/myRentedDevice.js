@@ -53,7 +53,7 @@ const MyRentedDevice = () => {
                             <Card.Text>
                                 Ngày thuê: {new Date(d.startDate).toLocaleDateString()}
                             </Card.Text>
-                            <Button variant="primary" onClick={() => navigate(`/devices/${d.id}`)}>
+                            <Button variant="outline-primary" onClick={() => navigate(`/devices/${d.id}`)}>
                                         Chi tiết
                                     </Button>
                         </Card.Body>

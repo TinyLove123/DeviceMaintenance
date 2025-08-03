@@ -12,7 +12,7 @@ export const endpoints={
     'profile':'/secure/profile',
     'deviceDetail': (id) => `devices/${id}`,
     'myRentedDevice':'secure/my-rented-devices',
-    'rentedDevice': (id) => `secure/devices/${id}/rented-device`,
+    'rentedDevice': (id) => `/secure/my-rented-devices/${id}/detail-device`,
     'myMaintenanceSchedules': 'secure/persional-maintenance-schedule/',
     'maintenanceScheduleDetail':(id) => `secure/persional-maintenance-schedule/${id}/detail-maintenance-schedule`
 

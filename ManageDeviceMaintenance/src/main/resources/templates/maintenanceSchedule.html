@@ -1,26 +1,24 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>LỊCH BẢO TRÌ</title>
+<head>
+    <title>LỊCH BẢO TRÌ</title>
     <th:block th:replace="base :: bootstrap"></th:block>
+
+
 </head>
 <body>
     <div th:replace="base :: header"></div>
 
-    <main class="container">
-
-
-
+    <main class="container my-4">
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Ngày bắt đầu</th>
-                    <th>tiến trình</th>
-                    <th>thiết bị</th>
-                    <th>nhân viên</th>
-                    <th>Ngày còn lại / Quá hạn</th>
-                    <th>Đổi nhân viên</th>
-                    <th></th>
+                    <th>Tiến trình</th>
+                    <th>Thiết bị</th>
+                    <th>Nhân viên</th>
+                    <th>Tình trạng</th>
+                    <th>Cập nhật</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,74 +27,29 @@
                     <td th:text="
                         ${m.progress == 'in_progress'} ? 'Đang thực hiện' :
                         (${m.progress == 'completed'} ? 'Hoàn thành' :
-                        (${m.progress == 'in_completed'} ? 'Chưa xử lý' : 'Không xác định'))
-                        "
+                        (${m.progress == 'in_completed'} ? 'Chưa xử lý' : 'Không xác định'))"
                         th:classappend="
                         ${m.progress == 'in_progress'} ? 'text-warning fw-bold bg-light' :
                         (${m.progress == 'completed'} ? 'text-success fw-bold bg-light' :
-                        (${m.progress == 'in_completed'} ? 'text-danger fw-bold bg-light' : 'text-dark fw-bold bg-light'))
-                        ">
+                        (${m.progress == 'in_completed'} ? 'text-danger fw-bold bg-light' : 'text-dark fw-bold bg-light'))">
                     </td>
-
                     <td th:text="${m.deviceId.nameDevice}"></td>
                     <td th:text="${m.employeeId != null ? m.employeeId.firstName + ' ' + m.employeeId.lastName : 'Chưa xếp'}"
                         th:classappend="${m.employeeId == null} ? 'text-danger fw-bold' : ''"></td>
                     <td>
                         <span th:attr="data-start=${m.startDate}" class="remaining-days"></span>
                     </td>
-
-                    <td><button class="btn btn-warning btn-sm btn-action"
-                                type="button"
-                                th:attr="onclick='toggleForm(' + ${m.id} + ')'">Cập nhật</button>
+                    <td>
+                        <a th:href="@{/admin/maintenance-schedule-manager/{id}/maintenance-schedule-detail(id=${m.id})}" class="btn btn-primary">Chỉnh sửa</a>
                     </td>
                 </tr>
-
-
             </tbody>
-            <tr th:each="m : ${maintenanceSchedules}" th:id="'form-' + ${m.id}" style="display: none;">
-                <td colspan="6">
-                    <form th:action="@{/changeEmployee}" method="post" class="row g-2 align-items-center">
-                        <h5>Đổi nhân viên #<span th:text="'thiết bị '+${m.deviceId.nameDevice}"></span></h5>
-                        <input type="hidden" name="scheduleId" th:value="${m.id}" />
-
-                        <div class="col-md-4">
-                            <select name="employeeId" class="form-select">
-                                <option value="" disabled selected>-- Chọn nhân viên --</option>
-                                <option th:each="e : ${employee}"
-                                        th:value="${e.id}"
-                                        th:text="${e.firstName + ' ' + e.lastName}">
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-success btn-sm">Lưu</button>
-                            <button type="button" class="btn btn-secondary btn-sm" th:attr="onclick='toggleForm(' + ${m.id} + ')'">Hủy</button>
-                        </div>
-                    </form>
-                </td>
-            </tr>
         </table>
-
     </main>
 
     <div th:replace="base :: footer"></div>
 
     <script>
-        function toggleForm(id) {
-            // Ẩn tất cả các form
-            document.querySelectorAll('[id^="form-"]').forEach(row => {
-                row.style.display = 'none';
-            });
-
-            // Lấy form được chọn
-            const formRow = document.getElementById('form-' + id);
-
-            // Kiểm tra nếu form này đang ẩn thì hiển thị nó
-            if (formRow && formRow.style.display === 'none') {
-                formRow.style.display = 'table-row';
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
             const rows = document.querySelectorAll('.remaining-days');
             const now = new Date();

@@ -1,0 +1,114 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Chi tiết lịch bảo trì</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+   <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container mt-4">
+        <h1 class="mb-4">Chi tiết Lịch Bảo Trì</h1>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <!-- Thông tin lịch bảo trì -->
+            <div>
+                <div class="card h-100 shadow">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Thông tin Lịch Bảo Trì</h5>
+                    </div>
+                    <div class="card-body" th:if="${maintenanceSchedule != null}">
+                        <div class="info-item">
+                            <span class="info-label">Thiết bị:</span>
+                            <span th:text="${maintenanceSchedule.deviceId.nameDevice}"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Ngày bắt đầu:</span>
+                            <span th:text="${maintenanceSchedule.startDate != null ? #dates.format(maintenanceSchedule.startDate, 'dd/MM/yyyy') : 'Chưa có'}"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Tiến trình:</span>
+                            <span th:text="${maintenanceSchedule.progress}"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Nhân viên phụ trách:</span>
+                            <span th:text="${maintenanceSchedule.employeeId != null ? maintenanceSchedule.employeeId.firstName + ' ' + maintenanceSchedule.employeeId.lastName : 'Chưa xếp'}"
+                                  th:classappend="${maintenanceSchedule.employeeId == null} ? 'text-danger fw-bold' : ''"></span>
+                        </div>
+
+                        <!-- Form cập nhật nhân viên -->
+                        <div class="mt-3">
+                            <form th:action="@{/admin/changeEmployee}" method="post" class="d-flex align-items-center gap-2">
+                                <input type="hidden" name="scheduleId" th:value="${maintenanceSchedule.id}" />
+                                <select name="employeeId" class="form-select form-select-sm" style="max-width: 70%;">
+                                    <option value="" disabled selected>-- Chọn nhân viên --</option>
+                                    <option th:each="e : ${employees}"
+                                            th:value="${e.id}"
+                                            th:text="${e.firstName + ' ' + e.lastName}">
+                                    </option>
+                                </select>
+                                <button type="submit" class="btn btn-success btn-sm">Lưu</button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin thiết bị -->
+            <div>
+                <div class="card h-100 shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Thông tin Thiết bị</h5>
+                    </div>
+                    <div class="card-body" th:if="${maintenanceSchedule.deviceId != null}">
+                        <div class="text-center mb-3">
+                            <img class="img-fluid rounded border" th:src="${maintenanceSchedule.deviceId.image}" alt="Hình thiết bị" style="max-height: 200px;" />
+                        </div>
+
+                        <div class="info-item"><span class="info-label">Tên thiết bị:</span> <span th:text="${maintenanceSchedule.deviceId.nameDevice}"></span></div>
+                        <div class="info-item"><span class="info-label">Loại thiết bị:</span> <span th:text="${maintenanceSchedule.deviceId.categoryId.type}"></span></div>
+                        <div class="info-item"><span class="info-label">Trạng thái hiện tại:</span> <span th:text="${maintenanceSchedule.deviceId.statusDevice}"></span></div>
+                        <div class="info-item"><span class="info-label">Nhà sản xuất:</span> <span th:text="${maintenanceSchedule.deviceId.manufacturer}"></span></div>
+                        <div class="info-item"><span class="info-label">Ngày mua:</span> <span th:text="${maintenanceSchedule.deviceId.purchaseDate != null ? #dates.format(maintenanceSchedule.deviceId.purchaseDate, 'dd/MM/yyyy') : 'Chưa có'}"></span></div>
+                        <div class="info-item">
+                            <span class="info-label">Vị trí hiện tại:</span>
+                            <span th:text="${maintenanceSchedule.deviceId.currentLocationId != null ?
+                                  maintenanceSchedule.deviceId.currentLocationId.wardId.fullName + ', ' +
+                                  maintenanceSchedule.deviceId.currentLocationId.wardId.provinceCode.fullName + ', ' +
+                                  maintenanceSchedule.deviceId.currentLocationId.address : 'Chưa cập nhật'}"></span>
+                        </div>
+                        <div>
+                            <span class="info-label">Tần suất bảo trì:</span>
+                            <span th:text="${maintenanceSchedule.deviceId.frequency}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin nhân viên -->
+            <div th:if="${maintenanceSchedule.employeeId != null}">
+                <div class="card h-100 shadow">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Thông tin Nhân Viên Phụ Trách</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <img class="avatar border" th:src="${maintenanceSchedule.employeeId.avatar}" alt="Ảnh nhân viên" />
+                        </div>
+                        <div class="info-item"><span class="info-label">Họ và tên:</span> <span th:text="${maintenanceSchedule.employeeId.firstName + ' ' + maintenanceSchedule.employeeId.lastName}"></span></div>
+                        <div class="info-item"><span class="info-label">Email:</span> <span th:text="${maintenanceSchedule.employeeId.email}"></span></div>
+                        <div class="info-item"><span class="info-label">Số điện thoại:</span> <span th:text="${maintenanceSchedule.employeeId.phone}"></span></div>
+                        <div class="info-item"><span class="info-label">Giới tính:</span> <span th:text="${maintenanceSchedule.employeeId.sex}"></span></div>
+                        <div><span class="info-label">Ngày gia nhập:</span> <span th:text="${maintenanceSchedule.employeeId.joinDate}"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

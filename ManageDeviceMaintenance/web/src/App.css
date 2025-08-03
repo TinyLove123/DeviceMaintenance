@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+body {
+  background-color: #111827; /* Tailwind's gray-900 */
+  color: #ffffff;
+}
