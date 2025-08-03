@@ -15,12 +15,22 @@ import java.util.Map;
  * @author Administrator
  */
 public interface IncidentRepository {
-    List<Incident> getIncident(Map<String,String> params);
+
+    List<Incident> getIncident(Map<String, String> params);
+
     Incident getIncidentById(int id);
-    Incident addOrUpdateIncident(Incident I, int DeviceId,User user);
+
+    Incident addOrUpdateIncident(Incident I, int DeviceId, User user);
+
     void deleteIncident(int id);
+
     List<Incident> GetIncidentByDeviceId(int deviceId);
+
     Incident getNewIncident(int DeviceId);
+
     List<Device> getListDeviceHadIncidentReport();
     
+    List<Incident> getPreviousIncidentNotApproved();
+    long LcountIncidentsToday();
+
 }

@@ -29,5 +29,8 @@ public interface IncidentService {
     Incident getNewIncident(int DeviceId);
     
     List<Device> getListDeviceHadIncidentReport();
-  
+    
+    List<Incident> getPreviousIncidentNotApproved();
+    
+    long countIncidentsToday();
 }

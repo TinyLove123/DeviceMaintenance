@@ -263,6 +263,8 @@ public class Device implements Serializable {
         this.file = file;
     }
 
+    
+
     public String getManufacturer() {
         return manufacturer;
     }
@@ -270,6 +272,7 @@ public class Device implements Serializable {
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
+
 
     public String getImage() {
         return image;

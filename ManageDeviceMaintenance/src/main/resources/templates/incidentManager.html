@@ -1,56 +1,77 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Trang chủ</title>
+        <title>Quản lý sự cố</title>
     <th:block th:replace="base :: bootstrap"></th:block>
 </head>
 <body>
     <div th:replace="base :: header"></div>
 
-    <h1>Danh sách các thiết bị cần bảo trì</h1>
-    <main class="container mt-4">
-        <table class="table table-bordered">
+    <div class="container mt-4">
+        <h2>Quản lý báo cáo sự cố</h2>
+
+        <!-- Form lọc theo trạng thái -->
+        <form method="get" th:action="@{/admin/incident-manager}" class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Tất cả trạng thái --</option>
+                        <option value="PENDING_APPROVAL">Chờ duyệt</option>
+                        <option value="APPROVED">Đã duyệt</option>
+                        <option value="IN_PROGRESS">Đang xử lý</option>
+                        <option value="RESOLVED">Đã hoàn thành</option>
+                        <option value="REJECTED">Từ chối</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Bảng danh sách sự cố -->
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Mã thiết bị</th>
-                    <th>Tên thiết bị</th>
-                    <th>Nhà xuất hành</th>
+                    <th>ID</th>
+                    <th>Tiêu đề</th>
+                    <th>Mô tả</th>
+                    <th>Thiết bị</th>
                     <th>Trạng thái</th>
-                    <th>Loại thiết bị</th>
-                    <th>Vị trí</th>
-                    <th>Xem chi tiết sự cố</th>
+                    <th>Người gửi</th>
+                    <th>Ngày gửi</th>
+                    <th>Người duyệt</th>
+                    <th>Ngày duyệt</th>     
+                    <th>Ngày thực hiện</th>
+                    <th>Ngày kết thúc</th>
+                    <th>Khẩn cấp</th>
+                    <td>Hành động</td>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="d : ${devicesIncident}">
-                    <td th:text="${d.id}"></td>
-                    <td th:text="${d.nameDevice}"></td>
-                    <td th:text="${d.manufacturer}"></td>
-                    <td th:switch="${d.statusDevice}">
-                        <span th:case="'active'">Đang hoạt động</span>
-                        <span th:case="'rented'">Đang thuê</span>
-                        <span th:case="'under_maintenance'">Đang bảo trì</span>
-                        <span th:case="'in_repair'">Đang sửa chữa</span>
-                        <span th:case="'inactive'">Ngưng sử dụng</span>
-                        <span th:case="'exclude'">Loại bỏ</span>
-                        <span th:case="*">Không xác định</span>
-                    </td>
-                    <td th:text="${d.categoryId.type}"></td>
-                    <td th:text="${d.currentLocationId != null ? d.currentLocationId.wardId.fullName + ',
-                        ' + d.currentLocationId.wardId.provinceCode.fullName + ', 
-                        ' + d.currentLocationId.address : 'Chưa cập nhật'}">
+                <tr th:each="incident : ${Incidents}">
+                    <td th:text="${incident.id}"></td>
+                    <td th:text="${incident.title}"></td>
+                    <td th:text="${incident.detailDescribe}"></td>
+                    <td th:text="${incident.deviceId != null ? incident.deviceId.nameDevice : 'N/A'}"></td>
+                    <td th:text="${incident.status}"></td>
+                    <td th:text="${incident.senderId != null ? incident.senderId.firstName + ' ' + incident.senderId.lastName : 'N/A'}"></td>
+                    <td th:text="${#dates.format(incident.reportDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${incident.employeeId != null ? incident.employeeId.firstName + ' ' + incident.employeeId.lastName : 'Chưa cập nhật'}"></td>
+                    <td th:text="${incident.approvalDate != null ? #dates.format(incident.approvalDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+                    <td th:text="${incident.startDate != null ? #dates.format(incident.startDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+                    <td th:text="${incident.endDate != null ? #dates.format(incident.endDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+                    <td>
+                        <span th:if="${incident.isEmergency == true}" class="badge bg-danger">Khẩn</span>
+                        <span th:if="${incident.isEmergency != true}" class="badge bg-secondary">Bình thường</span>
                     </td>
                     <td>
-                       <a th:href="@{/admin/incident-device/{id}/incident-detail(id=${d.id})}" class="btn btn-primary">Xem thêm</a>
-                        
+                        <a th:href="@{/admin/incident-manager/{id}/incident-detail(id=${incident.id})}" class="btn btn-primary">Xem thêm</a>
                     </td>
                 </tr>
             </tbody>
         </table>
-
-
-    </main>
+    </div>
 
     <div th:replace="base :: footer"></div>
 </body>

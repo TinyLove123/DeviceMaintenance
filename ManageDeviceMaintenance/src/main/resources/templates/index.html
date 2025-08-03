@@ -1,85 +1,99 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Trang chủ</title>
+<head>
+    <title>Trang chủ</title>
     <th:block th:replace="base :: bootstrap"></th:block>
 </head>
 <body>
-    <div th:replace="base :: header"></div>
+<div th:replace="base :: header"></div>
 
-    <main class="container">
-        <form id="searchForm" th:action="@{/admin}" method="get">
-            <div class="mb-3 mt-3">
-                <input type="text" class="form-control" name="kw" placeholder="Từ khóa" th:value="${param.kw}" />
-            </div>
-            <div class="mb-3 mt-3">
-                <button class="btn btn-info" type="submit">Tìm kiếm</button>
-            </div>
-        </form>
-        <hr />  
-        <div>
-            <select name="categoryId" class="form-select mb-3"
-                    onchange="updateCategory(this.value)">
-                <option value="">-- Chọn danh mục --</option>
-                <option th:each="c : ${categories}"
-                        th:value="${c.id}"
-                        th:text="${c.type}"
-                        th:selected="${param.categoryId} == ${c.id}">
-                </option>
-            </select>
+<main class="container mt-4">
+    <h2 class="mb-4">Tổng quan hệ thống</h2>
+
+    <!-- Sự cố phát sinh hôm nay -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark fw-bold">
+            Sự cố phát sinh hôm nay
         </div>
+        <div class="card-body">
+            <h5 class="card-title">Tổng cộng: <span th:text="${incidentCountToday}">0</span> sự cố</h5>
+        </div>
+    </div>
 
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Ngày mua</th>
-                    <th>Nhà sản xuất</th>
-                    <th>Trạng thái</th>
-                    <th>Bảo trì định kì</th>
-                    <th>Xem chi tiết</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="d: ${devices}">
-                    <td th:text="${d.id}"></td>
-                    <td th:text="${d.nameDevice}"></td>
-                    <td th:text="${#dates.format(d.purchaseDate, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${d.manufacturer}"></td>
-                    <td th:text="${d.statusDevice}"></td>
-                    <td th:text="${d.frequency}"></td>
-                    <td> <a th:href="@{'/admin/devices/' + ${d.id}}" class="btn btn-primary">Xem thêm</a> </td>
-                </tr>
-            </tbody>
-        </table>
-    </main>
+    <!-- Danh sách sự cố chưa duyệt -->
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white fw-bold">
+            Danh sách sự cố chưa duyệt
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Tiêu đề</th>
+                        <th>Thiết bị</th>
+                        <th>Người gửi</th>
+                        <th>Khẩn cấp</th>
+                        <th>Ngày gửi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="i, stat : ${unapprovedIncidents}">
+                        <td th:text="${stat.count}"></td>
+                        <td th:text="${i.title}"></td>
+                        <td th:text="${i.deviceId.nameDevice}"></td>
+                        <td th:text="${i.senderId.lastName + ' ' + i.senderId.firstName}"></td>
+                        <td>
+                            <span th:if="${i.isEmergency}" class="badge bg-danger">Khẩn</span>
+                            <span th:unless="${i.isEmergency}" class="badge bg-secondary">Thường</span>
+                        </td>
+                        <td th:text="${#dates.format(i.reportDate, 'dd/MM/yyyy HH:mm')}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(unapprovedIncidents)}">
+                        <td colspan="6" class="text-center text-muted">Không có sự cố nào chưa duyệt</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <div th:replace="base :: footer"></div>
+    <!-- Lịch bảo trì hôm nay -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white fw-bold">
+            Thiết bị cần bảo trì hôm nay
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Tên thiết bị</th>
+                        <th>Vị trí</th>
+                        <th>Thời gian dự kiến</th>
+                        <th>Nhân viên</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="m, stat : ${maintenanceSchedules}">
+                        <td th:text="${stat.count}"></td>
+                        <td th:text="${m.deviceId.nameDevice}"></td>
+                        <td><span th:text="${m.deviceId.currentLocationId != null ? m.deviceId.currentLocationId.wardId.fullName
+                                  + ', ' + m.deviceId.currentLocationId.wardId.provinceCode.fullName 
+                                  + ', ' + m.deviceId.currentLocationId.address : 'Chưa cập nhật'}"></span>
+                        <td>
+                            <span th:text="${#dates.format(m.startDate, 'dd/MM/yyyy')}"></span>
+                        </td>
+                        <td th:text="${m.employeeId != null ? m.employeeId.lastName + ' ' + m.employeeId.firstName : 'Chưa phân công'}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(maintenanceSchedules)}">
+                        <td colspan="5" class="text-center text-muted">Không có lịch bảo trì hôm nay</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
 
-    <script th:inline="javascript">
-        function updateCategory(categoryId) {
-            const form = document.getElementById('searchForm');
-            const kwInput = form.querySelector('input[name="kw"]');
-
-            // Tạo URL với các tham số
-            let url = /*[[@{/admin}]]*/ '/admin';
-            const params = new URLSearchParams();
-
-            if (kwInput.value) {
-                params.append('kw', kwInput.value);
-            }
-
-            if (categoryId) {
-                params.append('categoryId', categoryId);
-            }
-
-            if (params.toString()) {
-                url += '?' + params.toString();
-            }
-
-            window.location.href = url;
-        }
-    </script>
+<div th:replace="base :: footer"></div>
 </body>
 </html>
