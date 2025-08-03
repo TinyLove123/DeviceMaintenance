@@ -1,5 +1,7 @@
 import Nav from 'react-bootstrap/Nav';
 import { Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const Header = () => {
     return (
@@ -13,21 +15,16 @@ const Header = () => {
                 <Nav.Item>
 
                     <Nav.Link as={Link} to="/devices" eventKey="2">
-                        Danh sách sản phẩm
-                    </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link disabled>
                         Thuê thiết bị
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link disabled>
+                    <Nav.Link as={Link} to="/my-rented-devices">
                         Thiết bị đã thuê
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link disabled>
+                    <Nav.Link as={Link} to="/my-maintenance-schedule">
                         Lịch bảo trì cá nhân
                     </Nav.Link>
                 </Nav.Item>

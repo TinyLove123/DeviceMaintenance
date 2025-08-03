@@ -17,14 +17,16 @@ public class RentedDeviceDTO {
     private Boolean isRented;
     private String deviceName;
     private String manufacturer;
+    private String image;
 
-    public RentedDeviceDTO(int id, Date startDate, Date endDate, Boolean isRented, String deviceName, String manufacturer) {
+    public RentedDeviceDTO(int id, Date startDate, Date endDate, Boolean isRented, String deviceName, String manufacturer,String image) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isRented = isRented;
         this.deviceName = deviceName;
         this.manufacturer = manufacturer;
+        this.image = image;
     }
 
     /**
@@ -109,6 +111,20 @@ public class RentedDeviceDTO {
      */
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    /**
+     * @return the image
+     */
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
     }
 
     

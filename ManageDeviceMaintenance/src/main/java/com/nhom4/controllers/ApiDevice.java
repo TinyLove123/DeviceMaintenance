@@ -61,7 +61,9 @@ public class ApiDevice {
                               .collect(Collectors.toList());
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
-
+    
+    
+    
     @GetMapping("/secure/categories")
     public ResponseEntity<List<Category>> listCats() {
         return new ResponseEntity<>(this.catService.getCates(), HttpStatus.OK);

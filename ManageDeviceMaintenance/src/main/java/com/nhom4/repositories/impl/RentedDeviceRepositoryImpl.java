@@ -76,8 +76,10 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
                 root.get("startDate"),
                 root.get("endDate"),
                 root.get("isRented"),
+                
                 deviceJoin.get("nameDevice"),
-                deviceJoin.get("manufacturer")
+                deviceJoin.get("manufacturer"),
+                deviceJoin.get("image")
         )).where(cb.equal(root.get("customerId"), user));
         return s.createQuery(cq).getResultList();
 

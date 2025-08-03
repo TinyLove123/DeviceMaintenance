@@ -8,6 +8,9 @@ import Login from "./components/login";
 import Profile from "./components/profile";
 import { MyUserContext } from "./configs/Context";
 import MyUserReducer from "./reducers/MyUserReducer";
+import DeviceDetail from "./components/deviceDetail";
+import MyRentedDevice from "./components/myRentedDevice";
+import MyMaintenanceSchedule from "./components/myMaintenanceSchedule";
 
 const App = () => {
 
@@ -21,6 +24,9 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/devices" element={<Devices />} />
+        <Route path="/devices/:id" element={<DeviceDetail />} /> 
+        <Route path="/my-rented-devices" element={<MyRentedDevice/>} />
+        <Route path="/my-maintenance-schedule" element={<MyMaintenanceSchedule/>} />
       </Routes>
       <Footer />
     </BrowserRouter>
