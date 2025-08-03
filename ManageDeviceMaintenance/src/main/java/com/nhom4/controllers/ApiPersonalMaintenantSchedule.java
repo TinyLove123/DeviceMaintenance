@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nhom4.dto.MaintenanceScheduleDTO;
 import com.nhom4.pojo.MaintenanceSchedule;
+import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.User;
 import com.nhom4.services.MaintenanceScheduleService;
 import com.nhom4.services.UserService;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  *
@@ -68,7 +70,7 @@ public class ApiPersonalMaintenantSchedule {
     @PostMapping("/{id}/detail-maintenance-schedule")
     public ResponseEntity<?> MaintenanceScheduleUpdate(
             @PathVariable(value = "id") int id,
-            Principal principal) {
+            Principal principal, @RequestBody MaintenanceSchedule ms) {
 
         String username = principal.getName();
         User user = this.userService.getUserByUsername(username);
@@ -78,9 +80,12 @@ public class ApiPersonalMaintenantSchedule {
                     .status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "Bạn không có quyền truy cập thiết bị này"));
         }
-
-        MaintenanceSchedule ms = this.maintenanceScheduleRepo.getMaintenanceScheduleById(id);
-        return ResponseEntity.ok(this.maintenanceScheduleRepo.addOrUpdateMaintenanceSchedule(ms));
+        
+        MaintenanceSchedule ms1 = this.maintenanceScheduleRepo.getMaintenanceScheduleById(id);
+        ms1.setProgress(ms.getProgress());
+        
+        
+        return ResponseEntity.ok(this.maintenanceScheduleRepo.addOrUpdateMaintenanceSchedule(ms1));
     }
 
 }
