@@ -4,10 +4,6 @@
  */
 package com.nhom4.pojo;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,12 +15,13 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -38,7 +35,10 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Incident.findByTitle", query = "SELECT i FROM Incident i WHERE i.title = :title"),
     @NamedQuery(name = "Incident.findByReportDate", query = "SELECT i FROM Incident i WHERE i.reportDate = :reportDate"),
     @NamedQuery(name = "Incident.findByStatus", query = "SELECT i FROM Incident i WHERE i.status = :status"),
-    @NamedQuery(name = "Incident.findByApprovalDate", query = "SELECT i FROM Incident i WHERE i.approvalDate = :approvalDate")})
+    @NamedQuery(name = "Incident.findByApprovalDate", query = "SELECT i FROM Incident i WHERE i.approvalDate = :approvalDate"),
+    @NamedQuery(name = "Incident.findByIsEmergency", query = "SELECT i FROM Incident i WHERE i.isEmergency = :isEmergency"),
+    @NamedQuery(name = "Incident.findByStartDate", query = "SELECT i FROM Incident i WHERE i.startDate = :startDate"),
+    @NamedQuery(name = "Incident.findByEndDate", query = "SELECT i FROM Incident i WHERE i.endDate = :endDate")})
 public class Incident implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,8 +69,14 @@ public class Incident implements Serializable {
     @Column(name = "approval_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date approvalDate;
-    @OneToMany(mappedBy = "incidentId")
-    private Set<Repair> repairSet;
+    @Column(name = "is_emergency")
+    private Boolean isEmergency;
+    @Column(name = "start_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startDate;
+    @Column(name = "end_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endDate;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
     private Device deviceId;
@@ -146,12 +152,28 @@ public class Incident implements Serializable {
         this.approvalDate = approvalDate;
     }
 
-    public Set<Repair> getRepairSet() {
-        return repairSet;
+    public Boolean getIsEmergency() {
+        return isEmergency;
     }
 
-    public void setRepairSet(Set<Repair> repairSet) {
-        this.repairSet = repairSet;
+    public void setIsEmergency(Boolean isEmergency) {
+        this.isEmergency = isEmergency;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public Device getDeviceId() {

@@ -53,5 +53,10 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
     public Boolean isMaintenanceStaff(User u, int msId) {
         return this.maintenanceScheduleRepo.isMaintenanceStaff(u, msId);
     }
+
+    @Override
+    public List<MaintenanceSchedule> getTodayMaintenanceSchedule() {
+        return this.maintenanceScheduleRepo.getTodayMaintenanceSchedule();
+    }
     
 }

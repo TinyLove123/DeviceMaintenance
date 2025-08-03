@@ -16,7 +16,12 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
@@ -144,11 +149,29 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
     @Override
     public Boolean isMaintenanceStaff(User u, int msId) {
         Session s = this.factory.getObject().getCurrentSession();
-        MaintenanceSchedule loaded = s.get(MaintenanceSchedule.class, msId); 
+        MaintenanceSchedule loaded = s.get(MaintenanceSchedule.class, msId);
 
         return u != null && loaded != null
                 && loaded.getEmployeeId() != null
                 && u.getId().equals(loaded.getEmployeeId().getId());
+    }
+
+    @Override
+    public List<MaintenanceSchedule> getTodayMaintenanceSchedule() {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+        CriteriaQuery<MaintenanceSchedule> cq = cb.createQuery(MaintenanceSchedule.class);
+        Root<MaintenanceSchedule> root = cq.from(MaintenanceSchedule.class);
+
+        LocalDate today = LocalDate.now();
+        Date startOfDay = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date endOfDay = Date.from(today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        Predicate testPredicate = cb.lessThan(root.get("startDate"), new Date()); // lấy tất cả ngày trước hiện tại
+        cq.select(root).where(testPredicate);
+
+        Query query = s.createQuery(cq);
+        return query.getResultList();
     }
 
 }

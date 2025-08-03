@@ -27,4 +27,6 @@ public interface MaintenanceScheduleService {
     MaintenanceSchedule autoUpdateMaintenanceSchedule();
 
     Boolean isMaintenanceStaff(User u, int msId);
+    
+    List<MaintenanceSchedule> getTodayMaintenanceSchedule();
 }

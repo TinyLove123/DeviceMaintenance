@@ -16,14 +16,23 @@ import java.util.Map;
  * @author Administrator
  */
 public interface MaintenanceScheduleRepository {
-    List<MaintenanceSchedule> getMaintenanceSchedules(Map<String,String> params);
+
+    List<MaintenanceSchedule> getMaintenanceSchedules(Map<String, String> params);
+
     List<MaintenanceScheduleDTO> getMaintenanceSchedulesByUser(User user);
+
     MaintenanceSchedule getMaintenanceScheduleById(int id);
+
     MaintenanceSchedule addOrUpdateMaintenanceSchedule(MaintenanceSchedule m);
+
     MaintenanceSchedule autoUpdateMaintenanceSchedule();
+
     MaintenanceSchedule autoAddMaintenanceSchedule(MaintenanceSchedule m);
+
     MaintenanceSchedule setEmployee(User u);
+
     Boolean isMaintenanceStaff(User u, int msId);
     
+    List<MaintenanceSchedule> getTodayMaintenanceSchedule();
 
 }

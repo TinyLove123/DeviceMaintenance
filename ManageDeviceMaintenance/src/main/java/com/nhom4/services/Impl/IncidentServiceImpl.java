@@ -28,7 +28,7 @@ public class IncidentServiceImpl implements IncidentService{
 
     @Override
     public List<Incident> getIncident(Map<String, String> params) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.incidentRepo.getIncident(params);
     }
 
     @Override
@@ -59,6 +59,16 @@ public class IncidentServiceImpl implements IncidentService{
     @Override
     public List<Device> getListDeviceHadIncidentReport() {
         return this.incidentRepo.getListDeviceHadIncidentReport();
+    }
+
+    @Override
+    public List<Incident> getPreviousIncidentNotApproved() {
+        return this.incidentRepo.getPreviousIncidentNotApproved();
+    }
+
+    @Override
+    public long countIncidentsToday() {
+        return this.incidentRepo.LcountIncidentsToday();
     }
 
     

@@ -13,6 +13,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import static java.time.LocalDateTime.now;
 import java.util.Date;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,17 +37,18 @@ public class IncidentController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/incident-device")
-    public String getDeviceListHadIncident(Model model) {
-        model.addAttribute("devicesIncident", this.incidentRepo.getListDeviceHadIncidentReport());
+    @GetMapping("/incident-manager")
+    public String getDeviceListHadIncident(Model model,@RequestParam Map<String, String> params) {
+        model.addAttribute("Incidents", this.incidentRepo.getIncident(params));
 
         return "incidentManager";
     }
 
-    @GetMapping("/incident-device/{id}/incident-detail")
-    public String getDetailIncident(Model model, @PathVariable("id") Integer deviceId) {
+    @GetMapping("/incident-manager/{id}/incident-detail")
+    public String getDetailIncident(Model model, @PathVariable("id") Integer incidentId) {
 
-        model.addAttribute("Incident", this.incidentRepo.getNewIncident(deviceId));
+        model.addAttribute("employees", this.userService.getEmployee());
+        model.addAttribute("Incident", this.incidentRepo.getIncidentById(incidentId));
 
         return "incidentDetail";
     }
