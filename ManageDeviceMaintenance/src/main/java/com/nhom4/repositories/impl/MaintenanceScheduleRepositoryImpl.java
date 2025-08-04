@@ -60,6 +60,11 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
                 predicates.add(b.equal(root.get("startDate").as(Integer.class), startDate));
             }
 
+            String progress = params.get("progress");
+            if (progress != null && !progress.isEmpty()) {
+                predicates.add(b.equal(root.get("progress"), progress));
+            }
+
 //            String cateId = params.get("categoryId");
 //            if (cateId != null && !cateId.isEmpty()) {
 //                predicates.add(b.equal(root.get("categoryId").as(Integer.class), cateId));

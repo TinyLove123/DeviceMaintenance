@@ -9,9 +9,11 @@ import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.RepairCost;
 import com.nhom4.pojo.RepairType;
 import com.nhom4.pojo.User;
+import com.nhom4.repositories.MaintenanceScheduleRepository;
 import com.nhom4.services.DeviceService;
 import com.nhom4.services.MaintenanceScheduleService;
 import com.nhom4.services.UserService;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +30,16 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author Administrator
  */
-@Controller
 
+@Controller
+@RequestMapping("/admin")
 public class MaintenanceScheduleController {
 
     @Autowired
     private MaintenanceScheduleService maintenanceScheduleService;
+    
+    @Autowired
+    private MaintenanceScheduleRepository maintenanceScheduleRepo;
 
     @Autowired
     private UserService userService;
@@ -41,7 +47,7 @@ public class MaintenanceScheduleController {
     @Autowired
     private DeviceService deviceService;
 
-    @GetMapping("/maintenanceSchedule")
+    @GetMapping("/maintenance-schedule-manager")
     public String maintenanceScheduleView(Model model, @RequestParam Map<String, String> params) {
         
         List<User> employees=userService.getEmployee();
@@ -52,6 +58,16 @@ public class MaintenanceScheduleController {
 
         return "maintenanceSchedule";
     }
+    
+    @GetMapping("/maintenance-schedule-manager/{id}/maintenance-schedule-detail")
+    public String getDetailMaintenanceSchedule(Model model, @PathVariable("id") Integer maintenanceId) {
+
+        model.addAttribute("employees", this.userService.getEmployee());
+        model.addAttribute("maintenanceSchedule", this.maintenanceScheduleService.getMaintenanceScheduleById(maintenanceId));
+
+        return "maintenanceScheduleDetail";
+    }
+    
 
     @PostMapping("/changeEmployee")
     public String changeEmployee(@RequestParam("scheduleId") int scheduleId,
@@ -64,6 +80,6 @@ public class MaintenanceScheduleController {
                 maintenanceScheduleService.addOrUpdateMaintenanceSchedule(schedule); // Gọi service đã viết
             }
         }
-        return "redirect:/maintenanceSchedule";
+        return "redirect:/admin/maintenance-schedule-manager";
     }
 }

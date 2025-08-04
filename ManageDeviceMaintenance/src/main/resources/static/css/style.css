@@ -1,0 +1,65 @@
+
+/* Tổng layout: toàn bộ body chiếm full màn hình và chia làm header + main + footer */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f7fa;
+}
+
+/* Main content sẽ chiếm toàn bộ phần còn lại giữa header và footer */
+main.container {
+    flex: 1;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Footer luôn ở đáy */
+footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #ddd;
+    padding: 1rem;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Bảng bảo trì */
+.table thead th {
+    background-color: #007bff;
+    color: white;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    font-size: 15px;
+}
+
+/* Button chỉnh sửa */
+.btn-primary {
+    font-size: 0.875rem;
+    padding: 5px 12px;
+}
+
+/* Đánh dấu tiến trình */
+.text-warning {
+    color: #ffc107 !important;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+/* Responsive cải tiến một chút */
+@media (max-width: 768px) {
+    .table {
+        font-size: 13px;
+    }
+}
