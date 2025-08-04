@@ -46,15 +46,13 @@ public class DeviceController {
 
     @Autowired
     private LocationService locationService;
-    
-   
 
     @GetMapping
     @Transactional
     public String listDevices(Model model,
             @RequestParam Map<String, String> params) {
         model.addAttribute("devices", deviceService.getDevice(params));
-        
+
         model.addAttribute("categories", categoryService.getCates());
 
         return "deviceManage";
@@ -96,7 +94,6 @@ public class DeviceController {
     @GetMapping("/devices/{id}")
     public String getDeviceDetail(@PathVariable("id") int id, Model model) {
         Device device = this.deviceService.getDeviceById(id);
-        List<RepairCost> repairCosts = this.deviceService.getRepairTypeByDeviceId(id);
         List<RepairType> repairTypes = this.repairTypeService.getRepairType();
 
         model.addAttribute("device", device);
@@ -108,6 +105,34 @@ public class DeviceController {
         model.addAttribute("provinces", this.locationService.getProvince());
 
         return "deviceDetail";
+    }
+
+    @GetMapping("/devices/{id}/update")
+    public String updateDevicePage(@PathVariable("id") int id, Model model) {
+        Device device = this.deviceService.getDeviceById(id);
+        List<RepairType> repairTypes = this.repairTypeService.getRepairType();
+        model.addAttribute("device", device);
+        model.addAttribute("repairCosts", device.getRepairCostSet());
+        model.addAttribute("currentLocation", device.getLocationSet());
+        model.addAttribute("repairCost", new RepairCost());
+        model.addAttribute("location", new Location());
+        model.addAttribute("repairTypes", repairTypes);
+        model.addAttribute("provinces", this.locationService.getProvince());
+
+        return "updateDevice";
+    }
+
+    @PostMapping("/devices/{id}/update-device")
+    public String updateDevice(@PathVariable("id") int id,@ModelAttribute("device") Device device, Model model) {
+        Device d = this.deviceService.getDeviceById(id);
+        d.setNameDevice(device.getNameDevice());
+        d.setManufacturer(device.getManufacturer());
+        d.setFrequency(device.getFrequency());
+        d.setFile(device.getFile());
+        
+        this.deviceService.addOrUpdateDevice(d);
+        
+        return "redirect:/admin/devices-manager/devices/"+ d.getId()+"/update" ;
     }
 
     @PostMapping("/devices/{id}/add-repair")
@@ -141,9 +166,7 @@ public class DeviceController {
 
     @PostMapping("/devices/{id}/update-location")
     public String updateLocation(Model model, @PathVariable("id") int deviceId, Location loc) {
-        
-        
-        
+
         this.locationService.addLocation(deviceId, loc);
         return "redirect:/admin/devices-manager/devices/" + deviceId;
 

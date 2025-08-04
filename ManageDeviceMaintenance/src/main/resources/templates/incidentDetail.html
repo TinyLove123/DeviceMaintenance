@@ -27,7 +27,8 @@
                         <p><strong>Trạng thái:</strong> <span th:text="${Incident.status}"></span></p>
 
                         <!-- ✅ FORM cập nhật trạng thái -->
-                        <form th:action="@{|/admin/incident-device/${Incident.deviceId.id}/incident-update/${Incident.id}|}" method="post">
+                       <form th:action="@{|/admin/incident-device/${Incident.deviceId.id}/incident-update/${Incident.id}|}" 
+      method="post" onsubmit="return validateForm()">
                             <div class="mb-3">
                                 <label for="status" class="form-label">Cập nhật trạng thái:</label>
                                 <select name="status" id="status" class="form-control" onchange="toggleEmployeeDropdown(this.value)">
@@ -90,15 +91,32 @@
 
     <div th:replace="base :: footer"></div>
 
+    
+    
     <script>
-        function toggleEmployeeDropdown(value) {
-            const empSelect = document.getElementById('approvedFields');
-            empSelect.style.display = (value === 'APPROVED') ? 'block' : 'none';
-        }
+    function toggleEmployeeDropdown(value) {
+        const empSelect = document.getElementById('approvedFields');
+        empSelect.style.display = (value === 'APPROVED') ? 'block' : 'none';
+    }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            toggleEmployeeDropdown(document.getElementById('status').value);
-        });
-    </script>
+    document.addEventListener("DOMContentLoaded", function () {
+        toggleEmployeeDropdown(document.getElementById('status').value);
+    });
+
+    function validateForm() {
+        const status = document.getElementById('status').value;
+        if (status === 'APPROVED') {
+            const employeeId = document.getElementById('employeeId').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (!employeeId || !startDate || !endDate) {
+                alert('Khi chọn APPROVED, bạn phải chọn nhân viên và nhập ngày bắt đầu, ngày kết thúc!');
+                return false;
+            }
+        }
+        return true;
+    }
+</script>
 </body>
 </html>

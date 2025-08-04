@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Card, Col, Row, Spinner, Alert } from "react-bootstrap";
+import { Alert, Button, Card, Col, Row, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { MyUserContext } from "../configs/Context";
 import { authApis, endpoints } from "../configs/Apis";
+import { MyUserContext } from "../configs/Context";
 
 const MyRentedDevice = () => {
     const [user] = useContext(MyUserContext);
-    const [devices, setDevices] = useState([]);
+    const [, setDevices] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -16,6 +16,7 @@ const MyRentedDevice = () => {
             try {
                 const res = await authApis().get(endpoints['myRentedDevice']);
                 setDevices(res.data);
+                console.log(res.data)
             } catch (err) {
                 console.error("Error loading rented devices:", err);
             } finally {
@@ -53,9 +54,12 @@ const MyRentedDevice = () => {
                             <Card.Text>
                                 Ngày thuê: {new Date(d.startDate).toLocaleDateString()}
                             </Card.Text>
-                            <Button variant="primary" onClick={() => navigate(`/devices/${d.id}`)}>
-                                        Chi tiết
-                                    </Button>
+                            <Button
+                                variant="primary"
+                                onClick={() => navigate(`/my-rented-device-detail/${d.id}`)}
+                            >
+                                Chi tiết
+                            </Button>
                         </Card.Body>
                     </Card>
                 </Col>

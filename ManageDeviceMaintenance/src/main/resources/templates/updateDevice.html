@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Chi tiết thiết bị</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+    <style>
+        .device-info p {
+            margin-bottom: 8px;
+        }
+
+        .form-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .table thead th {
+            background-color: #e9ecef;
+        }
+
+        .device-image {
+            margin-top: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        .btn-action {
+            margin-right: 5px;
+        }
+
+        .update-form {
+            display: none;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fdfdfd;
+        }
+
+        .update-form h5 {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container mt-4">
+        <h2 class="mb-4 text-primary">Chi tiết thiết bị</h2>
+
+        <!-- Thông tin thiết bị -->
+        <div class="device-info mb-4">
+            <p><strong>Tên thiết bị:</strong> <span th:text="${device.nameDevice}"></span></p>
+            <p><strong>Nhà sản xuất:</strong> <span th:text="${device.manufacturer}"></span></p>
+            <p><strong>Ngày mua:</strong> <span th:text="${#dates.format(device.purchaseDate, 'dd/MM/yyyy')}"></span></p>
+            <p><strong>Giá mua:</strong> <span th:text="${#numbers.formatDecimal(device.price, 0, 'POINT', 0, 'COMMA')}"></span> VNĐ</p>
+            <img class="device-image" th:src="${device.image}" width="200" />
+            <p>
+                <strong>Vị trí hiện tại:</strong>
+                <span th:text="${device.currentLocationId != null ? device.currentLocationId.wardId.fullName + ', ' + device.currentLocationId.wardId.provinceCode.fullName + ', ' + device.currentLocationId.address : 'Chưa cập nhật'}"></span>
+            </p>
+            <button class="btn btn-success mb-3" onclick="toggleAddRepairForm()">+ Thêm chi phí sửa chữa</button>
+            <button class="btn btn-info mb-3" onclick="toggleLocationForm()">Cập nhật vị trí thiết bị</button>
+            <button class="btn btn-primary mb-3" onclick="toggleUpdateDeviceForm()">Cập nhật thiết bị</button>
+
+
+        </div>
+
+        <div id="updateDeviceForm" style="display: none;" class="card p-3 mb-4 bg-light">
+            <form th:action="@{/admin/devices-manager/devices/{id}/update-device (id=${device.id})}" enctype="multipart/form-data" method="post" th:object="${device}">
+                <div class="mb-3">
+                    <label for="nameDevice" class="form-label">Tên thiết bị:</label>
+                    <input type="text" class="form-control" id="nameDevice" th:field="*{nameDevice}" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="manufacturer" class="form-label">Nhà phát hành:</label>
+                    <textarea class="form-control" id="manufacturer" th:field="*{manufacturer}" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="frequency" class="form-label">Tần xuất bảo trì:</label>
+                    <input type="number" class="form-control" id="frequency" th:field="*{frequency}" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="statusDevice" class="form-label">Trạng thái:</label>
+                    <select class="form-select" id="statusDevice" th:field="*{statusDevice}">
+                        <option value="active">Còn hoạt đông</option>
+                        <option value="inactive">Không còn hoạt động</option>
+                        <option value="exclude">Ngừng cho thuê</option>
+                    </select>
+                </div>
+
+                
+
+                <div class="mb-3">
+                    <label for="price" class="form-label">Ảnh thiết bị: </label>
+                    <input type="file" class="form-control" th:field="*{file}"  />
+                    <img th:if="${device.image != null}" th:src="${device.image}" width="200" />
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <input type="hidden" th:field="*{image}"  />
+
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span >Cập nhật thiết bị</span>
+                    </button>
+
+                </div>
+
+                
+            </form>
+        </div>
+
+
+        <!-- Danh sách chi phí sửa chữa -->
+        <h4 class="mb-3">Chi phí sửa chữa</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Mã sửa chữa</th>
+                        <th>Loại sửa chữa</th>
+                        <th>Giá sửa chữa (VNĐ)</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${repairCosts.empty}">
+                        <td colspan="4" class="text-center text-muted">Chưa có chi phí sửa chữa nào.</td>
+                    </tr>
+                    <tr th:each="r : ${repairCosts}" th:if="${r != null}">
+                        <td th:text="${r.id}"></td>
+                        <td th:text="${r.repairTypeId.type}"></td>
+                        <td th:text="${#numbers.formatDecimal(r.price, 0, 'POINT', 0, 'COMMA')}"></td>
+                        <td>
+                            <button class="btn btn-warning btn-sm btn-action"
+                                    type="button"
+                                    th:attr="onclick='showUpdateForm(' + ${r.id} + ')'">Cập nhật</button>
+                            <a th:href="@{/admin/devices-manager/devices/{deviceId}/repaircost/{repairCostId}/delete(deviceId=${device.id}, repairCostId=${r.id})}"
+                               class="btn btn-danger btn-sm btn-action"
+                               onclick="return confirm('Bạn có chắc chắn muốn xoá chi phí sửa chữa này?');">
+                                Xoá
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Form cập nhật chi phí -->
+        <div th:each="r : ${repairCosts}">
+            <form th:action="@{/admin/devices-manager/devices/{id}/update-repair(id=${device.id})}" method="post"
+                  th:id="'form-update-' + ${r.id}" 
+                  class="update-form"
+                  th:object="${repairCost}">
+
+                <input type="hidden" name="id" th:value="${r.id}" />
+
+                <h5>Cập nhật chi phí sửa chữa #<span th:text="${r.id}"></span></h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Loại sửa chữa:</label>
+                        <select class="form-select" name="repairTypeId.id" required>
+                            <option th:each="t : ${repairTypes}" 
+                                    th:value="${t.id}" 
+                                    th:selected="${t.id == r.repairTypeId.id}" 
+                                    th:text="${t.type}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Giá sửa chữa (VNĐ):</label>
+                        <input type="number" step="1000" min="0"
+                               class="form-control" name="price"
+                               th:value="${r.price}" required />
+                    </div>
+
+                    <div class="col-md-2 d-flex align-items-end mb-3">
+                        <button type="submit" class="btn btn-primary me-2">Lưu</button>
+                        <button type="button" class="btn btn-secondary"
+                                th:attr="onclick='hideUpdateForm(' + ${r.id} + ')'">Hủy</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Form thêm chi phí sửa chữa -->
+        <div class="form-section mt-4" id="addRepairForm" style="display: none;">
+            <h5 class="mb-3">Thêm chi phí sửa chữa</h5>
+            <form th:action="@{/admin/devices-manager/devices/{id}/add-repair(id=${device.id})}" method="post" th:object="${repairCost}">
+                <div class="mb-3">
+                    <label for="repairType" class="form-label">Loại sửa chữa:</label>
+                    <select class="form-select" th:field="*{repairTypeId.id}" id="repairType" required>
+                        <option value="" disabled selected>-- Chọn loại sửa chữa --</option>
+                        <option th:each="r : ${repairTypes}" th:value="${r.id}" th:text="${r.type}"></option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="price" class="form-label">Giá sửa chữa (VNĐ):</label>
+                    <input type="number" step="1000" min="0" class="form-control" id="price"
+                           th:field="*{price}" placeholder="Nhập giá sửa chữa..." required />
+                </div>
+
+                <button type="submit" class="btn btn-success">Thêm sửa chữa</button>
+            </form>
+        </div>
+        <!-- Form cập nhật vị trí thiết bị -->
+        <h5 class="mt-5">Cập nhật vị trí thiết bị</h5>
+        <form id="locationForm" style="display: none;" th:action="@{/admin/devices-manager/devices/{id}/update-location(id=${device.id})}" method="post" th:object="${location}">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Chọn Tỉnh/Thành phố:</label>
+                    <select id="provinceSelect" class="form-select" name="provinceCode" required>
+                        <option value="">-- Chọn tỉnh/thành phố --</option>
+                        <option th:each="p : ${provinces}" 
+                                th:value="${p.code}" 
+                                th:text="${p.fullName}"></option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Chọn Xã/Phường:</label>
+                    <select id="wardSelect" class="form-select" th:field="*{wardId.code}" name="wardCode.code" required>
+                        <option value="">-- Chọn xã/phường --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Địa chỉ cụ thể</label>
+                    <input type="text" class="form-control" name="address" th:field="*{address}" placeholder="Số nhà, đường..." required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Cập nhật vị trí</button>
+        </form>
+
+
+        <a th:href="@{/admin/devices-manager}" class="btn btn-secondary mt-4">← Quay lại</a>
+
+    </main>
+
+    <div th:replace="base :: footer"></div>
+
+    <script>
+        function toggleAddRepairForm() {
+            const form = document.getElementById('addRepairForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleLocationForm() {
+            const form = document.getElementById('locationForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+    <script>
+        function toggleUpdateDeviceForm() {
+            const form = document.getElementById('updateDeviceForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+
+    <script>
+        function showUpdateForm(id) {
+            document.getElementById("form-update-" + id).style.display = "block";
+        }
+
+        function hideUpdateForm(id) {
+            document.getElementById("form-update-" + id).style.display = "none";
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const provinceSelect = document.getElementById('provinceSelect');
+            const wardSelect = document.getElementById('wardSelect');
+
+            // Xử lý khi chọn tỉnh
+            provinceSelect.addEventListener('change', function () {
+                const provinceCode = this.value;
+                wardSelect.innerHTML = '<option value="">-- Chọn xã/phường --</option>';
+
+                if (!provinceCode)
+                    return;
+
+                // Gọi API để lấy danh sách xã/phường theo tỉnh
+                fetch(`/ManageDeviceMaintenance/admin/devices-manager/wards?provinceId=${provinceCode}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Không thể tải danh sách xã/phường');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            data.forEach(ward => {
+                                const option = document.createElement('option');
+                                option.value = ward.code;
+                                option.textContent = ward.fullName;
+                                wardSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Lỗi:', error);
+                            alert('Có lỗi xảy ra khi tải danh sách xã/phường');
+                        });
+            });
+
+            // Nếu đã có giá trị tỉnh được chọn trước đó (khi edit), tự động load xã/phường
+            const selectedProvince = provinceSelect.value;
+            if (selectedProvince) {
+                provinceSelect.dispatchEvent(new Event('change'));
+
+                // Sau khi load xã xong, chọn giá trị đã có (nếu có)
+                setTimeout(() => {
+                    const selectedWard = wardSelect.querySelector(`option[value="${wardSelect.dataset.selected}"]`);
+                    if (selectedWard) {
+                        selectedWard.selected = true;
+                    }
+                }, 500);
+            }
+        });
+    </script>
+
+</body>
+</html>

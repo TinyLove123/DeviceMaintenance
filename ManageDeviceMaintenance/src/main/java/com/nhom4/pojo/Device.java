@@ -80,7 +80,7 @@ public class Device implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price")
     private Double price;
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "deviceId")
     private Set<RepairCost> repairCostSet;
     @JsonIgnore
@@ -142,7 +142,6 @@ public class Device implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
-
     public String getStatusDevice() {
         return statusDevice;
     }
@@ -158,7 +157,6 @@ public class Device implements Serializable {
     public void setFrequency(Integer frequency) {
         this.frequency = frequency;
     }
-
 
     public Double getPrice() {
         return price;
@@ -263,8 +261,6 @@ public class Device implements Serializable {
         this.file = file;
     }
 
-    
-
     public String getManufacturer() {
         return manufacturer;
     }
@@ -273,7 +269,6 @@ public class Device implements Serializable {
         this.manufacturer = manufacturer;
     }
 
-
     public String getImage() {
         return image;
     }
@@ -281,5 +276,5 @@ public class Device implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
-    
+
 }

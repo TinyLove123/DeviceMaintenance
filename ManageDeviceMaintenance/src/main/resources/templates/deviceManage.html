@@ -54,7 +54,7 @@
             <td th:text="${#dates.format(device.purchaseDate, 'dd/MM/yyyy')}"></td>
             <td>
                 <a th:href="@{'/admin/devices-manager/devices/' + ${device.id}}" class="btn btn-primary">Xem thêm</a>
-                <a th:href="@{/admin/devices-manager/edit/{id}(id=${device.id})}"
+                <a th:href="@{/admin/devices-manager/devices/{id}/update (id=${device.id})}"
                    class="btn btn-sm btn-warning">Sửa</a>
                 <a th:href="@{/admin/devices-manager/devices/{id}/delete(id=${device.id})}"
                    class="btn btn-sm btn-danger"

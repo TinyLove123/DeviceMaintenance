@@ -4,7 +4,9 @@
  */
 package com.nhom4.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,12 +16,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  *
@@ -34,6 +40,22 @@ import java.util.Date;
     @NamedQuery(name = "MaintenanceSchedule.findByProgress", query = "SELECT m FROM MaintenanceSchedule m WHERE m.progress = :progress")})
 public class MaintenanceSchedule implements Serializable {
 
+    @Size(max = 20)
+    @Column(name = "progress")
+    private String progress;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "recept_status")
+    private String receptStatus;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "maintenanceScheduleId")
+    private MaintenanceScheduleReport maintenanceScheduleReport;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "maintenanceScheduleId")
+    private Set<MaintenanceScheduleReport> maintenanceScheduleReportSet;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "maintenanceScheduleId")
+    private MaintenanceIncidentLink maintenanceIncidentLink;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,9 +65,6 @@ public class MaintenanceSchedule implements Serializable {
     @Column(name = "start_date")
     @Temporal(TemporalType.DATE)
     private Date startDate;
-    @Size(max = 20)
-    @Column(name = "progress")
-    private String progress;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Device deviceId;
@@ -76,13 +95,6 @@ public class MaintenanceSchedule implements Serializable {
         this.startDate = startDate;
     }
 
-    public String getProgress() {
-        return progress;
-    }
-
-    public void setProgress(String progress) {
-        this.progress = progress;
-    }
 
     public Device getDeviceId() {
         return deviceId;
@@ -124,5 +136,51 @@ public class MaintenanceSchedule implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.MaintenanceSchedule[ id=" + id + " ]";
     }
+
+
+    public Set<MaintenanceScheduleReport> getMaintenanceScheduleReportSet() {
+        return maintenanceScheduleReportSet;
+    }
+
+    public void setMaintenanceScheduleReportSet(Set<MaintenanceScheduleReport> maintenanceScheduleReportSet) {
+        this.maintenanceScheduleReportSet = maintenanceScheduleReportSet;
+    }
+
+    public MaintenanceIncidentLink getMaintenanceIncidentLink() {
+        return maintenanceIncidentLink;
+    }
+
+    public void setMaintenanceIncidentLink(MaintenanceIncidentLink maintenanceIncidentLink) {
+        this.maintenanceIncidentLink = maintenanceIncidentLink;
+    }
+
+
+    public String getReceptStatus() {
+        return receptStatus;
+    }
+
+    public void setReceptStatus(String receptStatus) {
+        this.receptStatus = receptStatus;
+    }
+
+
+    
+
+    public MaintenanceScheduleReport getMaintenanceScheduleReport() {
+        return maintenanceScheduleReport;
+    }
+
+    public void setMaintenanceScheduleReport(MaintenanceScheduleReport maintenanceScheduleReport) {
+        this.maintenanceScheduleReport = maintenanceScheduleReport;
+    }
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
     
 }

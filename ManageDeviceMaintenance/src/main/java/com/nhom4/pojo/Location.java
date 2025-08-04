@@ -44,6 +44,7 @@ public class Location implements Serializable {
     private String address;
     @OneToOne(mappedBy = "lastLocationId")
     private Location location;
+    @JsonIgnore
     @OneToMany(mappedBy = "currentLocationId")
     private Set<Device> deviceSet;
 
@@ -156,13 +157,6 @@ public class Location implements Serializable {
         return "com.nhom4.pojo.Location[ id=" + id + " ]";
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public Location getLocation() {
         return location;
@@ -178,6 +172,14 @@ public class Location implements Serializable {
 
     public void setDeviceSet(Set<Device> deviceSet) {
         this.deviceSet = deviceSet;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
     
 }

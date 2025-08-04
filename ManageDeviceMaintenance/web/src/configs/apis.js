@@ -7,12 +7,13 @@ const BASE_URL="http://localhost:8080/ManageDeviceMaintenance/api/";
 export const endpoints={
     'login':'/login',
     'categories':'/categories',
-    'devices':'devices',
+    'devices':'/devices',
     'register': '/users',
     'profile':'/secure/profile',
     'deviceDetail': (id) => `devices/${id}`,
     'myRentedDevice':'secure/my-rented-devices',
     'rentedDevice': (id) => `secure/devices/${id}/rented-device`,
+    'rentedDeviceDetail': (id,rentedId) => `secure/devices/${id}/rented-device/${rentedId}/`,
     'myMaintenanceSchedules': 'secure/persional-maintenance-schedule/',
     'maintenanceScheduleDetail':(id) => `secure/persional-maintenance-schedule/${id}/detail-maintenance-schedule`
 
