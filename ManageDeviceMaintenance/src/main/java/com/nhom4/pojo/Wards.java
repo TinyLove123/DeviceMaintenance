@@ -175,6 +175,9 @@ public class Wards implements Serializable {
         return "com.nhom4.pojo.Wards[ code=" + code + " ]";
     }
 
+
+    
+
     public String getName() {
         return name;
     }
@@ -183,6 +186,9 @@ public class Wards implements Serializable {
         this.name = name;
     }
 
+    
+
+   
    
     
 }

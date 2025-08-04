@@ -59,9 +59,15 @@ public class User implements Serializable {
     @Column(name = "last_name")
     private String lastName;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 100)
     @Column(name = "email")
     private String email;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     @Size(max = 20)
     @Column(name = "phone")
@@ -85,6 +91,12 @@ public class User implements Serializable {
     @Size(max = 200)
     @Column(name = "avatar")
     private String avatar;
+    @JsonIgnore
+    @OneToMany(mappedBy = "employeeId")
+    private Set<MaintenanceSchedule> maintenanceScheduleSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
+    @JsonIgnore
+    private Set<MaintenanceScheduleReport> maintenanceScheduleReportSet;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -234,6 +246,27 @@ public class User implements Serializable {
     }
 
 
+    
+
+
+    public Set<MaintenanceSchedule> getMaintenanceScheduleSet() {
+        return maintenanceScheduleSet;
+    }
+
+    public void setMaintenanceScheduleSet(Set<MaintenanceSchedule> maintenanceScheduleSet) {
+        this.maintenanceScheduleSet = maintenanceScheduleSet;
+    }
+
+    public Set<MaintenanceScheduleReport> getMaintenanceScheduleReportSet() {
+        return maintenanceScheduleReportSet;
+    }
+
+    public void setMaintenanceScheduleReportSet(Set<MaintenanceScheduleReport> maintenanceScheduleReportSet) {
+        this.maintenanceScheduleReportSet = maintenanceScheduleReportSet;
+    }
+
+    
+
     public String getEmail() {
         return email;
     }
@@ -258,7 +291,8 @@ public class User implements Serializable {
         this.sex = sex;
     }
 
-    
+   
+
     public String getUsername() {
         return username;
     }

@@ -5,6 +5,7 @@
 package com.nhom4.pojo;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -41,12 +43,6 @@ import java.util.Date;
     @NamedQuery(name = "Incident.findByEndDate", query = "SELECT i FROM Incident i WHERE i.endDate = :endDate")})
 public class Incident implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -58,14 +54,23 @@ public class Incident implements Serializable {
     @Size(min = 1, max = 65535)
     @Column(name = "detail_describe")
     private String detailDescribe;
-    @Column(name = "report_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date reportDate;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 16)
     @Column(name = "status")
     private String status;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "incidentId")
+    private MaintenanceIncidentLink maintenanceIncidentLink;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Column(name = "report_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reportDate;
     @Column(name = "approval_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date approvalDate;
@@ -112,13 +117,6 @@ public class Incident implements Serializable {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getDetailDescribe() {
         return detailDescribe;
@@ -136,13 +134,6 @@ public class Incident implements Serializable {
         this.reportDate = reportDate;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public Date getApprovalDate() {
         return approvalDate;
@@ -231,6 +222,32 @@ public class Incident implements Serializable {
     @Override
     public String toString() {
         return "com.nhom4.pojo.Incident[ id=" + id + " ]";
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public MaintenanceIncidentLink getMaintenanceIncidentLink() {
+        return maintenanceIncidentLink;
+    }
+
+    public void setMaintenanceIncidentLink(MaintenanceIncidentLink maintenanceIncidentLink) {
+        this.maintenanceIncidentLink = maintenanceIncidentLink;
     }
     
 }

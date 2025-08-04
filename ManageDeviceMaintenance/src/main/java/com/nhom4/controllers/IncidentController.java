@@ -38,7 +38,7 @@ public class IncidentController {
     private UserService userService;
 
     @GetMapping("/incident-manager")
-    public String getDeviceListHadIncident(Model model,@RequestParam Map<String, String> params) {
+    public String getDeviceListHadIncident(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("Incidents", this.incidentRepo.getIncident(params));
 
         return "incidentManager";
@@ -57,24 +57,28 @@ public class IncidentController {
     public String updateIncidentStatus(
             @PathVariable("incidentId") Integer incidentId,
             @RequestParam("status") String status,
+            @RequestParam(value = "employeeId", required = false) Integer employeeId,
             Principal principal
     ) {
-
         String username = principal.getName();
         User adminUser = this.userService.getUserByUsername(username);
 
         Incident incident = this.incidentRepo.getIncidentById(incidentId);
 
         if (incident != null) {
-
             incident.setStatus(status);
             incident.setApprovedBy(adminUser);
             incident.setApprovalDate(new Date());
 
+            if ("APPROVED".equalsIgnoreCase(status) && employeeId != null) {
+                User employee = this.userService.getUserById(employeeId);
+                incident.setEmployeeId(employee);
+            }
+
             this.incidentRepo.addOrUpdateIncident(incident, incident.getDeviceId().getId(), adminUser);
         }
 
-        return "incidentManager";
+        return "redirect:/admin/incident-manager";
     }
 
 }

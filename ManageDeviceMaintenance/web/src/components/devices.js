@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Apis, { authApis, endpoints } from "../configs/Apis";
-import { Button, Card, Col, Row } from "react-bootstrap";
 import { MyUserContext } from "../configs/Context";
 
 const Devices = () => {

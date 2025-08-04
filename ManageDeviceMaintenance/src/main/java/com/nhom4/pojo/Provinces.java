@@ -165,6 +165,9 @@ public class Provinces implements Serializable {
         return "com.nhom4.pojo.Provinces[ code=" + code + " ]";
     }
 
+
+    
+
     public String getName() {
         return name;
     }
@@ -173,6 +176,9 @@ public class Provinces implements Serializable {
         this.name = name;
     }
 
+    
+
+    
     
     
 }
