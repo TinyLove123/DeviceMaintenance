@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>LỊCH BẢO TRÌ</title>
+    <head>
+        <title>LỊCH BẢO TRÌ</title>
     <th:block th:replace="base :: bootstrap"></th:block>
 
 
@@ -36,12 +36,16 @@
                     <td th:text="${m.deviceId.nameDevice}"></td>
                     <td th:text="${m.employeeId != null ? m.employeeId.firstName + ' ' + m.employeeId.lastName : 'Chưa xếp'}"
                         th:classappend="${m.employeeId == null} ? 'text-danger fw-bold' : ''"></td>
+                    
                     <td>
-                        <span th:attr="data-start=${m.startDate}" class="remaining-days"></span>
+                        <span th:if="${m.progress != 'completed'}" th:attr="data-start=${m.startDate}" class="remaining-days"></span>
                     </td>
                     <td>
-                        <a th:href="@{/admin/maintenance-schedule-manager/{id}/maintenance-schedule-detail(id=${m.id})}" class="btn btn-primary">Chỉnh sửa</a>
+                        <a th:if="${m.progress != 'completed'}"
+                           th:href="@{/admin/maintenance-schedule-manager/{id}/maintenance-schedule-detail(id=${m.id})}"
+                           class="btn btn-primary">Chỉnh sửa</a>
                     </td>
+
                 </tr>
             </tbody>
         </table>

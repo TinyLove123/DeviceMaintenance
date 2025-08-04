@@ -30,9 +30,9 @@ const MyMaintenanceSchedule = () => {
 
   const updateProgress = async (schedule) => {
     const { id, progress } = schedule;
-  
+
     let nextProgress = null;
-  
+
     if (progress === "in_completed") {
       nextProgress = "in_progress";
     } else if (progress === "in_progress") {
@@ -40,22 +40,27 @@ const MyMaintenanceSchedule = () => {
     } else {
       return;
     }
-  
+
     if (!window.confirm(`Xác nhận chuyển trạng thái sang "${nextProgress}"?`)) return;
-  
+
     try {
-      await authApis().post(endpoints.maintenanceScheduleDetail(schedule.id), {
+      const res = await authApis().post(endpoints.maintenanceScheduleDetail(schedule.id), {
         progress: nextProgress
       });
-  
+
+      const updated = res.data;
+
+      if (!updated || updated.progress === progress) {
+        return;
+      }
+
       setSchedules(prev =>
         prev.map(s => (s.id === id ? { ...s, progress: nextProgress } : s))
       );
     } catch (err) {
-      console.error("Lỗi cập nhật tiến trình:", err);
+      console.error("Lỗi hệ thống:", err);
     }
   };
-  
 
   return (
     <div className="min-h-screen bg-white text-black flex items-center justify-center px-4">
@@ -83,7 +88,7 @@ const MyMaintenanceSchedule = () => {
             }`}
             onClick={() => setStatusFilter("in_progress")}
           >
-            Đang thực hiên
+            Đang thực hiện
           </button>
           <button
             className={`px-4 py-2 rounded-md border font-medium ${
@@ -108,7 +113,7 @@ const MyMaintenanceSchedule = () => {
                   <th className="px-4 py-3 text-left border-r border-gray-200">Thiết bị</th>
                   <th className="px-4 py-3 text-left border-r border-gray-200">Ngày bảo trì</th>
                   <th className="px-4 py-3 text-left border-r border-gray-200">Trạng thái</th>
-                  {statusFilter === "in_completed" && (
+                  {["in_completed", "in_progress"].includes(statusFilter) && (
                     <th className="px-4 py-3 text-left">Hành động</th>
                   )}
                 </tr>
@@ -138,24 +143,17 @@ const MyMaintenanceSchedule = () => {
                           : "Chưa bắt đầu"}
                       </span>
                     </td>
-                    {statusFilter === "in_completed" && (
+                    {["in_completed", "in_progress"].includes(statusFilter) && (
                       <td className="px-4 py-3">
                         <button
                           className={`px-3 py-1 rounded border text-sm font-medium ${
-                            s.progress === "completed"
-                              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                              : s.progress === "in_completed"
+                            s.progress === "in_completed"
                               ? "bg-yellow-400 text-black hover:bg-yellow-500 border-yellow-500"
                               : "bg-green-500 text-white hover:bg-green-600 border-green-600"
                           }`}
                           onClick={() => updateProgress(s)}
-                          disabled={s.progress === "completed"}
                         >
-                          {s.progress === "in_completed"
-                            ? "Bắt đầu"
-                            : s.progress === "in_progress"
-                            ? "Hoàn thành"
-                            : "Hoàn thành"}
+                          {s.progress === "in_completed" ? "Bắt đầu" : "Hoàn thành"}
                         </button>
                       </td>
                     )}

@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,28 +66,30 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
                 predicates.add(b.equal(root.get("progress"), progress));
             }
 
-//            String cateId = params.get("categoryId");
-//            if (cateId != null && !cateId.isEmpty()) {
-//                predicates.add(b.equal(root.get("categoryId").as(Integer.class), cateId));
-//            }
             q.where(predicates.toArray(Predicate[]::new));
 
-            String orderBy = params.get("orderBy");
-            if (orderBy != null && !orderBy.isEmpty()) {
-                q.orderBy(b.asc(root.get(orderBy)));
-            }
+            // Tạm thời bỏ orderBy ở đây nếu có
+            // Nếu bạn cần thêm sắp xếp khác thì xử lý sau khi query
         }
 
         Query query = s.createQuery(q);
+        List<MaintenanceSchedule> result = query.getResultList();
 
-//        if (params != null && params.containsKey("page")) {
-//            int page = Integer.parseInt(params.get("page"));
-//            int start = (page - 1) * PAGE_SIZE;
-//
-//            query.setMaxResults(PAGE_SIZE);
-//            query.setFirstResult(start);
-//        }
-        return query.getResultList();
+        // 🔽 Sắp xếp theo tiến trình sau khi truy vấn xong
+        result.sort(Comparator.comparingInt(m -> {
+            switch (m.getProgress()) {
+                case "in_completed":
+                    return 0;
+                case "in_progress":
+                    return 1;
+                case "completed":
+                    return 2;
+                default:
+                    return 3;
+            }
+        }));
+
+        return result;
     }
 
     @Override
@@ -95,7 +98,24 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
         if (m.getId() == null) {
             s.persist(m);
         } else {
-            s.merge(m);
+
+            if ("completed".equals(m.getProgress())) {
+                System.out.println("Đã hoàn thành, không cập nhật.");
+
+                return m;
+            }
+            if (m.getStartDate() != null) {
+                LocalDate startDate = m.getStartDate().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+
+                LocalDate today = LocalDate.now();
+
+                if (startDate.isAfter(today)) {
+                    System.out.println("Chưa đến ngày bắt đầu, không cho cập nhật.");
+                    return m;
+                }
+            }
         }
         return m;
     }
