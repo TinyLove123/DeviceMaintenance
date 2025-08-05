@@ -4,6 +4,7 @@
  */
 package com.nhom4.services.Impl;
 
+import com.nhom4.dto.IncidentDTO;
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
@@ -69,6 +70,17 @@ public class IncidentServiceImpl implements IncidentService{
     @Override
     public long countIncidentsToday() {
         return this.incidentRepo.LcountIncidentsToday();
+    }
+
+    @Override
+    public Boolean checkHandleIncidentByUser(User user, int incidentId) {
+        return this.incidentRepo.checkHandleIncidentByUser(user, incidentId);
+    }
+
+    @Override
+    public List<IncidentDTO> getMyIncidentHandle(User user) {
+        return this.incidentRepo.getMyIncidentHandle(user);
+
     }
 
     

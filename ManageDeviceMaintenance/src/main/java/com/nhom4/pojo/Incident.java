@@ -16,6 +16,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -24,6 +25,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  *
@@ -59,6 +61,8 @@ public class Incident implements Serializable {
     @Size(min = 1, max = 16)
     @Column(name = "status")
     private String status;
+    @OneToMany(mappedBy = "incidentId")
+    private Set<Repair> repairSet;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "incidentId")
     private MaintenanceIncidentLink maintenanceIncidentLink;
 
@@ -224,6 +228,15 @@ public class Incident implements Serializable {
         return "com.nhom4.pojo.Incident[ id=" + id + " ]";
     }
 
+
+    public MaintenanceIncidentLink getMaintenanceIncidentLink() {
+        return maintenanceIncidentLink;
+    }
+
+    public void setMaintenanceIncidentLink(MaintenanceIncidentLink maintenanceIncidentLink) {
+        this.maintenanceIncidentLink = maintenanceIncidentLink;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -242,12 +255,12 @@ public class Incident implements Serializable {
         this.status = status;
     }
 
-    public MaintenanceIncidentLink getMaintenanceIncidentLink() {
-        return maintenanceIncidentLink;
+    public Set<Repair> getRepairSet() {
+        return repairSet;
     }
 
-    public void setMaintenanceIncidentLink(MaintenanceIncidentLink maintenanceIncidentLink) {
-        this.maintenanceIncidentLink = maintenanceIncidentLink;
+    public void setRepairSet(Set<Repair> repairSet) {
+        this.repairSet = repairSet;
     }
     
 }

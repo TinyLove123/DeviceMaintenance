@@ -29,16 +29,17 @@ import java.io.Serializable;
     @NamedQuery(name = "RepairDetail.findById", query = "SELECT r FROM RepairDetail r WHERE r.id = :id")})
 public class RepairDetail implements Serializable {
 
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "description_detail")
+    private String descriptionDetail;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "id")
     private Integer id;
-    @Lob
-    @Size(max = 65535)
-    @Column(name = "description_detail")
-    private String descriptionDetail;
     @JoinColumn(name = "repair_id", referencedColumnName = "id")
     @ManyToOne
     private Repair repairId;
@@ -109,5 +110,7 @@ public class RepairDetail implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.RepairDetail[ id=" + id + " ]";
     }
+
+    
     
 }

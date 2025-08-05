@@ -27,7 +27,7 @@ const App = () => {
         <Route path="/devices/:id" element={<DeviceDetail />} /> 
         <Route path="/my-rented-devices" element={<MyRentedDevice/>} />
         <Route path="/my-maintenance-schedule" element={<MyMaintenanceSchedule/>} />
-        <Route path="/my-rented-device-detail/:id" element={<MyRentedDeviceDetail/>} />
+        {/* <Route path="/my-rented-device-detail/:id" element={<MyRentedDeviceDetail/>} /> */}
       </Routes>
       <Footer />
     </BrowserRouter>

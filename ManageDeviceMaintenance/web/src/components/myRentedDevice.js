@@ -6,7 +6,7 @@ import { MyUserContext } from "../configs/Context";
 
 const MyRentedDevice = () => {
     const [user] = useContext(MyUserContext);
-    const [, setDevices] = useState([]);
+    const [devices, setDevices] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 

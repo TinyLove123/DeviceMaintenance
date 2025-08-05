@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -21,6 +22,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  *
@@ -35,12 +37,6 @@ import java.util.Date;
     @NamedQuery(name = "Repair.findByProgress", query = "SELECT r FROM Repair r WHERE r.progress = :progress")})
 public class Repair implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "end_date")
@@ -49,6 +45,15 @@ public class Repair implements Serializable {
     @Size(max = 20)
     @Column(name = "progress")
     private String progress;
+    @OneToMany(mappedBy = "repairId")
+    private Set<RepairDetail> repairDetailSet;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @JoinColumn(name = "incident_id", referencedColumnName = "id")
     @ManyToOne
     private Incident incidentId;
@@ -84,13 +89,6 @@ public class Repair implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getProgress() {
-        return progress;
-    }
-
-    public void setProgress(String progress) {
-        this.progress = progress;
-    }
 
     public Incident getIncidentId() {
         return incidentId;
@@ -132,5 +130,6 @@ public class Repair implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.Repair[ id=" + id + " ]";
     }
+
     
 }

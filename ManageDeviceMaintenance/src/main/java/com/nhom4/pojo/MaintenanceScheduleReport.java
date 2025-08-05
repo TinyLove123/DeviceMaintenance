@@ -38,15 +38,6 @@ import java.util.Date;
     @NamedQuery(name = "MaintenanceScheduleReport.findByMaintenanceRate", query = "SELECT m FROM MaintenanceScheduleReport m WHERE m.maintenanceRate = :maintenanceRate")})
 public class MaintenanceScheduleReport implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @Column(name = "report_date")
-    @Temporal(TemporalType.DATE)
-    private Date reportDate;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -62,6 +53,16 @@ public class MaintenanceScheduleReport implements Serializable {
     @Size(min = 1, max = 20)
     @Column(name = "maintenance_rate")
     private String maintenanceRate;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Column(name = "report_date")
+    @Temporal(TemporalType.DATE)
+    private Date reportDate;
     @JoinColumn(name = "maintenance_schedule_id", referencedColumnName = "id")
     @OneToOne(optional = false)
     private MaintenanceSchedule maintenanceScheduleId;
@@ -99,21 +100,6 @@ public class MaintenanceScheduleReport implements Serializable {
         this.reportDate = reportDate;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 
     public String getMaintenanceRate() {
         return maintenanceRate;
@@ -163,5 +149,22 @@ public class MaintenanceScheduleReport implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.MaintenanceScheduleReport[ id=" + id + " ]";
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     
 }

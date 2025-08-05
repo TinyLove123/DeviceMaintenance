@@ -4,6 +4,7 @@
  */
 package com.nhom4.services;
 
+import com.nhom4.dto.IncidentDTO;
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
@@ -33,4 +34,9 @@ public interface IncidentService {
     List<Incident> getPreviousIncidentNotApproved();
     
     long countIncidentsToday();
+    
+    
+    Boolean checkHandleIncidentByUser(User user, int incidentId);
+
+    List<IncidentDTO> getMyIncidentHandle(User user);
 }

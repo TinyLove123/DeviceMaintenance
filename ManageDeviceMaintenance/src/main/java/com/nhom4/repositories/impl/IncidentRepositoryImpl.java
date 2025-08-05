@@ -4,6 +4,9 @@
  */
 package com.nhom4.repositories.impl;
 
+import com.nhom4.dto.DeviceOutputDTO;
+import com.nhom4.dto.IncidentDTO;
+import com.nhom4.dto.MaintenanceScheduleDTO;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +28,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import java.time.LocalDate;
@@ -32,6 +36,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -99,7 +104,16 @@ public class IncidentRepositoryImpl implements IncidentRepository {
     @Override
     public Incident getIncidentById(int id) {
         Session s = factory.getObject().getCurrentSession();
-        return s.get(Incident.class, id);
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+        CriteriaQuery<Incident> cq = cb.createQuery(Incident.class);
+        Root<Incident> root = cq.from(Incident.class);
+
+        root.fetch("deviceId", JoinType.LEFT)
+                .fetch("repairCostSet", JoinType.LEFT); 
+
+        cq.select(root).where(cb.equal(root.get("id"), id));
+
+        return s.createQuery(cq).uniqueResult();
     }
 
     @Override
@@ -233,5 +247,63 @@ public class IncidentRepositoryImpl implements IncidentRepository {
 
         return s.createQuery(cq).getSingleResult();
     }
+
+    
+
+    @Override
+    public Boolean checkHandleIncidentByUser(User user, int incidentId) {
+             Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root root = cq.from(Incident.class);
+        cq.select(cb.count(root))
+                .where(
+                        cb.and(
+                                cb.equal(root.get("id"), incidentId),
+                                cb.equal(root.get("employeeId").get("id"), user.getId())
+                        ));
+        Long count = s.createQuery(cq).uniqueResult();
+        return count != null && count > 0;
+        
+    }
+
+    @Override
+    public List<IncidentDTO> getMyIncidentHandle(User user) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+
+        CriteriaQuery<Incident> cq = cb.createQuery(Incident.class);
+        Root<Incident> root = cq.from(Incident.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(root.get("employeeId"), user));
+//        predicates.add(root.get("status").in("APPROVED", "IN_PROGRESS", "RESOLVED"));
+
+        cq.where(predicates.toArray(new Predicate[0]));
+        cq.orderBy(cb.asc(root.get("reportDate")));
+
+        TypedQuery<Incident> q = s.createQuery(cq);
+        List<Incident> results = q.getResultList();
+
+        // Mapping manually to DTO
+        return results.stream().map(incident -> new IncidentDTO(
+                incident.getId(),
+                incident.getTitle(),
+                incident.getDetailDescribe(),
+                incident.getStatus(),
+                incident.getReportDate(),
+                incident.getApprovalDate(),
+                incident.getIsEmergency(),
+                incident.getStartDate(),
+                incident.getEndDate(),
+                incident.getApprovedBy(),
+                incident.getEmployeeId(),
+                incident.getSenderId()
+        )).collect(Collectors.toList());
+            
+    }
+
+    
+    
 
 }
