@@ -16,6 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  *
@@ -23,6 +24,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
  */
 @Configuration
 @PropertySource("classpath:database.properties")
+@EnableTransactionManagement
 public class HibernateConfigs {
     @Autowired
     private Environment env;

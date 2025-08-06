@@ -25,6 +25,11 @@ import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.User;
 import com.nhom4.services.MaintenanceScheduleService;
 import com.nhom4.services.UserService;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
@@ -80,12 +85,18 @@ public class ApiPersonalMaintenantSchedule {
                     .status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "Bạn không có quyền truy cập thiết bị này"));
         }
-        
+
         MaintenanceSchedule ms1 = this.maintenanceScheduleRepo.getMaintenanceScheduleById(id);
         ms1.setProgress(ms.getProgress());
-        
-        
+
         return ResponseEntity.ok(this.maintenanceScheduleRepo.addOrUpdateMaintenanceSchedule(ms1));
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
 }

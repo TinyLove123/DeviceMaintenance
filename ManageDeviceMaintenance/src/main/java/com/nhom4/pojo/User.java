@@ -93,6 +93,7 @@ public class User implements Serializable {
     @Size(max = 200)
     @Column(name = "avatar")
     private String avatar;
+    @JsonIgnore
     @OneToMany(mappedBy = "customerId")
     private Set<RentedDevice> rentedDeviceSet;
     @JsonIgnore

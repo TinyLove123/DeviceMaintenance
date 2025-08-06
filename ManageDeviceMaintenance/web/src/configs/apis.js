@@ -14,7 +14,7 @@ export const endpoints={
     'myRentedDevice':'secure/my-rented-devices',
     'rentedDevice': (id) => `secure/devices/${id}/rented-device`,
     'rentedDeviceDetail': (id,rentedId) => `secure/devices/${id}/rented-device/${rentedId}/`,
-    'rentedDevice': (id) => `/secure/my-rented-devices/${id}/detail-device`,
+    // 'rentedDevice': (id) => `/secure/my-rented-devices/${id}/detail-device`,
     'myMaintenanceSchedules': 'secure/persional-maintenance-schedule/',
     'maintenanceScheduleDetail':(id) => `/secure/persional-maintenance-schedule/${id}/detail-maintenance-schedule`
 

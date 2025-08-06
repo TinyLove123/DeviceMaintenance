@@ -95,27 +95,33 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
     @Override
     public MaintenanceSchedule addOrUpdateMaintenanceSchedule(MaintenanceSchedule m) {
         Session s = this.factory.getObject().getCurrentSession();
+
         if (m.getId() == null) {
+
             s.persist(m);
         } else {
 
-            if ("completed".equals(m.getProgress())) {
+            if ("completed".equalsIgnoreCase(m.getProgress())) {
                 System.out.println("Đã hoàn thành, không cập nhật.");
-
                 return m;
             }
+
             if (m.getStartDate() != null) {
                 LocalDate startDate = m.getStartDate().toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate();
-
-                LocalDate today = LocalDate.now();
-
-                if (startDate.isAfter(today)) {
+                if (startDate.isAfter(LocalDate.now())) {
                     System.out.println("Chưa đến ngày bắt đầu, không cho cập nhật.");
                     return m;
                 }
             }
+
+            if (m.getDeviceId() != null) {
+                m.setReceptStatus(m.getDeviceId().getStatusDevice());
+            }
+
+            s.update(m);  // đã có trong session, dùng update
+            return m;
         }
         return m;
     }
