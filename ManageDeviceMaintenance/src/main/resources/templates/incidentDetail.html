@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Trang chi tiết báo cáo</title>
+<head>
+    <title>Trang chi tiết báo cáo</title>
     <th:block th:replace="base :: bootstrap"></th:block>
 </head>
 <body>
@@ -11,7 +11,7 @@
         <h1 class="mb-4">Chi tiết Báo cáo & Thiết bị</h1>
 
         <div class="row">
-            <!-- 🔼 KHUNG SỰ CỐ -->
+            <!-- KHUNG SỰ CỐ -->
             <div class="col-md-6">
                 <div class="card mb-4 shadow">
                     <div class="card-header bg-danger text-white">
@@ -26,45 +26,72 @@
                         </p>
                         <p><strong>Trạng thái:</strong> <span th:text="${Incident.status}"></span></p>
 
-                        <!-- ✅ FORM cập nhật trạng thái -->
-                       <form th:action="@{|/admin/incident-device/${Incident.deviceId.id}/incident-update/${Incident.id}|}" 
-      method="post" onsubmit="return validateForm()">
+                        <div class="card mb-4 shadow" th:if="${Incident.status != 'PENDING_APPROVAL' and Incident.status != 'REJECTED'}">
+                            <label class="col-sm-5 col-form-label"><strong>Trạng thái thực hiện:</strong></label>
+                            <div class="col-sm-7">
+                                <span th:if="${Incident.employeeId != null and now.after(Incident.startDate) and Incident.status != 'IN_PROGRESS' and Incident.status != 'RESOLVED'}"
+                                      class="text-danger fw-bold">Quá hạn bắt đầu thực hiện!</span>
+                                <span th:if="${Incident.employeeId != null and now.after(Incident.endDate) and Incident.status != 'RESOLVED'}"
+                                      class="text-danger fw-bold">Quá hạn kết thúc dự kiến!</span>
+                                <span th:if="${Incident.employeeId != null and !(now.after(Incident.startDate) or now.after(Incident.endDate))}">
+                                    Đúng tiến độ
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- FORM cập nhật trạng thái -->
+                        <form th:action="@{|/admin/incident-device/${Incident.id}/incident-update|}" 
+                              method="post" 
+                              th:object="${Incident}" 
+                              onsubmit="return validateForm()"
+                              th:if="${Incident.status == 'PENDING_APPROVAL'}">
+
                             <div class="mb-3">
                                 <label for="status" class="form-label">Cập nhật trạng thái:</label>
-                                <select name="status" id="status" class="form-control" onchange="toggleEmployeeDropdown(this.value)">
-                                    <option value="PENDING_APPROVAL" th:selected="${Incident.status == 'PENDING_APPROVAL'}">PENDING_APPROVAL</option>
-                                    <option value="APPROVED" th:selected="${Incident.status == 'APPROVED'}">APPROVED</option>
-                                    <option value="REJECTED" th:selected="${Incident.status == 'REJECTED'}">REJECTED</option>
+                                <select th:field="*{status}" id="status" class="form-control"
+                                        onchange="toggleEmployeeDropdown(this.value)">
+                                    <option value="APPROVED">APPROVED</option>
+                                    <option value="REJECTED">REJECTED</option>
                                 </select>
                             </div>
+
+                            <input type="hidden" th:field="*{id}" />
+                            <input type="hidden" th:field="*{deviceId.id}" />
 
                             <div id="approvedFields" style="display: none;">
                                 <div class="mb-3">
                                     <label for="employeeId" class="form-label">Nhân viên xử lý:</label>
-                                    <select name="employeeId" id="employeeId" class="form-control">
+                                    <select th:field="*{employeeId.id}" id="employeeId" class="form-control">
                                         <option value="">-- Chọn nhân viên --</option>
-                                        <option th:each="emp : ${employees}" th:value="${emp.id}" th:text="${emp.firstName + ' ' + emp.lastName}"></option>
+                                        <option th:each="emp : ${employees}" 
+                                                th:value="${emp.id}" 
+                                                th:text="${emp.firstName + ' ' + emp.lastName}">
+                                        </option>
                                     </select>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="startDate" class="form-label">Ngày bắt đầu thực hiện:</label>
-                                    <input type="datetime-local" name="startDate" id="startDate" class="form-control" />
+                                    <input type="datetime-local" th:field="*{startDate}" id="startDate" class="form-control" />
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="endDate" class="form-label">Ngày kết thúc dự kiến:</label>
-                                    <input type="datetime-local" name="endDate" id="endDate" class="form-control" />
+                                    <input type="datetime-local" th:field="*{endDate}" id="endDate" class="form-control" />
                                 </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Cập nhật</button>
                         </form>
                     </div>
+
+                    <div class="card-body text-center text-muted" th:if="${Incident == null}">
+                        <p>Không tìm thấy thông tin sự cố.</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- 🔽 KHUNG THIẾT BỊ -->
+            <!-- KHUNG THIẾT BỊ -->
             <div class="col-md-6">
                 <div class="card mb-4 shadow">
                     <div class="card-header bg-primary text-white">
@@ -75,14 +102,41 @@
                         <p><strong>Ngày mua:</strong> 
                             <span th:text="${Incident.deviceId.purchaseDate != null ? #dates.format(Incident.deviceId.purchaseDate, 'dd/MM/yyyy') : 'Chưa có'}"></span>
                         </p>
-                        <p>
-                            <strong>Vị trí hiện tại:</strong>
+                        <p><strong>Vị trí hiện tại:</strong>
                             <span th:text="${Incident.deviceId.currentLocationId != null ? Incident.deviceId.currentLocationId.wardId.fullName
                                   + ', ' + Incident.deviceId.currentLocationId.wardId.provinceCode.fullName 
                                   + ', ' + Incident.deviceId.currentLocationId.address : 'Chưa cập nhật'}"></span>
                         </p>
                         <p><strong>Loại thiết bị:</strong> <span th:text="${Incident.deviceId.categoryId.type}"></span></p>
-                        <!--<p><strong>Mã thiết bị:</strong> <span th:text="${Incident.deviceId.serialNumber}"></span></p>-->
+                    </div>
+                </div>
+            </div>
+
+            <!-- THÔNG TIN XỬ LÝ (nếu APPROVED) -->
+            <div class="card mb-4 shadow" th:if="${Incident.status != 'PENDING_APPROVAL' and Incident.status != 'REJECTED'}">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Thông tin xử lý</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 row">
+                        <label class="col-sm-5 col-form-label"><strong>Nhân viên xử lý:</strong></label>
+                        <div class="col-sm-7">
+                            <span th:text="${Incident.employeeId != null ? Incident.employeeId.firstName + ' ' + Incident.employeeId.lastName : 'Chưa phân công'}"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-5 col-form-label"><strong>Ngày bắt đầu:</strong></label>
+                        <div class="col-sm-7">
+                            <span th:text="${Incident.startDate != null ? #dates.format(Incident.startDate, 'dd/MM/yyyy HH:mm') : 'Chưa có'}"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-sm-5 col-form-label"><strong>Ngày kết thúc dự kiến:</strong></label>
+                        <div class="col-sm-7">
+                            <span th:text="${Incident.endDate != null ? #dates.format(Incident.endDate, 'dd/MM/yyyy HH:mm') : 'Chưa có'}"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,32 +145,46 @@
 
     <div th:replace="base :: footer"></div>
 
-    
-    
     <script>
-    function toggleEmployeeDropdown(value) {
-        const empSelect = document.getElementById('approvedFields');
-        empSelect.style.display = (value === 'APPROVED') ? 'block' : 'none';
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        toggleEmployeeDropdown(document.getElementById('status').value);
-    });
-
-    function validateForm() {
-        const status = document.getElementById('status').value;
-        if (status === 'APPROVED') {
-            const employeeId = document.getElementById('employeeId').value;
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-
-            if (!employeeId || !startDate || !endDate) {
-                alert('Khi chọn APPROVED, bạn phải chọn nhân viên và nhập ngày bắt đầu, ngày kết thúc!');
-                return false;
-            }
+        function toggleEmployeeDropdown(value) {
+            const empFields = document.getElementById('approvedFields');
+            empFields.style.display = (value === 'APPROVED') ? 'block' : 'none';
         }
-        return true;
-    }
-</script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const statusElement = document.getElementById('status');
+            if (statusElement)
+                toggleEmployeeDropdown(statusElement.value);
+        });
+
+        function validateForm() {
+            const status = document.getElementById('status').value;
+            if (status === 'APPROVED') {
+                const employeeId = document.getElementById('employeeId').value;
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+
+                if (!employeeId || !startDate || !endDate) {
+                    alert('Khi chọn APPROVED, bạn phải chọn nhân viên và nhập ngày bắt đầu, ngày kết thúc!');
+                    return false;
+                }
+
+                const now = new Date();
+                const sDate = new Date(startDate);
+                const eDate = new Date(endDate);
+
+                if (sDate >= eDate) {
+                    alert('Ngày bắt đầu phải trước ngày kết thúc!');
+                    return false;
+                }
+
+                if (sDate < now) {
+                    alert('Ngày bắt đầu không được là quá khứ!');
+                    return false;
+                }
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>

@@ -14,10 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nhom4.dto.RentedDeviceDTO;
 import com.nhom4.pojo.Device;
+import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.RepairCost;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.RentedDeviceRepository;
+import com.nhom4.services.LocationService;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -37,15 +39,18 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
+    
+    @Autowired
+    private LocationService locationService;
 
     @Override
-    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice) {
+    public RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice,Location location) {
         Session s = this.factory.getObject().getCurrentSession();
 
         Device device = s.get(Device.class, deviceId);
 
         if (device != null && "active".equals(device.getStatusDevice())) {
-
+            
             rentedDevice.setDeviceId(device);
             rentedDevice.setIsRented(Boolean.TRUE);
             rentedDevice.setStartDate(new Date());
@@ -53,8 +58,10 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
             s.persist(rentedDevice);
 
             // Cập nhật trạng thái thiết bị nếu muốn, ví dụ thành "rented"
-            device.setStatusDevice("rented");
+            this.locationService.addLocation(deviceId, location);
+            device.setStatusDevice("rented");       
             s.merge(device);
+            
 
             return rentedDevice;
         } else {
@@ -76,7 +83,7 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
                 root.get("startDate"),
                 root.get("endDate"),
                 root.get("isRented"),
-                
+                deviceJoin.get("id"),
                 deviceJoin.get("nameDevice"),
                 deviceJoin.get("manufacturer"),
                 deviceJoin.get("image")

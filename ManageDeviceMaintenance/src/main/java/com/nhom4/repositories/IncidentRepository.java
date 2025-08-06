@@ -4,6 +4,7 @@
  */
 package com.nhom4.repositories;
 
+import com.nhom4.dto.IncidentDTO;
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
@@ -29,8 +30,13 @@ public interface IncidentRepository {
     Incident getNewIncident(int DeviceId);
 
     List<Device> getListDeviceHadIncidentReport();
-    
+
     List<Incident> getPreviousIncidentNotApproved();
+
     long LcountIncidentsToday();
+    
+    List <IncidentDTO> getMyIncidentHandle(User user);
+    
+    Boolean checkHandleIncidentByUser(User user, int incidentId);
 
 }

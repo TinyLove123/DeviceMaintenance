@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import Apis, { endpoints } from "../configs/Apis";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Apis, { endpoints } from "../configs/Apis";
 
 
 const Home = () => {
@@ -72,9 +72,6 @@ const Home = () => {
                   style={{ height: "200px", objectFit: "cover" }}/>
                 <Card.Body className="d-flex flex-column">
                   <Card.Title className="text-truncate">{d.nameDevice}</Card.Title>
-                  <Card.Text className="text-primary fw-bold">
-                    {d.price}
-                  </Card.Text>
                   <Card.Text className="text-primary fw-bold">
                     {d.statusDevice}
                   </Card.Text>

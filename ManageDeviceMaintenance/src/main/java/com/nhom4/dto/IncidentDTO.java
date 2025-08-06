@@ -1,108 +1,184 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.nhom4.dto;
 
 import com.nhom4.pojo.User;
 import java.util.Date;
 
-/**
- *
- * @author Administrator
- */
 public class IncidentDTO {
+
     private Integer id;
     private String title;
     private String detailDescribe;
+    private String status;
     private Date reportDate;
-    private DeviceOutputDTO device;
+    private Date approvalDate;
+    private Boolean isEmergency;
+    private Date startDate;
+    private Date endDate;
+    private String receptStatus;
+    private User approvedBy;
+    private User employee;
     private User sender;
-    
 
-    // ... constructor, getter/setter
+    private DeviceDTO device;
 
-    /**
-     * @return the id
-     */
+    public IncidentDTO() {
+    }
+
+    public IncidentDTO(Integer id, String title, String detailDescribe, String status,
+            Date reportDate, Date approvalDate, Boolean isEmergency,
+            Date startDate, Date endDate,
+            User approvedBy, User employee, User sender, DeviceDTO device) {
+        this.id = id;
+        this.title = title;
+        this.detailDescribe = detailDescribe;
+        this.status = status;
+        this.reportDate = reportDate;
+        this.approvalDate = approvalDate;
+        this.isEmergency = isEmergency;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.approvedBy = approvedBy;
+        this.employee = employee;
+        this.sender = sender;
+        this.device = device;
+        this.receptStatus = device.getStatusDevice();
+    }
+//    public IncidentDTO(Integer id, String title, String detailDescribe, String status,
+//            Date reportDate, Date approvalDate, Boolean isEmergency,
+//            Date startDate, Date endDate,
+//            User approvedBy, User employee, User sender) {
+//        this.id = id;
+//        this.title = title;
+//        this.detailDescribe = detailDescribe;
+//        this.status = status;
+//        this.reportDate = reportDate;
+//        this.approvalDate = approvalDate;
+//        this.isEmergency = isEmergency;
+//        this.startDate = startDate;
+//        this.endDate = endDate;
+//        this.approvedBy = approvedBy;
+//        this.employee = employee;
+//        this.sender = sender;
+//        this.device = device;
+//        this.receptStatus = device.getStatusDevice();
+//    }
+
+    // --- Getters & Setters ---
     public Integer getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(Integer id) {
         this.id = id;
     }
 
-    /**
-     * @return the title
-     */
     public String getTitle() {
         return title;
     }
 
-    /**
-     * @param title the title to set
-     */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /**
-     * @return the detailDescribe
-     */
     public String getDetailDescribe() {
         return detailDescribe;
     }
 
-    /**
-     * @param detailDescribe the detailDescribe to set
-     */
     public void setDetailDescribe(String detailDescribe) {
         this.detailDescribe = detailDescribe;
     }
 
-    /**
-     * @return the reportDate
-     */
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public Date getReportDate() {
         return reportDate;
     }
 
-    /**
-     * @param reportDate the reportDate to set
-     */
     public void setReportDate(Date reportDate) {
         this.reportDate = reportDate;
     }
 
-    /**
-     * @return the device
-     */
-    public DeviceOutputDTO getDevice() {
-        return device;
+    public Date getApprovalDate() {
+        return approvalDate;
     }
 
-    /**
-     * @param device the device to set
-     */
-    public void setDevice(DeviceOutputDTO device) {
-        this.device = device;
+    public void setApprovalDate(Date approvalDate) {
+        this.approvalDate = approvalDate;
     }
 
-    /**
-     * @return the sender
-     */
+    public Boolean getIsEmergency() {
+        return isEmergency;
+    }
+
+    public void setIsEmergency(Boolean isEmergency) {
+        this.isEmergency = isEmergency;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public User getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(User approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+
+    public User getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(User employee) {
+        this.employee = employee;
+    }
+
     public User getSender() {
         return sender;
     }
 
-    /**
-     * @param sender the sender to set
-     */
     public void setSender(User sender) {
         this.sender = sender;
+    }
+    
+    public DeviceDTO getDevice() {
+        return device;
+    }
+
+    public void setDevice(DeviceDTO device) {
+        this.device = device;
+    }
+
+    /**
+     * @return the receptStatus
+     */
+    public String getReceptStatus() {
+        return receptStatus;
+    }
+
+    /**
+     * @param receptStatus the receptStatus to set
+     */
+    public void setReceptStatus(String receptStatus) {
+        this.receptStatus = receptStatus;
     }
 }

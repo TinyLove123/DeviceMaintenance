@@ -5,6 +5,7 @@
 package com.nhom4.services;
 
 import com.nhom4.dto.RentedDeviceDTO;
+import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.User;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public interface RentedDeviceService {
 
-    RentedDevice addRentedDevice(int deviceId, RentedDevice rentedDevice);
+    RentedDevice addOrUpdateRentedDevice(int deviceId, RentedDevice rentedDevice, Location location);
 
     List<RentedDeviceDTO> getMyRentedDevice(User user);
 

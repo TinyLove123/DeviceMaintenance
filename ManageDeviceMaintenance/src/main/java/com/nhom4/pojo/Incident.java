@@ -4,8 +4,8 @@
  */
 package com.nhom4.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,9 +40,16 @@ import java.util.Date;
     @NamedQuery(name = "Incident.findByApprovalDate", query = "SELECT i FROM Incident i WHERE i.approvalDate = :approvalDate"),
     @NamedQuery(name = "Incident.findByIsEmergency", query = "SELECT i FROM Incident i WHERE i.isEmergency = :isEmergency"),
     @NamedQuery(name = "Incident.findByStartDate", query = "SELECT i FROM Incident i WHERE i.startDate = :startDate"),
-    @NamedQuery(name = "Incident.findByEndDate", query = "SELECT i FROM Incident i WHERE i.endDate = :endDate")})
+    @NamedQuery(name = "Incident.findByEndDate", query = "SELECT i FROM Incident i WHERE i.endDate = :endDate"),
+    @NamedQuery(name = "Incident.findByReceptStatus", query = "SELECT i FROM Incident i WHERE i.receptStatus = :receptStatus")})
 public class Incident implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -54,23 +61,14 @@ public class Incident implements Serializable {
     @Size(min = 1, max = 65535)
     @Column(name = "detail_describe")
     private String detailDescribe;
+    @Column(name = "report_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reportDate;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 16)
     @Column(name = "status")
     private String status;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "incidentId")
-    private MaintenanceIncidentLink maintenanceIncidentLink;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @Column(name = "report_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date reportDate;
     @Column(name = "approval_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date approvalDate;
@@ -82,6 +80,12 @@ public class Incident implements Serializable {
     @Column(name = "end_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
+    @Size(max = 50)
+    @Column(name = "recept_status")
+    private String receptStatus;
+    @JsonIgnore
+    @OneToOne(mappedBy = "incidentId")
+    private Repair repair;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
     private Device deviceId;
@@ -117,6 +121,13 @@ public class Incident implements Serializable {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getDetailDescribe() {
         return detailDescribe;
@@ -134,6 +145,13 @@ public class Incident implements Serializable {
         this.reportDate = reportDate;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Date getApprovalDate() {
         return approvalDate;
@@ -165,6 +183,22 @@ public class Incident implements Serializable {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getReceptStatus() {
+        return receptStatus;
+    }
+
+    public void setReceptStatus(String receptStatus) {
+        this.receptStatus = receptStatus;
+    }
+
+    public Repair getRepair() {
+        return repair;
+    }
+
+    public void setRepair(Repair repair) {
+        this.repair = repair;
     }
 
     public Device getDeviceId() {
@@ -222,32 +256,6 @@ public class Incident implements Serializable {
     @Override
     public String toString() {
         return "com.nhom4.pojo.Incident[ id=" + id + " ]";
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public MaintenanceIncidentLink getMaintenanceIncidentLink() {
-        return maintenanceIncidentLink;
-    }
-
-    public void setMaintenanceIncidentLink(MaintenanceIncidentLink maintenanceIncidentLink) {
-        this.maintenanceIncidentLink = maintenanceIncidentLink;
     }
     
 }

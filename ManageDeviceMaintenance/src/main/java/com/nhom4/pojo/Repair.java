@@ -14,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -21,6 +23,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  *
@@ -35,7 +38,7 @@ import java.util.Date;
     @NamedQuery(name = "Repair.findByProgress", query = "SELECT r FROM Repair r WHERE r.progress = :progress")})
 public class Repair implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -50,11 +53,13 @@ public class Repair implements Serializable {
     @Column(name = "progress")
     private String progress;
     @JoinColumn(name = "incident_id", referencedColumnName = "id")
-    @ManyToOne
+    @OneToOne
     private Incident incidentId;
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @ManyToOne
     private User employeeId;
+    @OneToMany(mappedBy = "repairId")
+    private Set<RepairDetail> repairDetailSet;
 
     public Repair() {
     }
@@ -131,6 +136,34 @@ public class Repair implements Serializable {
     @Override
     public String toString() {
         return "com.nhom4.pojo.Repair[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the serialVersionUID
+     */
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    /**
+     * @param aSerialVersionUID the serialVersionUID to set
+     */
+    public static void setSerialVersionUID(long aSerialVersionUID) {
+        serialVersionUID = aSerialVersionUID;
+    }
+
+    /**
+     * @return the repairDetailSet
+     */
+    public Set<RepairDetail> getRepairDetailSet() {
+        return repairDetailSet;
+    }
+
+    /**
+     * @param repairDetailSet the repairDetailSet to set
+     */
+    public void setRepairDetailSet(Set<RepairDetail> repairDetailSet) {
+        this.repairDetailSet = repairDetailSet;
     }
     
 }

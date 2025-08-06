@@ -15,16 +15,23 @@ import java.util.Map;
  * @author Administrator
  */
 public interface DeviceRepository {
-    List<Device> getDevice(Map<String,String> params);
+
+    List<Device> getDevice(Map<String, String> params);
+
     Device getDeviceById(int id);
+
     Device addOrUpdateDevice(Device d);
-    List<Device> getDevicesByCatesId(int id, Map<String,String> params);
+
+    List<Device> getDevicesByCatesId(int id, Map<String, String> params);
+
     void deleteDevice(int deviceId);
+
     List<RepairCost> getRepairTypeByDeviceId(int deviceId);
+
     RepairCost addOrUpdateRepairCost(RepairCost repairCost);
+
     RepairCost getRepairCostById(int repairCostId);
+
     void deleteRepairCost(int repairId);
-    
-    
 
 }

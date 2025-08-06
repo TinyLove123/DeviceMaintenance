@@ -33,16 +33,17 @@ import java.util.Set;
     @NamedQuery(name = "RepairCost.findByPrice", query = "SELECT r FROM RepairCost r WHERE r.price = :price")})
 public class RepairCost implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "price")
+    private int price;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "price")
-    private int price;
     @JsonIgnore
     @OneToMany(mappedBy = "repairCostId")
     private Set<RepairDetail> repairDetailSet;
@@ -74,13 +75,6 @@ public class RepairCost implements Serializable {
         this.id = id;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
 
     public Set<RepairDetail> getRepairDetailSet() {
         return repairDetailSet;
@@ -129,6 +123,14 @@ public class RepairCost implements Serializable {
     @Override
     public String toString() {
         return "com.nhom4.pojo.RepairCost[ id=" + id + " ]";
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
     
 }

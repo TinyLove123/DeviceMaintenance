@@ -33,17 +33,18 @@ import java.util.Set;
     @NamedQuery(name = "RepairType.findByType", query = "SELECT r FROM RepairType r WHERE r.type = :type")})
 public class RepairType implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 40)
+    @Column(name = "type")
+    private String type;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 40)
-    @Column(name = "type")
-    private String type;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "repairTypeId")
     private Set<RepairCost> repairCostSet;
@@ -68,13 +69,6 @@ public class RepairType implements Serializable {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public Set<RepairCost> getRepairCostSet() {
         return repairCostSet;
@@ -107,6 +101,14 @@ public class RepairType implements Serializable {
     @Override
     public String toString() {
         return "com.nhom4.pojo.RepairType[ id=" + id + " ]";
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
     
 }

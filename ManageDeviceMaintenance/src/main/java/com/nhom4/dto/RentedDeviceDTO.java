@@ -4,6 +4,7 @@
  */
 package com.nhom4.dto;
 
+import com.nhom4.pojo.Location;
 import java.util.Date;
 
 /**
@@ -15,15 +16,30 @@ public class RentedDeviceDTO {
     private Date startDate;
     private Date endDate;
     private Boolean isRented;
+    private int deviceId;
     private String deviceName;
     private String manufacturer;
     private String image;
 
-    public RentedDeviceDTO(int id, Date startDate, Date endDate, Boolean isRented, String deviceName, String manufacturer,String image) {
+    public RentedDeviceDTO() {
+    }
+    public RentedDeviceDTO(int id, Date startDate, Date endDate, Boolean isRented, String deviceName, String manufacturer, String image) {
+    this.id = id;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.isRented = isRented;
+    this.deviceName = deviceName;
+    this.manufacturer = manufacturer;
+    this.image = image;
+}
+    
+
+    public RentedDeviceDTO(int id, Date startDate, Date endDate, Boolean isRented,int deviceId, String deviceName, String manufacturer,String image) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.isRented = isRented;
+        this.deviceId=deviceId;
         this.deviceName = deviceName;
         this.manufacturer = manufacturer;
         this.image = image;
@@ -125,6 +141,22 @@ public class RentedDeviceDTO {
      */
     public void setImage(String image) {
         this.image = image;
+    }
+
+   
+
+    /**
+     * @return the deviceId
+     */
+    public int getDeviceId() {
+        return deviceId;
+    }
+
+    /**
+     * @param deviceId the deviceId to set
+     */
+    public void setDeviceId(int deviceId) {
+        this.deviceId = deviceId;
     }
 
     
