@@ -7,6 +7,7 @@ package com.nhom4.controllers;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
 import com.nhom4.services.IncidentService;
+import com.nhom4.services.MailService;
 import com.nhom4.services.RepairService;
 import com.nhom4.services.UserService;
 import jakarta.ws.rs.PathParam;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -45,6 +47,9 @@ public class IncidentController {
     
     @Autowired
     private RepairService repairService;
+    
+    @Autowired
+    private MailService mailService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -96,8 +101,23 @@ public class IncidentController {
             incident.setStartDate(incidentForm.getStartDate());
             incident.setEndDate(incidentForm.getEndDate());
         }
+        if (incident.getEmployeeId() != null && incident.getEmployeeId().getEmail() != null) {
+            String email = incident.getEmployeeId().getEmail();
+            String subject = "Bạn được giao xử lý sự cố";
+            String body = "Bạn được phân công xử lý sự cố thiết bị: "
+                    + incidentForm.getDeviceId().getNameDevice()
+                    + ". Thời gian bắt đầu: "
+                    + incident.getStartDate();
+            try {
+                mailService.sendMail(email, subject, body);
+            } catch (Exception e) {
+                System.out.println("loi gui mail: " + e.getMessage());
+            }
+        }
+    
 
         this.incidentService.addOrUpdateIncident(incident, incidentForm.getDeviceId().getId(), adminUser);
+        
 
         return "redirect:/admin/incident-manager";
     }
@@ -110,6 +130,7 @@ public class IncidentController {
         
         return "repairDetail";
     }
+  
         
     
 

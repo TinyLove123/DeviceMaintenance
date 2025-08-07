@@ -37,7 +37,7 @@
                             <span th:text="${maintenanceSchedule.employeeId != null ? maintenanceSchedule.employeeId.firstName + ' ' + maintenanceSchedule.employeeId.lastName : 'Chưa xếp'}"
                                   th:classappend="${maintenanceSchedule.employeeId == null} ? 'text-danger fw-bold' : ''"></span>
                         </div>
-                       <div class="info-item">
+                        <div class="info-item">
                             <span class="info-label">Tự động cập nhật:</span>
                             <span th:text="${maintenanceSchedule.isAutoAdd}"></span>
                         </div>
@@ -122,8 +122,33 @@
                 </div>
             </div>
         </div>
+        <!-- Modal lỗi -->
+        <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content border-danger">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="errorModalLabel">Lỗi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body" th:text="${errorMessage}">
+                        <!-- Nội dung lỗi -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <div th:replace="base :: footer"></div>
+    <script th:if="${errorMessage != null}">
+        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        window.addEventListener('DOMContentLoaded', function () {
+            errorModal.show();
+        });
+    </script>
+
 </body>
 </html>

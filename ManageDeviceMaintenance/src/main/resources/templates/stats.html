@@ -1,0 +1,40 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Thống kê</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container mt-4">
+        <h2>Danh sách thiết bị</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên thiết bị</th>
+                    <th>Danh mục</th>
+                    <th>Ngày mua</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="device : ${devices}">
+                    <td th:text="${device.id}"></td>
+                    <td th:text="${device.nameDevice}"></td>
+                    <td th:text="${device.categoryId.type}"></td>
+                    <td th:text="${#dates.format(device.purchaseDate, 'dd/MM/yyyy')}"></td>
+                    <td>
+                        <a th:href="@{/admin/stats/{id}(id=${device.id})}">Xem thống kê</a>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

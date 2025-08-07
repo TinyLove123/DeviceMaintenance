@@ -1,0 +1,36 @@
+
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Thống kê thiết bị</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container mt-4">
+        <h2>Thống kê cho thiết bị: <span th:text="${device.nameDevice}"></span></h2>
+
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Loại sự kiện</th>
+                    <th>Ngày</th>
+                    <th>Mô tả</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="event : ${events}">
+                    <td th:text="${event.type == 'maintenance' ? 'Bảo trì' : 'Sự cố'}"></td>
+                    <td th:text="${#dates.format(event.date, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${event.description}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a th:href="@{/admin/stats}" class="btn btn-secondary">Quay lại danh sách thiết bị</a>
+    </main>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

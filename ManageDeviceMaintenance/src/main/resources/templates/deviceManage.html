@@ -1,95 +1,95 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Trang chủ</title>
+    <head>
+        <title>Trang chủ</title>
     <th:block th:replace="base :: bootstrap"></th:block>
 </head>
 <body>
-<div th:replace="base :: header"></div>
-<h1>Trang quản trị thiết bị</h1>
+    <div th:replace="base :: header"></div>
+    <h1>Trang quản trị thiết bị</h1>
 
-<main class="container mt-4">
-    <!-- Thanh tìm kiếm và nút thêm -->
-    <div class="d-flex justify-content-between mb-3">
-        <!-- ✅ Thêm id="searchForm" -->
-        <form id="searchForm" th:action="@{/admin/devices-manager}" method="get" class="w-50">
-            <div class="input-group">
-                <input type="text" name="kw" class="form-control" placeholder="Tìm kiếm..."
-                       th:value="${param.kw}">
-                <button class="btn btn-primary" type="submit">Tìm</button>
-            </div>
-        </form>
-        <a th:href="@{/admin/devices-manager/add}" class="btn btn-success">+ Thêm mới</a>
-    </div>
+    <main class="container mt-4">
+        <!-- Thanh tìm kiếm và nút thêm -->
+        <div class="d-flex justify-content-between mb-3">
+            <!-- ✅ Thêm id="searchForm" -->
+            <form id="searchForm" th:action="@{/admin/devices-manager}" method="get" class="w-50">
+                <div class="input-group">
+                    <input type="text" name="kw" class="form-control" placeholder="Tìm kiếm..."
+                           th:value="${param.kw}">
+                    <button class="btn btn-primary" type="submit">Tìm</button>
+                </div>
+            </form>
+            <a th:href="@{/admin/devices-manager/add}" class="btn btn-success">+ Thêm mới</a>
+        </div>
 
-    <!-- Filter danh mục -->
-    <div>
-        <select name="categoryId" class="form-select mb-3"
-                onchange="updateCategory(this.value)">
-            <option value="">-- Chọn danh mục --</option>
-            <option th:each="c : ${categories}"
-                    th:value="${c.id}"
-                    th:text="${c.type}"
-                    th:selected="${param.categoryId} == ${c.id}">
-            </option>
-        </select>
-    </div>
+        <!-- Filter danh mục -->
+        <div>
+            <select name="categoryId" class="form-select mb-3"
+                    onchange="updateCategory(this.value)">
+                <option value="">-- Chọn danh mục --</option>
+                <option th:each="c : ${categories}"
+                        th:value="${c.id}"
+                        th:text="${c.type}"
+                        th:selected="${param.categoryId} == ${c.id}">
+                </option>
+            </select>
+        </div>
 
-    <!-- Bảng danh sách -->
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên thiết bị</th>
-            <th>Danh mục</th>
-            <th>Ngày mua</th>
-            <th>Hành động</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="device : ${devices}">
-            <td th:text="${device.id}"></td>
-            <td th:text="${device.nameDevice}"></td>
-            <td th:text="${device.categoryId.type}"></td>
-            <td th:text="${#dates.format(device.purchaseDate, 'dd/MM/yyyy')}"></td>
-            <td>
-                <a th:href="@{'/admin/devices-manager/devices/' + ${device.id}}" class="btn btn-primary">Xem thêm</a>
-                <a th:href="@{/admin/devices-manager/devices/{id}/update (id=${device.id})}"
-                   class="btn btn-sm btn-warning">Sửa</a>
-                <a th:href="@{/admin/devices-manager/devices/{id}/delete(id=${device.id})}"
-                   class="btn btn-sm btn-danger"
-                   onclick="return confirm('Xác nhận xóa?')">Xóa</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</main>
+        <!-- Bảng danh sách -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên thiết bị</th>
+                    <th>Danh mục</th>
+                    <th>Ngày mua</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="device : ${devices}">
+                    <td th:text="${device.id}"></td>
+                    <td th:text="${device.nameDevice}"></td>
+                    <td th:text="${device.categoryId.type}"></td>
+                    <td th:text="${#dates.format(device.purchaseDate, 'dd/MM/yyyy')}"></td>
+                    <td>
+                        <a th:href="@{'/admin/devices-manager/devices/' + ${device.id}}" class="btn btn-primary">Xem thêm</a>
+                        <a th:href="@{/admin/devices-manager/devices/{id}/update (id=${device.id})}"
+                           class="btn btn-sm btn-warning">Sửa</a>
+                        <a th:href="@{/admin/devices-manager/devices/{id}/delete(id=${device.id})}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Xác nhận xóa?')">Xóa</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
 
-<div th:replace="base :: footer"></div>
+    <div th:replace="base :: footer"></div>
 
-<script th:inline="javascript">
-    function updateCategory(categoryId) {
-        const form = document.getElementById('searchForm');
-        const kwInput = form.querySelector('input[name="kw"]');
+    <script th:inline="javascript">
+        function updateCategory(categoryId) {
+            const form = document.getElementById('searchForm');
+            const kwInput = form.querySelector('input[name="kw"]');
 
-        let url = /*[[@{/admin/devices-manager}]]*/ '/admin/devices-manager';
-        const params = new URLSearchParams();
+            let url = /*[[@{/admin/devices-manager}]]*/ '/admin/devices-manager';
+            const params = new URLSearchParams();
 
-        if (kwInput.value) {
-            params.append('kw', kwInput.value);
+            if (kwInput.value) {
+                params.append('kw', kwInput.value);
+            }
+
+            if (categoryId) {
+                params.append('categoryId', categoryId);
+            }
+
+            if (params.toString()) {
+                url += '?' + params.toString();
+            }
+
+            window.location.href = url;
         }
-
-        if (categoryId) {
-            params.append('categoryId', categoryId);
-        }
-
-        if (params.toString()) {
-            url += '?' + params.toString();
-        }
-
-        window.location.href = url;
-    }
-</script>
+    </script>
 
 </body>
 </html>

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -103,25 +104,31 @@ public class MaintenanceScheduleController {
 
     @GetMapping("/maintenance-schedule-manager/add-maintenance-schedule")
     public String addMaintenanceScheduleForm(Model model, @RequestParam Map<String, String> params) {
-        try{
+        try {
             model.addAttribute("maintenanceSchedule", new MaintenanceSchedule());
-        model.addAttribute("employees", userService.getEmployee());
-        model.addAttribute("devices", deviceService.getDevice(params));//
-        return "addMaintenanceSchedule";
+            model.addAttribute("employees", userService.getEmployee());
+            model.addAttribute("devices", deviceService.getDevice(params));//
+            return "addMaintenanceSchedule";
         } catch (RuntimeException ex) {
-        model.addAttribute("errorMessage", ex.getMessage());
-       
-        return "admin/add-maintenance-schedule";
-    }
-        
-        
+            model.addAttribute("errorMessage", ex.getMessage());
+
+            return "admin/add-maintenance-schedule";
+        }
+
     }
 
     @PostMapping("/maintenance-schedule-manager/add-maintenance-schedule")
-    public String addMaintenanceSchedule(@ModelAttribute("maintenanceSchedule") MaintenanceSchedule m) {
-
-        maintenanceScheduleService.addOrUpdateMaintenanceSchedule(m);
-        return "redirect:/admin/maintenance-schedule-manager";
+    public String addMaintenanceSchedule(@ModelAttribute("maintenanceSchedule") MaintenanceSchedule m, Model model, @RequestParam Map<String, String> params) {
+        try {
+            maintenanceScheduleService.addOrUpdateMaintenanceSchedule(m);
+            return "redirect:/admin/maintenance-schedule-manager";
+        } catch (RuntimeException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            model.addAttribute("maintenanceSchedule", m);
+            model.addAttribute("employees", userService.getEmployee());
+            model.addAttribute("devices", deviceService.getDevice(params));
+            return "addMaintenanceSchedule"; // Hiển thị lại form thêm
+        }
     }
 
     @InitBinder
@@ -141,4 +148,10 @@ public class MaintenanceScheduleController {
         return "redirect:/admin/maintenance-schedule-manager";
     }
 
+//    @GetMapping("/send-mail")
+//    @ResponseBody
+//    public String testSendMail() {
+//        mailService.sendMail("2251052036hieu@ou.edu.vn", "Hello!", "Nội dung test nè!");
+//        return "Đã gửi email!";
+//    }
 }
