@@ -49,16 +49,20 @@ public class RepairRepositoryImpl implements RepairRepository {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder cb = s.getCriteriaBuilder();
         CriteriaQuery<Repair> cq = cb.createQuery(Repair.class);
-        Root root = cq.from(Repair.class);
-        Fetch<Repair, RepairDetail> detailFetch = root.fetch("repairDetailSet", JoinType.LEFT);
-        Fetch<RepairDetail, RepairCost> costFetch = detailFetch.fetch("repairCostId", JoinType.LEFT);
-        costFetch.fetch("deviceId", JoinType.LEFT).fetch("repairCostSet", JoinType.LEFT);
-        cq.select(root).where(cb.equal(root.get("incidentId").get("id"), incidentId));
+        Root<Repair> root = cq.from(Repair.class);
+
+        root.fetch("repairDetailSet", JoinType.LEFT);
+
+        cq.select(root)
+                .where(cb.equal(root.get("incidentId").get("id"), incidentId));
+
         return s.createQuery(cq).uniqueResult();
     }
 
     @Override
-    public void addOrUpdateRepairByIncidentId(Repair repair, Incident incident, User employee, Map<String, String> params) {
+    public void addOrUpdateRepairByIncidentId(Repair repair, Incident incident,
+            User employee, Map<String, String> params
+    ) {
         Session s = factory.getObject().getCurrentSession();
 
         Device device = s.get(Device.class, incident.getDeviceId().getId());
@@ -86,12 +90,13 @@ public class RepairRepositoryImpl implements RepairRepository {
     }
 
     @Override
-    public void addRepairDetail(Repair repair, List<RepairDetailDTO> repairDetailList) {
+    public void addRepairDetail(Repair repair, List<RepairDetailDTO> repairDetailList
+    ) {
         Session s = factory.getObject().getCurrentSession();
 
         int deviceId = repair.getIncidentId().getDeviceId().getId();
 
-        List<RepairCost> validRepairCosts = this.deviceRepo.getRepairTypeByDeviceId(deviceId);
+        List<RepairCost> validRepairCosts = this.deviceRepo.getRepairCostByDeviceId(deviceId);
         Set<Integer> validRepairCostIds = validRepairCosts.stream()
                 .map(RepairCost::getId)
                 .collect(Collectors.toSet());
@@ -111,5 +116,22 @@ public class RepairRepositoryImpl implements RepairRepository {
             s.persist(detail);
         }
     }
+
+    @Override
+    public void deleteRepairDetail(int repairDetailId) {
+         Session s = this.factory.getObject().getCurrentSession();
+        RepairDetail r = this.getRepairDetailById(repairDetailId);
+        if (r != null) {
+            s.remove(r);
+        }
+    }
+
+    @Override
+    public RepairDetail getRepairDetailById(int repairDetailId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(RepairDetail.class, repairDetailId);
+    }
+    
+    
 
 }

@@ -69,7 +69,7 @@ public class LocationRepositoryImpl implements LocationRepository {
         Root root = cq.from(Location.class);
         Predicate predicate = c.equal(root.get("deviceId").get("id"), deviceId);
 
-        // ORDER BY createdDate DESC
+
         cq.select(root)
                 .where(predicate)
                 .orderBy(c.desc(root.get("lastUpdate")));

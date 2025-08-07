@@ -4,6 +4,7 @@
  */
 package com.nhom4.repositories.impl;
 
+import com.nhom4.configs.CustomSecurityException;
 import com.nhom4.dto.DeviceDTO;
 import com.nhom4.dto.IncidentDTO;
 import java.util.Date;
@@ -120,8 +121,19 @@ public class IncidentRepositoryImpl implements IncidentRepository {
     public Incident addOrUpdateIncident(Incident incident, int deviceId, User user) {
         Session s = factory.getObject().getCurrentSession();
 
+        Device device = s.get(Device.class, deviceId);
+
         if (incident.getId() == null) {
-            Device device = s.get(Device.class, deviceId);
+            TypedQuery<Incident> query = s.createQuery(
+                    "SELECT i FROM Incident i WHERE i.deviceId.id = :deviceId AND i.status <> 'RESOLVED'",
+                    Incident.class
+            );
+            query.setParameter("deviceId", deviceId); // <-- đúng!
+            List<Incident> unresolvedIncidents = query.getResultList();
+
+            if (!unresolvedIncidents.isEmpty()) {
+                throw new CustomSecurityException("Thiết bị này còn sự cố chưa được xử lý, không thể thêm mới!");
+            }
             incident.setDeviceId(device);
             incident.setSenderId(user);
             incident.setStatus("PENDING_APPROVAL");
@@ -131,6 +143,11 @@ public class IncidentRepositoryImpl implements IncidentRepository {
 
         } else {
             s.merge(incident);
+
+            if ("RESOLVED".equals(incident.getStatus())) {
+                device.setStatusDevice(incident.getReceptStatus());
+                s.merge(device);
+            }
         }
 
         return incident;
@@ -263,19 +280,19 @@ public class IncidentRepositoryImpl implements IncidentRepository {
                 root.get("approvedBy"),
                 root.get("employeeId"),
                 root.get("senderId"),
-                        cb.construct(
-                                DeviceDTO.class,
-                                deviceJoin.get("id"),
-                                deviceJoin.get("nameDevice"),                               
-                                deviceJoin.get("manufacturer"),
-                                deviceJoin.get("statusDevice"),
-                                deviceJoin.get("purchaseDate"),                             
-                                deviceJoin.get("frequency"),
-                                deviceJoin.get("image"),
-                                deviceJoin.get("price"),
-                                deviceJoin.get("currentLocationId")
-                        )));
-        
+                cb.construct(
+                        DeviceDTO.class,
+                        deviceJoin.get("id"),
+                        deviceJoin.get("nameDevice"),
+                        deviceJoin.get("manufacturer"),
+                        deviceJoin.get("statusDevice"),
+                        deviceJoin.get("purchaseDate"),
+                        deviceJoin.get("frequency"),
+                        deviceJoin.get("image"),
+                        deviceJoin.get("price"),
+                        deviceJoin.get("currentLocationId")
+                )));
+
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(cb.equal(root.get("employeeId").get("id"), user.getId()));
 
@@ -300,7 +317,7 @@ public class IncidentRepositoryImpl implements IncidentRepository {
                         cb.and(
                                 cb.equal(root.get("id"), incidentId),
                                 cb.equal(root.get("employeeId").get("id"), user.getId()),
-                                root.get("status").in("APPROVED", "IN_PROGRESS")
+                                root.get("status").in("APPROVED", "IN_PROGRESS", "RESOLVED")
                         ));
         Long count = s.createQuery(cq).uniqueResult();
         return count != null && count > 0;

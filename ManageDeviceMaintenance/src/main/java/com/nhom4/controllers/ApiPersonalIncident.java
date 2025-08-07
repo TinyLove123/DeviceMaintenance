@@ -8,7 +8,9 @@ import com.nhom4.dto.IncidentDTO;
 import com.nhom4.dto.RepairDetailDTO;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.Repair;
+import com.nhom4.pojo.RepairCost;
 import com.nhom4.pojo.User;
+import com.nhom4.services.DeviceService;
 import com.nhom4.services.IncidentService;
 import com.nhom4.services.RepairService;
 import com.nhom4.services.UserService;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +51,9 @@ public class ApiPersonalIncident {
 
     @Autowired
     private RepairService repairService;
+    
+    @Autowired
+    private DeviceService deviceService;
 
     @GetMapping("/secure/my-report-handle")
     public ResponseEntity<List<IncidentDTO>> getMyIncidentHandle(Principal principal) {
@@ -58,6 +64,7 @@ public class ApiPersonalIncident {
         List<IncidentDTO> myIncident = this.incidentService.getMyIncidentHandle(user);
         return new ResponseEntity<>(myIncident, HttpStatus.OK);
     }
+
 
     @GetMapping("/secure/my-report-handle/{id}/incident-detail")
     public ResponseEntity<?> getMyIncidentHandleDetail(@PathVariable("id") int incidentId,
@@ -114,21 +121,40 @@ public class ApiPersonalIncident {
             @RequestBody List<RepairDetailDTO> repairDetail) {
         try {
             Repair repair = this.repairService.getRepairByIncident(incidentId);
+
+            if (repair == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Không tìm thấy bản sửa chữa ứng với sự cố ID: " + incidentId));
+            }
+
             this.repairService.addRepairDetail(repair, repairDetail);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(Map.of("message", "Thêm chi tiết sửa chữa thành công"));
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Map.of("error", ex.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
         } catch (Exception ex) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            ex.printStackTrace(); // in stack trace ra log
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau."));
         }
     }
+
     @GetMapping("/secure/my-report-handle/{id}/repair-detail")
-    public ResponseEntity<?> addRepairDetail(@PathVariable("id") int incidentId){
+    public ResponseEntity<?> addRepairDetail(@PathVariable("id") int incidentId) {
         Repair repair = this.repairService.getRepairByIncident(incidentId);
-        return new ResponseEntity<>(repair,HttpStatus.OK);
+        return new ResponseEntity<>(repair, HttpStatus.OK);
+    }
+    
+    @DeleteMapping("/secure/my-report-handle/{id}/delete-repair-detail")
+    public ResponseEntity<?> deleteRepairDetail(@PathVariable("id") int incidentId) {
+        this.repairService.deleteRepairDetail(incidentId);
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
+    
+    
+    
+    @GetMapping("/secure/{id}/repair-cost")
+    public ResponseEntity<?> getRepairCost(@PathVariable("id") int deviceId) {
+        List<RepairCost> repairCost = this.deviceService.getRepairCostByDeviceId(deviceId);
+        return new ResponseEntity<>(repairCost, HttpStatus.OK);
     }
 }

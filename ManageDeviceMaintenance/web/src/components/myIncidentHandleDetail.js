@@ -1,23 +1,56 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Image, ListGroup, Row, Spinner } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { authApis, endpoints } from "../configs/Apis";
 
 const IncidentDetailPage = () => {
     const { id } = useParams();
     const [incident, setIncident] = useState(null);
-
-    const updateStatusIncident = async (id) => {
+    const [showModal, setShowModal] = useState(false);
+    const [selectedCosts, setSelectedCosts] = useState([]);
+    const [repair, setRepair] = useState(null);
+    const navigate = useNavigate();
+    const updateStatusIncident = async (id, incidentStatus) => {
         try {
-            const res = await authApis().post(
-                `${endpoints.updateIncidentStatus(id)}?status=IN_PROGRESS`
+            const res = await authApis().put(
+                `${endpoints.updateIncidentStatus(id)}?status=${incidentStatus}`
             );
-            setIncident(res.data);  // nếu API trả về incident sau khi cập nhật
+            setIncident(res.data);  // Cập nhật lại dữ liệu sự cố sau khi đổi trạng thái
         } catch (err) {
             console.error("Lỗi khi cập nhật sự cố:", err);
         }
     };
+
+    const getRepair = async () => {
+        try {
+            await authApis().get(endpoints.getDetailRepair(id));
+
+        } catch (err) {
+
+        }
+    }
+
+    const addRepair = async () => {
+        if (repair) {
+            alert("Đã tồn tại báo cáo sửa chữa cho sự cố này!");
+            return;
+        }
+
+        try {
+            const repairData = {
+                endDate: moment().add(1, 'days').format("YYYY-MM-DDTHH:mm:ss"),
+            };
+
+            await authApis().post(endpoints.addRepairByIncident(id), repairData);
+            alert("Tạo báo cáo sửa chữa thành công!");
+        } catch (err) {
+            console.error("Lỗi khi tạo báo cáo sửa chữa:", err);
+            alert("Lỗi khi tạo báo cáo sửa chữa!");
+        }
+    };
+
+
 
     useEffect(() => {
         const loadIncident = async () => {
@@ -29,7 +62,17 @@ const IncidentDetailPage = () => {
             }
         };
 
+        const loadRepair = async () => {
+            try {
+                const res = await authApis().get(endpoints.getDetailRepair(id));
+                setRepair(res.data);  // ✅ Cập nhật state repair
+            } catch (err) {
+                setRepair(null); // Không có repair thì giữ null
+            }
+        };
+
         loadIncident();
+        loadRepair();
     }, [id]);
 
     if (!incident) {
@@ -41,14 +84,12 @@ const IncidentDetailPage = () => {
         );
     }
 
-    // helper
     const formatDate = (date) =>
         date ? moment(date).format("DD-MM-YYYY HH:mm") : "Chưa duyệt";
 
     const formatPrice = (price) =>
         price ? price.toLocaleString() + " VND" : "N/A";
 
-    // components
     const UserCard = ({ user, title }) => (
         <Card className="mb-3 shadow">
             <Card.Header className="bg-secondary text-white">{title}</Card.Header>
@@ -122,13 +163,46 @@ const IncidentDetailPage = () => {
                     <UserCard user={incident.employeeId} title="Người xử lý" />
                     <UserCard user={incident.approvedBy} title="Người duyệt" />
                 </Col>
+            </Row>
+
+            <div className="mt-3 d-flex gap-3">
+                {/* Nút xử lý */}
                 <Button
-                 variant="secondary"
-                 onClick={() =>updateStatusIncident(incident.id)}
+                    variant="secondary"
+                    onClick={() => updateStatusIncident(incident.id, "IN_PROGRESS")}
+                    disabled={incident.status === "IN_PROGRESS" || incident.status === "RESOLVED"} // disable nếu đã xử lý xong
                 >
                     Xử lý
                 </Button>
-            </Row>
+
+                {/* Nút hoàn tất, chỉ hiện khi đang xử lý */}
+                {incident.status === "IN_PROGRESS" && (
+                    <Button
+                        variant="success"
+                        onClick={() => updateStatusIncident(incident.id, "RESOLVED")}
+                    >
+                        Hoàn tất
+                    </Button>
+                )}
+
+                {!repair ? (
+                    <Button variant="primary" onClick={addRepair}>
+                        Tạo báo cáo sửa chữa
+                    </Button>
+                )
+                    : (
+                        <Button variant="outline-success"
+                            onClick={() => navigate(`/repair-detail/${incident.id}`, {
+                                state: {
+                                    deviceId: incident.deviceId.id
+                                }
+                            })}
+                        >
+                            Đã có báo cáo sửa chữa
+                        </Button>
+                    )}
+
+            </div>
         </div>
     );
 };

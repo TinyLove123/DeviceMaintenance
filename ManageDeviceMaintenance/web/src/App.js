@@ -12,6 +12,7 @@ import MyMaintenanceSchedule from "./components/myMaintenanceSchedule";
 import MyRentedDevice from "./components/myRentedDevice";
 import MyRentedDeviceDetail from "./components/myRentedDeviceDetail";
 import Profile from "./components/profile";
+import RepairDetailPage from "./components/repairDetailPage";
 import IncidentReportForm from "./components/reportRentedDevice";
 import { MyUserContext } from "./configs/Context";
 import MyUserReducer from "./reducers/MyUserReducer";
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/incident-report/:id" element={<IncidentReportForm/>} />
         <Route path="/my-report-handle/" element={<MyReportHandle/>} />
         <Route path="/incident/:id" element={<IncidentDetailPage />} />
+        <Route path="/repair-detail/:id" element={<RepairDetailPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>
