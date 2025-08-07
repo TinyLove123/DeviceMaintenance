@@ -5,10 +5,12 @@
 package com.nhom4.services.Impl;
 
 import com.nhom4.dto.MaintenanceScheduleDTO;
+import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.MaintenanceScheduleRepository;
 import com.nhom4.services.MaintenanceScheduleService;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
@@ -65,6 +67,11 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
     @Override
     public void autoAddMaintenanceSchedule(MaintenanceSchedule m) {
          this.maintenanceScheduleRepo.autoAddMaintenanceSchedule(m);
+    }
+
+    @Override
+    public void addMaintenanceIncidentLinkByEmployee(User user, int maintenanceId, Incident incident, String note, Date linkedBy) {
+        this.maintenanceScheduleRepo.addMaintenanceIncidentLinkByEmployee(user, maintenanceId, incident, note, linkedBy);
     }
 
     

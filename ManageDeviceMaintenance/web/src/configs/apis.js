@@ -27,12 +27,13 @@ export const endpoints={
     'myReportHandleDetail':(id)=>`/secure/my-report-handle/${id}/incident-detail`,
     'updateIncidentStatus':(id)=>`/secure/my-report-handle/${id}/incident-update-status`,
     'addRepairByIncident':(id)=> `/secure/my-report-handle/${id}/add-repair`,
-    'addRepairDetail':(id)=> `secure/report-handle/${id}/add-repair-detail`,
+    // 'addRepairDetail':(id)=> `secure/report-handle/${id}/add-repair-detail`,
     'getDetailRepair':(id)=> `/secure/my-report-handle/${id}/repair-detail`,
     'getRepairCost':(id)=>`/secure/${id}/repair-cost`,
     'addRepairDetail':(id)=>`/secure/report-handle/${id}/add-repair-detail`,
-    'deleteRepairDetail':(id)=>`/secure/my-report-handle/${id}/delete-repair-detail`
-    'myMaintenanceReport':(id) => `/secure/persional-maintenance-schedule/${id}/detail-maintenance-report`
+    'deleteRepairDetail':(id)=>`/secure/my-report-handle/${id}/delete-repair-detail`,
+    'myMaintenanceReport':(id) => `/secure/persional-maintenance-schedule/${id}/detail-maintenance-report`,
+    'addIncidentByMaintenanceSchedule':(id)=>`/secure/persional-maintenance-schedule/maintenance-schedule/${id}/add-link`
 
 }
 

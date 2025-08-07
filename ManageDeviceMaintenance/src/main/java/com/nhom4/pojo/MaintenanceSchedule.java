@@ -176,13 +176,6 @@ public class MaintenanceSchedule implements Serializable {
         this.maintenanceScheduleReport = maintenanceScheduleReport;
     }
 
-    public String getProgress() {
-        return progress;
-    }
-
-    public void setProgress(String progress) {
-        this.progress = progress;
-    }
 
    
 
@@ -193,6 +186,16 @@ public class MaintenanceSchedule implements Serializable {
     public void setIsAutoAdd(Boolean isAutoAdd) {
         this.isAutoAdd = isAutoAdd;
     }
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+   
 
     
    
