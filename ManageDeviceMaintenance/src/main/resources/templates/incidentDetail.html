@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Trang chi tiết báo cáo</title>
+    <head>
+        <title>Trang chi tiết báo cáo</title>
     <th:block th:replace="base :: bootstrap"></th:block>
 </head>
 <body>
@@ -40,49 +40,59 @@
                         </div>
 
                         <!-- FORM cập nhật trạng thái -->
-                        <form th:action="@{|/admin/incident-device/${Incident.id}/incident-update|}" 
-                              method="post" 
-                              th:object="${Incident}" 
-                              onsubmit="return validateForm()"
-                              th:if="${Incident.status == 'PENDING_APPROVAL'}">
+                        <!-- FORM cập nhật trạng thái -->
+                        <div th:if="${Incident.status == 'PENDING_APPROVAL'}">
+                            <form th:action="@{|/admin/incident-device/${Incident.id}/incident-update|}" 
+                                  method="post" 
+                                  th:object="${Incident}" 
+                                  onsubmit="return validateForm()">
 
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Cập nhật trạng thái:</label>
-                                <select th:field="*{status}" id="status" class="form-control"
-                                        onchange="toggleEmployeeDropdown(this.value)">
-                                    <option value="APPROVED">APPROVED</option>
-                                    <option value="REJECTED">REJECTED</option>
-                                </select>
-                            </div>
-
-                            <input type="hidden" th:field="*{id}" />
-                            <input type="hidden" th:field="*{deviceId.id}" />
-
-                            <div id="approvedFields" style="display: none;">
                                 <div class="mb-3">
-                                    <label for="employeeId" class="form-label">Nhân viên xử lý:</label>
-                                    <select th:field="*{employeeId.id}" id="employeeId" class="form-control">
-                                        <option value="">-- Chọn nhân viên --</option>
-                                        <option th:each="emp : ${employees}" 
-                                                th:value="${emp.id}" 
-                                                th:text="${emp.firstName + ' ' + emp.lastName}">
-                                        </option>
+                                    <label for="status" class="form-label">Cập nhật trạng thái:</label>
+                                    <select th:field="*{status}" id="status" class="form-control"
+                                            onchange="toggleEmployeeDropdown(this.value)">
+                                        <option value="APPROVED">APPROVED</option>
+                                        <option value="REJECTED">REJECTED</option>
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="startDate" class="form-label">Ngày bắt đầu thực hiện:</label>
-                                    <input type="datetime-local" th:field="*{startDate}" id="startDate" class="form-control" />
+                                <input type="hidden" th:field="*{id}" />
+                                <input type="hidden" th:field="*{deviceId.id}" />
+
+                                <div id="approvedFields" style="display: none;">
+                                    <div class="mb-3">
+                                        <label for="employeeId" class="form-label">Nhân viên xử lý:</label>
+                                        <select th:field="*{employeeId.id}" id="employeeId" class="form-control">
+                                            <option value="">-- Chọn nhân viên --</option>
+                                            <option th:each="emp : ${employees}" 
+                                                    th:value="${emp.id}" 
+                                                    th:text="${emp.firstName + ' ' + emp.lastName}">
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="startDate" class="form-label">Ngày bắt đầu thực hiện:</label>
+                                        <input type="datetime-local" th:field="*{startDate}" id="startDate" class="form-control" />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="endDate" class="form-label">Ngày kết thúc dự kiến:</label>
+                                        <input type="datetime-local" th:field="*{endDate}" id="endDate" class="form-control" />
+                                    </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="endDate" class="form-label">Ngày kết thúc dự kiến:</label>
-                                    <input type="datetime-local" th:field="*{endDate}" id="endDate" class="form-control" />
-                                </div>
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            </form>
+                        </div>
+                        <div th:if="${Incident.status != 'PENDING_APPROVAL'}" class="mb-3">
+                            <label class="form-label"><strong>Trạng thái hiện tại:</strong></label>
+                            <span class="badge bg-success" style="font-size: 1rem;" th:text="${Incident.status}"></span>
+                            <div class="alert alert-info mt-3" role="alert">
+                                Báo cáo đã được xử lý ở trạng thái <strong th:text="${Incident.status}"></strong>. Bạn không thể cập nhật trạng thái nữa.
                             </div>
+                        </div>
 
-                            <button type="submit" class="btn btn-primary">Cập nhật</button>
-                        </form>
                     </div>
 
                     <div class="card-body text-center text-muted" th:if="${Incident == null}">
@@ -113,31 +123,40 @@
             </div>
 
             <!-- THÔNG TIN XỬ LÝ (nếu APPROVED) -->
-            <div class="card mb-4 shadow" th:if="${Incident.status != 'PENDING_APPROVAL' and Incident.status != 'REJECTED'}">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Thông tin xử lý</h5>
+            <div class="col-md-12" th:if="${Incident.status != 'PENDING_APPROVAL' and Incident.status != 'REJECTED'}">
+                <div class="card mb-4 shadow">
+                    <div class="card-header bg-success text-white">
+                        <h5>Thông tin xử lý</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3 row">
+                            <label class="col-sm-5 col-form-label"><strong>Nhân viên xử lý:</strong></label>
+                            <div class="col-sm-7">
+                                <span th:text="${Incident.employeeId != null ? Incident.employeeId.firstName + ' ' + Incident.employeeId.lastName : 'Chưa phân công'}"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-5 col-form-label"><strong>Ngày bắt đầu:</strong></label>
+                            <div class="col-sm-7">
+                                <span th:text="${Incident.startDate != null ? #dates.format(Incident.startDate, 'dd/MM/yyyy HH:mm') : 'Chưa có'}"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-5 col-form-label"><strong>Ngày kết thúc dự kiến:</strong></label>
+                            <div class="col-sm-7">
+                                <span th:text="${Incident.endDate != null ? #dates.format(Incident.endDate, 'dd/MM/yyyy HH:mm') : 'Chưa có'}"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="mb-3 row">
-                        <label class="col-sm-5 col-form-label"><strong>Nhân viên xử lý:</strong></label>
-                        <div class="col-sm-7">
-                            <span th:text="${Incident.employeeId != null ? Incident.employeeId.firstName + ' ' + Incident.employeeId.lastName : 'Chưa phân công'}"></span>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                        <label class="col-sm-5 col-form-label"><strong>Ngày bắt đầu:</strong></label>
-                        <div class="col-sm-7">
-                            <span th:text="${Incident.startDate != null ? #dates.format(Incident.startDate, 'dd/MM/yyyy HH:mm') : 'Chưa có'}"></span>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                        <label class="col-sm-5 col-form-label"><strong>Ngày kết thúc dự kiến:</strong></label>
-                        <div class="col-sm-7">
-                            <span th:text="${Incident.endDate != null ? #dates.format(Incident.endDate, 'dd/MM/yyyy HH:mm') : 'Chưa có'}"></span>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-12 mt-2" th:if="${Incident.status == 'RESOLVED'}">
+                <div class="text-end">
+                    <a th:href="@{|/admin/incident-manager/${Incident.id}/detail-repair|}" class="btn btn-outline-primary">
+                        Xem chi tiết sửa chữa
+                    </a>
                 </div>
             </div>
         </div>

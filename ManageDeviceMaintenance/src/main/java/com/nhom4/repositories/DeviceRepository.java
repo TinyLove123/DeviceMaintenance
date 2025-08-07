@@ -26,7 +26,7 @@ public interface DeviceRepository {
 
     void deleteDevice(int deviceId);
 
-    List<RepairCost> getRepairTypeByDeviceId(int deviceId);
+    List<RepairCost> getRepairCostByDeviceId(int deviceId);
 
     RepairCost addOrUpdateRepairCost(RepairCost repairCost);
 

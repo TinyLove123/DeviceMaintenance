@@ -9,13 +9,15 @@ package com.nhom4.dto;
  * @author Administrator
  */
 public class RepairDetailDTO {
+    private Integer id;
     private int repairCostId;
     private String description;
-
+    
     public RepairDetailDTO() {
     }
 
-    public RepairDetailDTO(int repairCostId, String description) {
+    public RepairDetailDTO(int id,int repairCostId, String description) {
+        this.id = id;
         this.repairCostId = repairCostId;
         this.description = description;
     }

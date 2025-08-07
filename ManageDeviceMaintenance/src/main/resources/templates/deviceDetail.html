@@ -81,22 +81,23 @@
                         <td th:text="${r.id}"></td>
                         <td th:text="${r.repairTypeId.type}"></td>
                         <td th:text="${#numbers.formatDecimal(r.price, 0, 'POINT', 0, 'COMMA')}"></td>
-                        
+
                     </tr>
                 </tbody>
             </table>
         </div>
 
-      
+
         <!-- Form thêm chi phí sửa chữa -->
-       
+        <a th:href="@{/admin/devices-manager/device/{id}/location-history(id=${device.id})}" class="btn btn-secondary mt-3">Lịch sử cập nhật vị trí</a>
+
         <a th:href="@{/admin/devices-manager}" class="btn btn-secondary mt-4">← Quay lại</a>
 
     </main>
 
     <div th:replace="base :: footer"></div>
 
-   
+
 
 </body>
 </html>

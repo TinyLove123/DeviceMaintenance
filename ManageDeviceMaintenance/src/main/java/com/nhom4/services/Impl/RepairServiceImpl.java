@@ -7,6 +7,7 @@ package com.nhom4.services.Impl;
 import com.nhom4.dto.RepairDetailDTO;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.Repair;
+import com.nhom4.pojo.RepairDetail;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.RepairRepository;
 import com.nhom4.services.RepairService;
@@ -39,5 +40,15 @@ public class RepairServiceImpl implements RepairService{
     public void addRepairDetail(Repair repair, List<RepairDetailDTO> repairDetailList) {
         this.repairRepo.addRepairDetail(repair, repairDetailList);
     }
+
+    @Override
+    public void deleteRepairDetail(int repairDetailId) {
+        this.repairRepo.deleteRepairDetail(repairDetailId);
+    }
+
+//    @Override
+//    public RepairDetail getRepairDetailById(int repairDetailId) {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//    }
     
 }

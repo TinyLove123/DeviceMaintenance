@@ -11,6 +11,7 @@ import com.nhom4.services.CategoryService;
 import com.nhom4.services.DeviceService;
 import com.nhom4.services.LocationService;
 import com.nhom4.services.RepairTypeService;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -123,16 +124,16 @@ public class DeviceController {
     }
 
     @PostMapping("/devices/{id}/update-device")
-    public String updateDevice(@PathVariable("id") int id,@ModelAttribute("device") Device device, Model model) {
+    public String updateDevice(@PathVariable("id") int id, @ModelAttribute("device") Device device, Model model) {
         Device d = this.deviceService.getDeviceById(id);
         d.setNameDevice(device.getNameDevice());
         d.setManufacturer(device.getManufacturer());
         d.setFrequency(device.getFrequency());
         d.setFile(device.getFile());
-        
+
         this.deviceService.addOrUpdateDevice(d);
-        
-        return "redirect:/admin/devices-manager/devices/"+ d.getId()+"/update" ;
+
+        return "redirect:/admin/devices-manager/devices/" + d.getId() + "/update";
     }
 
     @PostMapping("/devices/{id}/add-repair")
@@ -170,6 +171,14 @@ public class DeviceController {
         this.locationService.addLocation(deviceId, loc);
         return "redirect:/admin/devices-manager/devices/" + deviceId;
 
+    }
+
+    @GetMapping("/device/{id}/location-history")
+    public String getHistoryLocation(Model model, @PathVariable("id") Integer deviceId,
+            Principal principal) {
+        List<Location> historyLocation = this.locationService.getLocationByDeviceId(deviceId);
+        model.addAttribute("LocationHistory", historyLocation);
+        return "deviceHistoryLocation";
     }
 
 }

@@ -32,7 +32,7 @@ public interface DeviceService {
 
     void deleteDevice(int deviceId);
 
-    List<RepairCost> getRepairTypeByDeviceId(int deviceId);
+    List<RepairCost> getRepairCostByDeviceId(int deviceId);
 
     RepairCost addOrUpdateRepairCost(RepairCost repairCost);
 

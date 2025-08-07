@@ -4,6 +4,7 @@
  */
 package com.nhom4.controllers;
 
+import com.nhom4.dto.AddIncidentLinkRequestDTO;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nhom4.dto.MaintenanceScheduleDTO;
 import com.nhom4.dto.MaintenanceReportDTO;
+import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.MaintenanceReport;
 import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.User;
+import com.nhom4.services.IncidentService;
 import com.nhom4.services.MaintenanceScheduleService;
 import com.nhom4.services.UserService;
 import static jakarta.ws.rs.client.Entity.entity;
@@ -35,6 +38,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.nhom4.services.MaintenanceReportService;
+import java.text.ParseException;
 
 /**
  *
@@ -53,6 +57,9 @@ public class ApiPersonalMaintenantSchedule {
 
     @Autowired
     private MaintenanceReportService maintenanceReportService;
+
+    @Autowired
+    private IncidentService incidentService;
 
     @GetMapping("/")
     public ResponseEntity<List<MaintenanceScheduleDTO>> listMaintenanceSchedule(@RequestParam Map<String, String> params, Principal principal) {
@@ -198,4 +205,34 @@ public class ApiPersonalMaintenantSchedule {
         }
 
     }
+
+    @PostMapping("/maintenance-schedule/{id}/add-link")
+    public ResponseEntity<?> addLink(
+            @RequestBody AddIncidentLinkRequestDTO request,
+            @PathVariable("id") int maintenanceScheduleId,
+            Principal principal
+    ) {
+        User user = this.userService.getUserByUsername(principal.getName());
+        MaintenanceSchedule maintenance = this.maintenanceScheduleService.getMaintenanceScheduleById(maintenanceScheduleId);
+
+        Incident incident = request.getIncident();
+        incident.setEmployeeId(user);
+
+        Incident incidentAdd = this.incidentService.addOrUpdateIncident(
+                incident,
+                maintenance.getDeviceId().getId(),
+                user
+        );
+
+        this.maintenanceScheduleService.addMaintenanceIncidentLinkByEmployee(
+                user,
+                maintenanceScheduleId,
+                incidentAdd,
+                request.getNote(),
+                request.getLinkedAt()
+        );
+
+        return ResponseEntity.ok().build();
+    }
+
 }

@@ -68,8 +68,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<RepairCost> getRepairTypeByDeviceId(int id) {
-        return deviceRepository.getRepairTypeByDeviceId(id);
+    public List<RepairCost> getRepairCostByDeviceId(int id) {
+        return deviceRepository.getRepairCostByDeviceId(id);
     }
 
     @Override

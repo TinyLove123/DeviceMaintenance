@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Chi tiết sửa chữa</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <main class="container mt-5">
+        <h2 class="mb-4">Lịch sử cập nhật vị trí của thiết bị</h2>
+
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Địa chỉ</th>
+                    <th>Tỉnh</th>
+                    <th>Phường/Xã</th>
+                    <th>Thời gian cập nhật</th>
+                    <th>Vị trí hiện tại?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="loc, iterStat : ${LocationHistory}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="${loc.address}"></td>
+                    <td th:text="${loc.wardId.provinceCode.fullName}">N/A</td>
+                    <td th:text="${loc.wardId.fullName}">N/A</td>
+                    <td th:text="${#dates.format(loc.lastUpdate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td>
+                        <span th:if="${loc.isCurrentLocation}" class="badge" style="background-color: #198754; color: white;">Hiện tại</span>
+                        <span th:if="${!loc.isCurrentLocation}"class="badge" style="background-color: #6c757d; color: white;">Cũ</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${LocationHistory.size() == 0}" class="alert alert-warning">
+            Không có dữ liệu vị trí cho thiết bị này.
+        </div>
+    </main>
+    <div th:replace="base :: footer"></div>
+
+</body>
+</html>

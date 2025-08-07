@@ -172,7 +172,7 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     }
 
     @Override
-    public List<RepairCost> getRepairTypeByDeviceId(int id) {
+    public List<RepairCost> getRepairCostByDeviceId(int id) {
         Session session = this.factory.getObject().getCurrentSession();
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -195,7 +195,7 @@ public class DeviceRepositoryImpl implements DeviceRepository {
                 s.merge(repairCost);
             }
         } catch (Exception e) {
-            System.err.println("❌ Lỗi khi lưu RepairCost: " + e.getMessage());
+            System.err.println("Lỗi khi lưu RepairCost: " + e.getMessage());
         }
         return repairCost;
     }

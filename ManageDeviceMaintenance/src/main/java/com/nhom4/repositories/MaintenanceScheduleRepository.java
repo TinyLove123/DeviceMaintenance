@@ -6,8 +6,10 @@ package com.nhom4.repositories;
 
 import com.nhom4.dto.MaintenanceScheduleDTO;
 import com.nhom4.pojo.Device;
+import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.User;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
@@ -38,5 +40,7 @@ public interface MaintenanceScheduleRepository {
     
     void deleteMaintenanceSchedule(MaintenanceSchedule m);
     
+    void addMaintenanceIncidentLinkByEmployee(User user, int maintenanceId ,Incident incident, String note, Date linkedBy);
+
     
 }

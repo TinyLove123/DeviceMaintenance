@@ -7,10 +7,13 @@ package com.nhom4.repositories.impl;
 import com.nhom4.dto.MaintenanceScheduleDTO;
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.MaintenanceReport;
+import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.MaintenanceIncidentLink;
 import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.DeviceRepository;
 import com.nhom4.repositories.MaintenanceScheduleRepository;
+import com.nhom4.services.IncidentService;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -46,6 +49,10 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
 
     @Autowired
     private DeviceRepository deviceRepo;
+
+    
+    @Autowired
+    private IncidentService incidentService;
 
     @Override
     public List<MaintenanceSchedule> getMaintenanceSchedules(Map<String, String> params) {
@@ -294,6 +301,24 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
             // Ghi log nếu cần
             throw ex;
         }
+    }
+
+    @Override
+    public void addMaintenanceIncidentLinkByEmployee(User user, int maintenanceId, Incident incident, String note, Date linkedAt) {
+        Session s = this.factory.getObject().getCurrentSession();
+
+        MaintenanceSchedule maintenance = this.getMaintenanceScheduleById(maintenanceId);
+
+
+        Incident incidentSave = this.incidentService.addOrUpdateIncident(incident, maintenance.getDeviceId().getId(), user);
+
+        MaintenanceIncidentLink link = new MaintenanceIncidentLink();
+        link.setIncidentId(incidentSave);
+        link.setMaintenanceScheduleId(maintenance);
+        link.setNote(note);
+        link.setLinkedAt(linkedAt); 
+
+        s.persist(link);
     }
 
 }

@@ -7,6 +7,7 @@ package com.nhom4.controllers;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
 import com.nhom4.services.IncidentService;
+import com.nhom4.services.RepairService;
 import com.nhom4.services.UserService;
 import jakarta.ws.rs.PathParam;
 import java.security.Principal;
@@ -37,10 +38,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class IncidentController {
 
     @Autowired
-    private IncidentService incidentRepo;
+    private IncidentService incidentService;
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private RepairService repairService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -51,7 +55,7 @@ public class IncidentController {
 
     @GetMapping("/incident-manager")
     public String getDeviceListHadIncident(Model model, @RequestParam Map<String, String> params) {
-        model.addAttribute("Incidents", this.incidentRepo.getIncident(params));
+        model.addAttribute("Incidents", this.incidentService.getIncident(params));
 
         return "incidentManager";
     }
@@ -61,7 +65,7 @@ public class IncidentController {
         model.addAttribute("now", new Date());
 
         model.addAttribute("employees", this.userService.getEmployee());
-        model.addAttribute("Incident", this.incidentRepo.getIncidentById(incidentId));
+        model.addAttribute("Incident", this.incidentService.getIncidentById(incidentId));
 
         return "incidentDetail";
     }
@@ -74,7 +78,7 @@ public class IncidentController {
         String username = principal.getName();
         User adminUser = this.userService.getUserByUsername(username);
 
-        Incident incident = this.incidentRepo.getIncidentById(incidentForm.getId());
+        Incident incident = this.incidentService.getIncidentById(incidentForm.getId());
         if (incident == null) {
             return "redirect:/admin/incident-manager?error=notFound";
         }
@@ -93,9 +97,20 @@ public class IncidentController {
             incident.setEndDate(incidentForm.getEndDate());
         }
 
-        this.incidentRepo.addOrUpdateIncident(incident, incidentForm.getDeviceId().getId(), adminUser);
+        this.incidentService.addOrUpdateIncident(incident, incidentForm.getDeviceId().getId(), adminUser);
 
         return "redirect:/admin/incident-manager";
     }
+    
+    @GetMapping("/incident-manager/{id}/detail-repair")
+    public String getIncidentRepair(
+           Model model,@PathVariable("id") Integer incidentId,
+            Principal principal) {
+        model.addAttribute("Repair", this.repairService.getRepairByIncident(incidentId));
+        
+        return "repairDetail";
+    }
+        
+    
 
 }
