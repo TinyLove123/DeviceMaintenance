@@ -10,6 +10,28 @@
     <div th:replace="base :: header"></div>
 
     <main class="container my-4">
+
+        <form method="get" th:action="@{/admin/maintenance-schedule-manager}" class="mb-3">
+            <div class="row g-2">
+                <div class="col-auto">
+                    <label for="progress" class="form-label">Lọc theo tiến trình:</label>
+                    <select name="progress" id="progress">
+                        <option value="in_completed" th:selected="${params.progress == 'in_completed'}">Chưa thực hiện</option>
+                        <option value="in_progress" th:selected="${params.progress == 'in_progress'}">Đang thực hiện</option>
+                        <option value="completed" th:selected="${params.progress == 'completed'}">Hoàn thành</option>
+                    </select>
+                    <button type="submit">Lọc</button>                
+                </div>
+            </div>
+        </form>
+
+
+        <a 
+            th:href="@{/admin/maintenance-schedule-manager/add-maintenance-schedule}"
+            class="btn btn-primary">Thêm lịch bảo trì</a> 
+
+
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -38,14 +60,23 @@
                     <td th:text="${m.progress == 'completed'} ? '--' : ${m.deviceId.statusDevice}"></td>
                     <td th:text="${m.employeeId != null ? m.employeeId.firstName + ' ' + m.employeeId.lastName : 'Chưa xếp'}"
                         th:classappend="${m.employeeId == null} ? 'text-danger fw-bold' : ''"></td>
-                    
+
                     <td>
                         <span th:if="${m.progress != 'completed'}" th:attr="data-start=${m.startDate}" class="remaining-days"></span>
                     </td>
                     <td>
-                        <a th:if="${m.progress == 'in_completed'}"
-                           th:href="@{/admin/maintenance-schedule-manager/{id}/maintenance-schedule-detail(id=${m.id})}"
-                           class="btn btn-primary">Chỉnh sửa</a>
+                        <div th:if="${m.progress == 'in_completed'}">
+                            <a th:href="@{/admin/maintenance-schedule-manager/{id}/maintenance-schedule-detail(id=${m.id})}"
+                               class="btn btn-primary">Chỉnh sửa</a>
+
+                            <form th:action="@{/admin/maintenance-schedule-manager/delete}" 
+                                  method="post" 
+                                  style="display:inline"
+                                  onsubmit="return confirm('Bạn có chắc chắn muốn xóa lịch bảo trì này không?');">
+
+                                <input type="hidden" name="id" th:value="${m.id}" />
+                                <button type="submit" class="btn btn-danger ms-2">Xóa</button>
+                            </form>                        </div>
                     </td>
 
                 </tr>

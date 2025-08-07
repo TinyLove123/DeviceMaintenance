@@ -67,5 +67,10 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
          this.maintenanceScheduleRepo.autoAddMaintenanceSchedule(m);
     }
 
+    @Override
+    public void deleteMaintenanceSchedule(MaintenanceSchedule m) {
+        this.maintenanceScheduleRepo.deleteMaintenanceSchedule(m);
+    }
+
     
 }

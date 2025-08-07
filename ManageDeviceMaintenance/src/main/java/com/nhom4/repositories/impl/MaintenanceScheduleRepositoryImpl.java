@@ -6,6 +6,7 @@ package com.nhom4.repositories.impl;
 
 import com.nhom4.dto.MaintenanceScheduleDTO;
 import com.nhom4.pojo.Device;
+import com.nhom4.pojo.MaintenanceReport;
 import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.DeviceRepository;
@@ -46,36 +47,42 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
     @Autowired
     private DeviceRepository deviceRepo;
 
+    @Override
     public List<MaintenanceSchedule> getMaintenanceSchedules(Map<String, String> params) {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<MaintenanceSchedule> q = b.createQuery(MaintenanceSchedule.class);
-        Root root = q.from(MaintenanceSchedule.class);
+        Root<MaintenanceSchedule> root = q.from(MaintenanceSchedule.class);
         q.select(root);
 
-        if (params != null) {
-            List<Predicate> predicates = new ArrayList<>();
+        List<Predicate> predicates = new ArrayList<>();
 
+        if (params != null) {
             String startDate = params.get("startDate");
             if (startDate != null && !startDate.isEmpty()) {
-                predicates.add(b.equal(root.get("startDate").as(Integer.class), startDate));
+                predicates.add(b.equal(root.get("startDate").as(String.class), startDate));
             }
 
             String progress = params.get("progress");
-            if (progress != null && !progress.isEmpty()) {
-                predicates.add(b.equal(root.get("progress"), progress));
+            if (progress == null || progress.isEmpty()) {
+                progress = "in_completed"; // ✅ Mặc định lọc là 'in_completed'
             }
 
-            q.where(predicates.toArray(Predicate[]::new));
+            // Nếu không chọn "all" thì mới thêm điều kiện lọc
+            predicates.add(b.equal(root.get("progress"), progress));
+        } else {
+            // ✅ Nếu không truyền gì, mặc định lọc theo 'in_completed'
+            predicates.add(b.equal(root.get("progress"), "in_completed"));
+        }
 
-            // Tạm thời bỏ orderBy ở đây nếu có
-            // Nếu bạn cần thêm sắp xếp khác thì xử lý sau khi query
+        if (!predicates.isEmpty()) {
+            q.where(predicates.toArray(Predicate[]::new));
         }
 
         Query query = s.createQuery(q);
         List<MaintenanceSchedule> result = query.getResultList();
 
-        // 🔽 Sắp xếp theo tiến trình sau khi truy vấn xong
+        // 🔽 Sắp xếp theo tiến trình sau khi truy vấn xong (giữ nguyên)
         result.sort(Comparator.comparingInt(m -> {
             switch (m.getProgress()) {
                 case "in_completed":
@@ -97,10 +104,33 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
         Session s = this.factory.getObject().getCurrentSession();
 
         if (m.getId() == null) {
+
+            CriteriaBuilder cb = s.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            Root<MaintenanceSchedule> root = cq.from(MaintenanceSchedule.class);
+
+            cq.select(cb.count(root));
+            cq.where(
+                    cb.and(
+                            cb.equal(root.get("deviceId").get("id"), m.getDeviceId().getId()),
+                            cb.equal(root.get("startDate"), m.getStartDate())
+                    )
+            );
+
+            Long count = s.createQuery(cq).uniqueResult();
+
+            if (count != null && count > 0) {
+                throw new RuntimeException("Lịch bảo trì cho thiết bị này vào ngày này đã tồn tại!");
+            }
             // Tạo mới
             if (m.getIsAutoAdd() == null) {
                 m.setIsAutoAdd(true); // Mặc định là true nếu chưa gán
             }
+
+            if (m.getProgress() == null || m.getProgress().isEmpty()) {
+                m.setProgress("in_completed");
+            }
+
             s.persist(m);
         } else {
 
@@ -235,13 +265,35 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
 
     @Override
     public boolean hasMaintenanceReport(int maintenanceScheduleId) {
-        Session session = this.factory.getObject().getCurrentSession();
-        Query q = session.createQuery("SELECT COUNT(r) FROM MaintenanceScheduleReport r WHERE r.maintenanceScheduleId.id = :id");
-        q.setParameter("id", maintenanceScheduleId);
-        Long count = (Long) q.getSingleResult();
-        return count != null && count > 0;
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<MaintenanceReport> root = cq.from(MaintenanceReport.class);
 
+        // SELECT COUNT(r)
+        cq.select(cb.count(root));
+
+        // WHERE r.maintenanceScheduleId.id = :id
+        cq.where(cb.equal(root.get("maintenanceScheduleId").get("id"), maintenanceScheduleId));
+
+        Long count = s.createQuery(cq).getSingleResult();
+        return count != null && count > 0;
     }
 
-    
+    @Override
+    public void deleteMaintenanceSchedule(MaintenanceSchedule m) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            MaintenanceSchedule schedule = s.get(MaintenanceSchedule.class, m.getId());
+            if (schedule != null && "in_completed".equalsIgnoreCase(schedule.getProgress())) {
+                s.remove(schedule);
+            } else {
+                System.out.println("Không thể xóa lịch không ở trạng thái 'in_completed'");
+            }
+        } catch (Exception ex) {
+            // Ghi log nếu cần
+            throw ex;
+        }
+    }
+
 }

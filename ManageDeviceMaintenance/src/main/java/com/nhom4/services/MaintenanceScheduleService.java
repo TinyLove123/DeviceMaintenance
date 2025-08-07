@@ -32,5 +32,7 @@ public interface MaintenanceScheduleService {
     List<MaintenanceSchedule> getTodayMaintenanceSchedule();
     
     boolean hasMaintenanceReport(int maintenanceScheduleId);
+        void deleteMaintenanceSchedule(MaintenanceSchedule m);
+
 
 }

@@ -43,9 +43,7 @@ public class MaintenanceSchedule implements Serializable {
     @Size(max = 20)
     @Column(name = "progress")
     private String progress;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
+    @Size(max = 20)
     @Column(name = "recept_status")
     private String receptStatus;
     @Column(name = "is_auto_add")
@@ -176,13 +174,6 @@ public class MaintenanceSchedule implements Serializable {
         this.maintenanceScheduleReport = maintenanceScheduleReport;
     }
 
-    public String getProgress() {
-        return progress;
-    }
-
-    public void setProgress(String progress) {
-        this.progress = progress;
-    }
 
    
 
@@ -194,6 +185,15 @@ public class MaintenanceSchedule implements Serializable {
         this.isAutoAdd = isAutoAdd;
     }
 
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+   
     
    
     
