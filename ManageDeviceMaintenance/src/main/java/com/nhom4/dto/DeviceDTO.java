@@ -1,6 +1,7 @@
 package com.nhom4.dto;
 
 import com.nhom4.pojo.Device;
+import com.nhom4.pojo.Location;
 import java.util.Date;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,9 +17,25 @@ public class DeviceDTO {
     private Double price;
     private Integer categoryId; // chỉ lấy id để tránh lồng object
     private MultipartFile file; // dùng để upload ảnh
+    private Location location;
 
     // Constructors
     public DeviceDTO() {
+    }
+//       
+
+    public DeviceDTO(Integer id, String nameDevice, String manufacturer, 
+            String statusDeviceDate,Date purchaseDate, Integer frequency,
+            String image, Double price,Location currentLocationId) {
+        this.id = id;
+        this.nameDevice = nameDevice;
+        this.manufacturer = manufacturer;
+        this.statusDevice = statusDevice;
+        this.location = currentLocationId;
+        this.purchaseDate = purchaseDate;
+        this.frequency = frequency;
+        this.image = image;
+        this.price = price;
     }
 
     public DeviceDTO(Device device) {
@@ -31,13 +48,14 @@ public class DeviceDTO {
         this.image = device.getImage();
         this.price = device.getPrice();
         this.categoryId = device.getCategoryId() != null ? device.getCategoryId().getId() : null;
-        this.file = null; 
+        this.file = null;
+        this.location = device.getCurrentLocationId();
 
     }
 
     public DeviceDTO(Integer id, String nameDevice, Date purchaseDate, String manufacturer,
             String statusDevice, Integer frequency, String image,
-            Double price, Integer categoryId, MultipartFile file) {
+            Double price, Integer categoryId, MultipartFile file, Location location) {
         this.id = id;
         this.nameDevice = nameDevice;
         this.purchaseDate = purchaseDate;
@@ -48,7 +66,10 @@ public class DeviceDTO {
         this.price = price;
         this.categoryId = categoryId;
         this.file = file;
+        this.location = location;
     }
+
+    
 
     // Getters and setters
     public Integer getId() {
@@ -129,5 +150,19 @@ public class DeviceDTO {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    /**
+     * @return the location
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     * @param location the location to set
+     */
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

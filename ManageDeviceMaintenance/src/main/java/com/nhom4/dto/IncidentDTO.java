@@ -4,6 +4,7 @@ import com.nhom4.pojo.User;
 import java.util.Date;
 
 public class IncidentDTO {
+
     private Integer id;
     private String title;
     private String detailDescribe;
@@ -13,17 +14,20 @@ public class IncidentDTO {
     private Boolean isEmergency;
     private Date startDate;
     private Date endDate;
-
     private User approvedBy;
     private User employee;
     private User sender;
+    private String receptStatus;
 
-    public IncidentDTO() {}
+    private DeviceDTO device;
+
+    public IncidentDTO() {
+    }
 
     public IncidentDTO(Integer id, String title, String detailDescribe, String status,
-                       Date reportDate, Date approvalDate, Boolean isEmergency,
-                       Date startDate, Date endDate,
-                       User approvedBy, User employee, User sender) {
+            Date reportDate, Date approvalDate, Boolean isEmergency,
+            Date startDate, Date endDate,
+            User approvedBy, User employee, User sender, DeviceDTO device) {
         this.id = id;
         this.title = title;
         this.detailDescribe = detailDescribe;
@@ -36,8 +40,29 @@ public class IncidentDTO {
         this.approvedBy = approvedBy;
         this.employee = employee;
         this.sender = sender;
+        this.device = device;
+        this.receptStatus = device.getStatusDevice();
     }
-    
+//    public IncidentDTO(Integer id, String title, String detailDescribe, String status,
+//            Date reportDate, Date approvalDate, Boolean isEmergency,
+//            Date startDate, Date endDate,
+//            User approvedBy, User employee, User sender) {
+//        this.id = id;
+//        this.title = title;
+//        this.detailDescribe = detailDescribe;
+//        this.status = status;
+//        this.reportDate = reportDate;
+//        this.approvalDate = approvalDate;
+//        this.isEmergency = isEmergency;
+//        this.startDate = startDate;
+//        this.endDate = endDate;
+//        this.approvedBy = approvedBy;
+//        this.employee = employee;
+//        this.sender = sender;
+//        this.device = device;
+//        this.receptStatus = device.getStatusDevice();
+//    }
+
     // --- Getters & Setters ---
     public Integer getId() {
         return id;
@@ -130,7 +155,30 @@ public class IncidentDTO {
     public User getSender() {
         return sender;
     }
+
     public void setSender(User sender) {
         this.sender = sender;
+    }
+    
+    public DeviceDTO getDevice() {
+        return device;
+    }
+
+    public void setDevice(DeviceDTO device) {
+        this.device = device;
+    }
+
+    /**
+     * @return the receptStatus
+     */
+    public String getReceptStatus() {
+        return receptStatus;
+    }
+
+    /**
+     * @param receptStatus the receptStatus to set
+     */
+    public void setReceptStatus(String receptStatus) {
+        this.receptStatus = receptStatus;
     }
 }

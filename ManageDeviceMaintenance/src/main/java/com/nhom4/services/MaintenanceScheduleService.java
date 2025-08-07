@@ -9,6 +9,7 @@ import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.User;
 import java.util.List;
 import java.util.Map;
+import org.hibernate.Session;
 
 /**
  *
@@ -24,9 +25,12 @@ public interface MaintenanceScheduleService {
 
     MaintenanceSchedule addOrUpdateMaintenanceSchedule(MaintenanceSchedule m);
 
-    MaintenanceSchedule autoUpdateMaintenanceSchedule();
+    void autoAddMaintenanceSchedule(MaintenanceSchedule m);
 
     Boolean isMaintenanceStaff(User u, int msId);
     
     List<MaintenanceSchedule> getTodayMaintenanceSchedule();
+    
+    boolean hasMaintenanceReport(int maintenanceScheduleId);
+
 }

@@ -7,9 +7,9 @@ const MyUserReducer = (current, action) => {
         case 'logout':
             cookie.remove('token');
             return null;
+        default:
+            return current; // ✅ Trả về trạng thái hiện tại nếu không khớp action
     }
-
-    return current;
-}
+};
 
 export default MyUserReducer;

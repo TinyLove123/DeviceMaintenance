@@ -7,7 +7,9 @@ package com.nhom4.controllers;
 import com.nhom4.configs.CustomSecurityException;
 import com.nhom4.dto.DeviceDTO;
 import com.nhom4.dto.RentedDeviceDTO;
+import com.nhom4.dto.RentedDeviceRequestDTO;
 import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.User;
 import com.nhom4.services.DeviceService;
@@ -53,16 +55,21 @@ public class ApiPersionalRentedDevice {
     private IncidentService incidentService;
 
     @PostMapping("/secure/devices/{id}/rented-device")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RentedDevice> addRenedDevice(@PathVariable("id") int deviceId,
-            @RequestBody RentedDevice rented, Principal principal) {
-        String username = principal.getName();
-        User user = this.userService.getUserByUsername(username);
-        rented.setCustomerId(user);
-//            Location loc) {
-        RentedDevice rentedSave = rentedDeviceService.addRentedDevice(deviceId, rented);
+    public ResponseEntity<String> addRentedDevice(@PathVariable("id") int deviceId,
+            @RequestBody RentedDeviceRequestDTO request,
+            Principal principal) {
+        try {
+            User user = this.userService.getUserByUsername(principal.getName());
+            RentedDevice rented = request.getRentedDevice();
+            rented.setCustomerId(user);
 
-        return new ResponseEntity<>(rentedSave, HttpStatus.CREATED);
+            Location loc = request.getLocation();
+            rentedDeviceService.addOrUpdateRentedDevice(deviceId, rented, loc);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Thiết bị đã được thuê thành công.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Thuê thiết bị thất bại.");
+        }
     }
 
     @GetMapping("/secure/my-rented-devices")
@@ -75,10 +82,14 @@ public class ApiPersionalRentedDevice {
     }
 
     @GetMapping("/secure/my-rented-devices/{id}/detail-device")
-    public ResponseEntity<RentedDevice> getMyRentedDeviceById(@PathVariable("id") int rentedDeviceId, Principal principal) {
-        System.out.printf("principal", principal);
+    public ResponseEntity<?> getMyRentedDeviceById(@PathVariable("id") int rentedDeviceId, Principal principal) {
         String username = principal.getName();
         User user = this.userService.getUserByUsername(username);
+
+        if (!rentedDeviceService.checkDeviceOwnership(this.rentedDeviceService.getRentedDeviceById(user, rentedDeviceId).getDeviceId().getId(), user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Bạn không có quyền truy cập thiết bị này"));
+        }
         RentedDevice rentedDevice = this.rentedDeviceService.getRentedDeviceById(user, rentedDeviceId);
         return new ResponseEntity<>(rentedDevice, HttpStatus.OK);
     }
@@ -90,22 +101,17 @@ public class ApiPersionalRentedDevice {
             Principal principal) {
 
         try {
-            // 1. Xác thực người dùng
             String username = principal.getName();
             User user = this.userService.getUserByUsername(username);
 
-            // 2. Kiểm tra quyền truy cập thiết bị
             if (!rentedDeviceService.checkDeviceOwnership(deviceId, user.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(Map.of("error", "Bạn không có quyền truy cập thiết bị này"));
             }
 
-            // 3. Xử lý logic nghiệp vụ
             Incident incidentSave = incidentService.addOrUpdateIncident(incident, deviceId, user);
 
-            // 4. Trả về kết quả
-            return new ResponseEntity<>(incidentSave, HttpStatus.CREATED);
-
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Báo cáo sự cố thành công, chờ xét duyệt"));
         } catch (CustomSecurityException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", e.getMessage()));
@@ -113,6 +119,7 @@ public class ApiPersionalRentedDevice {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "Không tìm thấy thiết bị"));
         } catch (Exception e) {
+            e.printStackTrace(); 
             return ResponseEntity.internalServerError()
                     .body(Map.of("error", "Lỗi hệ thống"));
         }

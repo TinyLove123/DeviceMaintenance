@@ -48,11 +48,13 @@ public class MaintenanceSchedule implements Serializable {
     @Size(min = 1, max = 20)
     @Column(name = "recept_status")
     private String receptStatus;
+    @Column(name = "is_auto_add")
+    private Boolean isAutoAdd;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "maintenanceScheduleId")
-    private MaintenanceScheduleReport maintenanceScheduleReport;
+    private MaintenanceReport maintenanceScheduleReport;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "maintenanceScheduleId")
-    private Set<MaintenanceScheduleReport> maintenanceScheduleReportSet;
+    private Set<MaintenanceReport> maintenanceScheduleReportSet;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "maintenanceScheduleId")
     private MaintenanceIncidentLink maintenanceIncidentLink;
 
@@ -138,11 +140,11 @@ public class MaintenanceSchedule implements Serializable {
     }
 
 
-    public Set<MaintenanceScheduleReport> getMaintenanceScheduleReportSet() {
+    public Set<MaintenanceReport> getMaintenanceScheduleReportSet() {
         return maintenanceScheduleReportSet;
     }
 
-    public void setMaintenanceScheduleReportSet(Set<MaintenanceScheduleReport> maintenanceScheduleReportSet) {
+    public void setMaintenanceScheduleReportSet(Set<MaintenanceReport> maintenanceScheduleReportSet) {
         this.maintenanceScheduleReportSet = maintenanceScheduleReportSet;
     }
 
@@ -166,11 +168,11 @@ public class MaintenanceSchedule implements Serializable {
 
     
 
-    public MaintenanceScheduleReport getMaintenanceScheduleReport() {
+    public MaintenanceReport getMaintenanceScheduleReport() {
         return maintenanceScheduleReport;
     }
 
-    public void setMaintenanceScheduleReport(MaintenanceScheduleReport maintenanceScheduleReport) {
+    public void setMaintenanceScheduleReport(MaintenanceReport maintenanceScheduleReport) {
         this.maintenanceScheduleReport = maintenanceScheduleReport;
     }
 
@@ -182,6 +184,17 @@ public class MaintenanceSchedule implements Serializable {
         this.progress = progress;
     }
 
+   
+
+    public Boolean getIsAutoAdd() {
+        return isAutoAdd;
+    }
+
+    public void setIsAutoAdd(Boolean isAutoAdd) {
+        this.isAutoAdd = isAutoAdd;
+    }
+
+    
    
     
 }

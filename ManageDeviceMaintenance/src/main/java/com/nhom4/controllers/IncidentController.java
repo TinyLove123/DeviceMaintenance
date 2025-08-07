@@ -10,14 +10,19 @@ import com.nhom4.services.IncidentService;
 import com.nhom4.services.UserService;
 import jakarta.ws.rs.PathParam;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import static java.time.LocalDateTime.now;
 import java.util.Date;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +42,13 @@ public class IncidentController {
     @Autowired
     private UserService userService;
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
     @GetMapping("/incident-manager")
     public String getDeviceListHadIncident(Model model, @RequestParam Map<String, String> params) {
         model.addAttribute("Incidents", this.incidentRepo.getIncident(params));
@@ -46,6 +58,7 @@ public class IncidentController {
 
     @GetMapping("/incident-manager/{id}/incident-detail")
     public String getDetailIncident(Model model, @PathVariable("id") Integer incidentId) {
+        model.addAttribute("now", new Date());
 
         model.addAttribute("employees", this.userService.getEmployee());
         model.addAttribute("Incident", this.incidentRepo.getIncidentById(incidentId));
@@ -53,30 +66,34 @@ public class IncidentController {
         return "incidentDetail";
     }
 
-    @PostMapping("/incident-device/{deviceId}/incident-update/{incidentId}")
+    @PostMapping("/incident-device/{incidentId}/incident-update")
     public String updateIncidentStatus(
-            @PathVariable("incidentId") Integer incidentId,
-            @RequestParam("status") String status,
-            @RequestParam(value = "employeeId", required = false) Integer employeeId,
-            Principal principal
-    ) {
+            @ModelAttribute("Incident") Incident incidentForm,
+            Principal principal) {
+        
         String username = principal.getName();
         User adminUser = this.userService.getUserByUsername(username);
 
-        Incident incident = this.incidentRepo.getIncidentById(incidentId);
-
-        if (incident != null) {
-            incident.setStatus(status);
-            incident.setApprovedBy(adminUser);
-            incident.setApprovalDate(new Date());
-
-            if ("APPROVED".equalsIgnoreCase(status) && employeeId != null) {
-                User employee = this.userService.getUserById(employeeId);
-                incident.setEmployeeId(employee);
-            }
-
-            this.incidentRepo.addOrUpdateIncident(incident, incident.getDeviceId().getId(), adminUser);
+        Incident incident = this.incidentRepo.getIncidentById(incidentForm.getId());
+        if (incident == null) {
+            return "redirect:/admin/incident-manager?error=notFound";
         }
+
+        if (!"PENDING_APPROVAL".equalsIgnoreCase(incident.getStatus())) {
+            return "redirect:/admin/incident-manager?error=alreadyProcessed";
+        }
+
+        incident.setStatus(incidentForm.getStatus());
+        incident.setApprovedBy(adminUser);
+        incident.setApprovalDate(new Date());
+
+        if ("APPROVED".equalsIgnoreCase(incidentForm.getStatus()) && incidentForm.getEmployeeId() != null) {
+            incident.setEmployeeId(incidentForm.getEmployeeId());
+            incident.setStartDate(incidentForm.getStartDate());
+            incident.setEndDate(incidentForm.getEndDate());
+        }
+
+        this.incidentRepo.addOrUpdateIncident(incident, incidentForm.getDeviceId().getId(), adminUser);
 
         return "redirect:/admin/incident-manager";
     }

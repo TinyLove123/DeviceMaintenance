@@ -36,6 +36,7 @@
                     <th>ID</th>
                     <th>Tiêu đề</th>
                     <th>Mô tả</th>
+                    <th>Trạng thái nhận</th>
                     <th>Thiết bị</th>
                     <th>Trạng thái</th>
                     <th>Người gửi</th>
@@ -53,6 +54,7 @@
                     <td th:text="${incident.id}"></td>
                     <td th:text="${incident.title}"></td>
                     <td th:text="${incident.detailDescribe}"></td>
+                    <td th:text="${incident.receptStatus!=null? incident.receptStatus:'Chưa cập nhật'}"></td>
                     <td th:text="${incident.deviceId != null ? incident.deviceId.nameDevice : 'N/A'}"></td>
                     <td th:text="${incident.status}"></td>
                     <td th:text="${incident.senderId != null ? incident.senderId.firstName + ' ' + incident.senderId.lastName : 'N/A'}"></td>

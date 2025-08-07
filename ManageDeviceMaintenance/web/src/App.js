@@ -6,11 +6,16 @@ import Home from "./components/home";
 import Footer from "./components/layout/footer";
 import Header from "./components/layout/header";
 import Login from "./components/login";
+import MyReportHandle from "./components/myIncidentHandle";
+import IncidentDetailPage from "./components/myIncidentHandleDetail";
 import MyMaintenanceSchedule from "./components/myMaintenanceSchedule";
 import MyRentedDevice from "./components/myRentedDevice";
+import MyRentedDeviceDetail from "./components/myRentedDeviceDetail";
 import Profile from "./components/profile";
+import IncidentReportForm from "./components/reportRentedDevice";
 import { MyUserContext } from "./configs/Context";
 import MyUserReducer from "./reducers/MyUserReducer";
+import MyMaintenanceReport from "./components/myMaintenanceReport";
 
 const App = () => {
 
@@ -27,7 +32,12 @@ const App = () => {
         <Route path="/devices/:id" element={<DeviceDetail />} /> 
         <Route path="/my-rented-devices" element={<MyRentedDevice/>} />
         <Route path="/my-maintenance-schedule" element={<MyMaintenanceSchedule/>} />
-        {/* <Route path="/my-rented-device-detail/:id" element={<MyRentedDeviceDetail/>} /> */}
+        <Route path="/my-rented-device-detail/:id" element={<MyRentedDeviceDetail/>} />
+        <Route path="/my-rented-device-detail/incident-report/:id" element={<MyRentedDeviceDetail/>} />
+        <Route path="/incident-report/:id" element={<IncidentReportForm/>} />
+        <Route path="/my-report-handle/" element={<MyReportHandle/>} />
+        <Route path="/my-maintenance-report/:id" element={<MyMaintenanceReport />} />
+        <Route path="/incident/:id" element={<IncidentDetailPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

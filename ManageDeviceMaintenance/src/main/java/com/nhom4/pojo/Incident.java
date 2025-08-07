@@ -4,6 +4,7 @@
  */
 package com.nhom4.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,7 +43,8 @@ import java.util.Set;
     @NamedQuery(name = "Incident.findByApprovalDate", query = "SELECT i FROM Incident i WHERE i.approvalDate = :approvalDate"),
     @NamedQuery(name = "Incident.findByIsEmergency", query = "SELECT i FROM Incident i WHERE i.isEmergency = :isEmergency"),
     @NamedQuery(name = "Incident.findByStartDate", query = "SELECT i FROM Incident i WHERE i.startDate = :startDate"),
-    @NamedQuery(name = "Incident.findByEndDate", query = "SELECT i FROM Incident i WHERE i.endDate = :endDate")})
+    @NamedQuery(name = "Incident.findByEndDate", query = "SELECT i FROM Incident i WHERE i.endDate = :endDate"),
+    @NamedQuery(name = "Incident.findByReceptStatus", query = "SELECT i FROM Incident i WHERE i.receptStatus = :receptStatus")})
 public class Incident implements Serializable {
 
     @Basic(optional = false)
@@ -61,8 +63,9 @@ public class Incident implements Serializable {
     @Size(min = 1, max = 16)
     @Column(name = "status")
     private String status;
-    @OneToMany(mappedBy = "incidentId")
-    private Set<Repair> repairSet;
+    @Size(max = 50)
+    @Column(name = "recept_status")
+    private String receptStatus;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "incidentId")
     private MaintenanceIncidentLink maintenanceIncidentLink;
 
@@ -86,6 +89,9 @@ public class Incident implements Serializable {
     @Column(name = "end_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
+    @JsonIgnore
+    @OneToOne(mappedBy = "incidentId")
+    private Repair repair;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
     private Device deviceId;
@@ -121,6 +127,13 @@ public class Incident implements Serializable {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getDetailDescribe() {
         return detailDescribe;
@@ -138,6 +151,13 @@ public class Incident implements Serializable {
         this.reportDate = reportDate;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Date getApprovalDate() {
         return approvalDate;
@@ -169,6 +189,22 @@ public class Incident implements Serializable {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getReceptStatus() {
+        return receptStatus;
+    }
+
+    public void setReceptStatus(String receptStatus) {
+        this.receptStatus = receptStatus;
+    }
+
+    public Repair getRepair() {
+        return repair;
+    }
+
+    public void setRepair(Repair repair) {
+        this.repair = repair;
     }
 
     public Device getDeviceId() {
@@ -237,30 +273,6 @@ public class Incident implements Serializable {
         this.maintenanceIncidentLink = maintenanceIncidentLink;
     }
 
-    public String getTitle() {
-        return title;
-    }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Set<Repair> getRepairSet() {
-        return repairSet;
-    }
-
-    public void setRepairSet(Set<Repair> repairSet) {
-        this.repairSet = repairSet;
-    }
     
 }

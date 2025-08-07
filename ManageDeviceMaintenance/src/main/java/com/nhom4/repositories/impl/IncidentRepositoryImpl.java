@@ -7,6 +7,8 @@ package com.nhom4.repositories.impl;
 import com.nhom4.dto.DeviceOutputDTO;
 import com.nhom4.dto.IncidentDTO;
 import com.nhom4.dto.MaintenanceScheduleDTO;
+import com.nhom4.dto.DeviceDTO;
+import com.nhom4.dto.IncidentDTO;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.Location;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.IncidentRepository;
 
@@ -120,13 +123,13 @@ public class IncidentRepositoryImpl implements IncidentRepository {
     public Incident addOrUpdateIncident(Incident incident, int deviceId, User user) {
         Session s = factory.getObject().getCurrentSession();
 
-        Device device = s.get(Device.class, deviceId);
-        incident.setDeviceId(device);
-        incident.setSenderId(user);
-
         if (incident.getId() == null) {
+            Device device = s.get(Device.class, deviceId);
+            incident.setDeviceId(device);
+            incident.setSenderId(user);
             incident.setStatus("PENDING_APPROVAL");
             incident.setReportDate(new Date());
+            incident.setReceptStatus(device.getStatusDevice());
             s.persist(incident);
 
         } else {
@@ -204,13 +207,9 @@ public class IncidentRepositoryImpl implements IncidentRepository {
         CriteriaQuery<Incident> cq = cb.createQuery(Incident.class);
         Root<Incident> root = cq.from(Incident.class);
 
-        // Lấy thời điểm bắt đầu của ngày hôm nay
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
         Date startOfTodayDate = Date.from(startOfToday.atZone(ZoneId.systemDefault()).toInstant());
 
-        // Tạo các điều kiện:
-        // 1. Incident có reportDate trước ngày hôm nay
-        // 2. Có trạng thái PENDING_APPROVAL
         Predicate datePredicate = cb.lessThan(root.get("reportDate"), startOfTodayDate);
         Predicate statusPredicate = cb.equal(root.get("status"), "PENDING_APPROVAL");
 
@@ -218,10 +217,6 @@ public class IncidentRepositoryImpl implements IncidentRepository {
         cq.select(root)
                 .where(cb.and(datePredicate, statusPredicate));
 
-        // Sắp xếp:
-        // 1. Ưu tiên incident khẩn cấp (isEmergency = 1)
-        // 2. Theo ngày báo cáo (cũ nhất trước)
-        // 3. Có thể thêm sắp xếp phụ theo ID nếu cần
         cq.orderBy(
                 cb.desc(root.get("isEmergency")), // Emergency first
                 cb.asc(root.get("reportDate")), // Oldest first
@@ -251,8 +246,57 @@ public class IncidentRepositoryImpl implements IncidentRepository {
     
 
     @Override
+    public List<IncidentDTO> getMyIncidentHandle(User user) {
+        Session session = factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<IncidentDTO> cq = cb.createQuery(IncidentDTO.class);
+        Root<Incident> root = cq.from(Incident.class);
+        Join<Incident, Device> deviceJoin = root.join("deviceId");
+
+        cq.select(cb.construct(
+                IncidentDTO.class,
+                root.get("id"),
+                root.get("title"),
+                root.get("detailDescribe"),
+                root.get("status"),
+                root.get("reportDate"),
+                root.get("approvalDate"),
+                root.get("isEmergency"),
+                root.get("startDate"),
+                root.get("endDate"),
+                root.get("approvedBy"),
+                root.get("employeeId"),
+                root.get("senderId"),
+                        cb.construct(
+                                DeviceDTO.class,
+                                deviceJoin.get("id"),
+                                deviceJoin.get("nameDevice"),                               
+                                deviceJoin.get("manufacturer"),
+                                deviceJoin.get("statusDevice"),
+                                deviceJoin.get("purchaseDate"),                             
+                                deviceJoin.get("frequency"),
+                                deviceJoin.get("image"),
+                                deviceJoin.get("price"),
+                                deviceJoin.get("currentLocationId")
+                        )));
+        
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(root.get("employeeId").get("id"), user.getId()));
+
+        predicates.add(cb.notEqual(root.get("status"), "PENDING_APPROVAL"));
+
+        cq.where(cb.and(predicates.toArray(new Predicate[0])));
+
+        cq.orderBy(cb.asc(root.get("reportDate")));
+
+        return session.createQuery(cq).getResultList();
+
+    }
+
+    @Override
     public Boolean checkHandleIncidentByUser(User user, int incidentId) {
-             Session s = this.factory.getObject().getCurrentSession();
+        Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder cb = s.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root root = cq.from(Incident.class);
@@ -260,50 +304,12 @@ public class IncidentRepositoryImpl implements IncidentRepository {
                 .where(
                         cb.and(
                                 cb.equal(root.get("id"), incidentId),
-                                cb.equal(root.get("employeeId").get("id"), user.getId())
+                                cb.equal(root.get("employeeId").get("id"), user.getId()),
+                                root.get("status").in("APPROVED", "IN_PROGRESS")
                         ));
         Long count = s.createQuery(cq).uniqueResult();
         return count != null && count > 0;
-        
+
     }
-
-    @Override
-    public List<IncidentDTO> getMyIncidentHandle(User user) {
-        Session s = this.factory.getObject().getCurrentSession();
-        CriteriaBuilder cb = s.getCriteriaBuilder();
-
-        CriteriaQuery<Incident> cq = cb.createQuery(Incident.class);
-        Root<Incident> root = cq.from(Incident.class);
-
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(root.get("employeeId"), user));
-//        predicates.add(root.get("status").in("APPROVED", "IN_PROGRESS", "RESOLVED"));
-
-        cq.where(predicates.toArray(new Predicate[0]));
-        cq.orderBy(cb.asc(root.get("reportDate")));
-
-        TypedQuery<Incident> q = s.createQuery(cq);
-        List<Incident> results = q.getResultList();
-
-        // Mapping manually to DTO
-        return results.stream().map(incident -> new IncidentDTO(
-                incident.getId(),
-                incident.getTitle(),
-                incident.getDetailDescribe(),
-                incident.getStatus(),
-                incident.getReportDate(),
-                incident.getApprovalDate(),
-                incident.getIsEmergency(),
-                incident.getStartDate(),
-                incident.getEndDate(),
-                incident.getApprovedBy(),
-                incident.getEmployeeId(),
-                incident.getSenderId()
-        )).collect(Collectors.toList());
-            
-    }
-
-    
-    
 
 }

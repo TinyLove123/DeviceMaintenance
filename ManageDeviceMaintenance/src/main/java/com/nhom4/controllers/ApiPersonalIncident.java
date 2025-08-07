@@ -9,6 +9,14 @@ import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
 import com.nhom4.services.IncidentService;
 import com.nhom4.services.UserService;
+import com.nhom4.dto.RepairDetailDTO;
+import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.Repair;
+import com.nhom4.pojo.User;
+import com.nhom4.services.IncidentService;
+import com.nhom4.services.RepairService;
+import com.nhom4.services.UserService;
+import jakarta.persistence.criteria.Predicate;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +27,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,7 +49,9 @@ public class ApiPersonalIncident {
 
     @Autowired
     private UserService userService;
-    //xử lý sự cố, thêm repair, tạo các repairdetail sủa chữa qua các repaircost
+
+    @Autowired
+    private RepairService repairService;
 
     @GetMapping("/secure/my-report-handle")
     public ResponseEntity<List<IncidentDTO>> getMyIncidentHandle(Principal principal) {
@@ -66,20 +77,62 @@ public class ApiPersonalIncident {
         return new ResponseEntity<>(incident, HttpStatus.OK);
     }
 
-    @PostMapping("/secure/my-report-handle/{id}/incident-update-status")
-    public ResponseEntity<?> updateMyIncidentHandleDetail(@PathVariable("id") int incidentId,
-            @RequestBody Incident incident, Principal principal) {
-        String username = principal.getName();
+    @PutMapping("/secure/my-report-handle/{id}/incident-update-status")
+    public ResponseEntity<?> updateMyIncidentHandleDetail(
+            @PathVariable("id") int incidentId,
+            @RequestParam("status") String status,
+            Principal principal) {
 
+        String username = principal.getName();
+        User user = this.userService.getUserByUsername(username);
+
+        if (!this.incidentService.checkHandleIncidentByUser(user, incidentId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Bạn không có quyền truy cập báo cáo này"));
+        }
+
+        Incident incidentRoot = this.incidentService.getIncidentById(incidentId);
+        incidentRoot.setStatus(status);
+
+        this.incidentService.addOrUpdateIncident(incidentRoot, incidentRoot.getDeviceId().getId(), user);
+        return new ResponseEntity<>(incidentRoot, HttpStatus.OK);
+    }
+
+    @PostMapping("/secure/my-report-handle/{id}/add-repair")
+    public ResponseEntity<?> addRepair(
+            @PathVariable("id") int incidentId, @RequestBody Repair request, @RequestParam Map<String, String> params, Principal principal
+    ) {
+        String username = principal.getName();
         User user = this.userService.getUserByUsername(username);
         if (!this.incidentService.checkHandleIncidentByUser(user, incidentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("error", "Bạn không có quyền truy cập thiết bị này"));
+                    .body(Map.of("error", "Bạn không có quyền truy cập báo cáo này"));
         }
-        Incident incidentRoot = this.incidentService.getIncidentById(incidentId);
-        incidentRoot.setStatus(incident.getStatus());
-        this.incidentService.addOrUpdateIncident(incidentRoot, incidentRoot.getDeviceId().getId(), user);
+        Incident incident = this.incidentService.getIncidentById(incidentId);
+        this.repairService.addOrUpdateRepairByIncidentId(request, incident, user, params);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-        return new ResponseEntity<>(incidentRoot, HttpStatus.OK);
+    @PostMapping("/secure/report-handle/{id}/add-repair-detail")
+    public ResponseEntity<?> addRepairDetail(@PathVariable("id") int incidentId,
+            @RequestBody List<RepairDetailDTO> repairDetail) {
+        try {
+            Repair repair = this.repairService.getRepairByIncident(incidentId);
+            this.repairService.addRepairDetail(repair, repairDetail);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("error", ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau."));
+        }
+    }
+    @GetMapping("/secure/my-report-handle/{id}/repair-detail")
+    public ResponseEntity<?> addRepairDetail(@PathVariable("id") int incidentId){
+        Repair repair = this.repairService.getRepairByIncident(incidentId);
+        return new ResponseEntity<>(repair,HttpStatus.OK);
     }
 }

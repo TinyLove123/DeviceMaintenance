@@ -73,14 +73,13 @@ public class IncidentServiceImpl implements IncidentService{
     }
 
     @Override
-    public Boolean checkHandleIncidentByUser(User user, int incidentId) {
-        return this.incidentRepo.checkHandleIncidentByUser(user, incidentId);
+    public List<IncidentDTO> getMyIncidentHandle(User user) {
+        return this.incidentRepo.getMyIncidentHandle(user);
     }
 
     @Override
-    public List<IncidentDTO> getMyIncidentHandle(User user) {
-        return this.incidentRepo.getMyIncidentHandle(user);
-
+    public Boolean checkHandleIncidentByUser(User user, int incidentId) {
+        return this.incidentRepo.checkHandleIncidentByUser(user, incidentId);
     }
 
     

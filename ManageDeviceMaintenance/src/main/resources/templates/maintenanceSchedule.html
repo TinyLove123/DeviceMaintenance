@@ -16,6 +16,7 @@
                     <th>Ngày bắt đầu</th>
                     <th>Tiến trình</th>
                     <th>Thiết bị</th>
+                    <th>Trạng thái thiết bị</th>
                     <th>Nhân viên</th>
                     <th>Tình trạng</th>
                     <th>Cập nhật</th>
@@ -34,6 +35,7 @@
                         (${m.progress == 'in_completed'} ? 'text-danger fw-bold bg-light' : 'text-dark fw-bold bg-light'))">
                     </td>
                     <td th:text="${m.deviceId.nameDevice}"></td>
+                    <td th:text="${m.progress == 'completed'} ? '--' : ${m.deviceId.statusDevice}"></td>
                     <td th:text="${m.employeeId != null ? m.employeeId.firstName + ' ' + m.employeeId.lastName : 'Chưa xếp'}"
                         th:classappend="${m.employeeId == null} ? 'text-danger fw-bold' : ''"></td>
                     
@@ -41,7 +43,7 @@
                         <span th:if="${m.progress != 'completed'}" th:attr="data-start=${m.startDate}" class="remaining-days"></span>
                     </td>
                     <td>
-                        <a th:if="${m.progress != 'completed'}"
+                        <a th:if="${m.progress == 'in_completed'}"
                            th:href="@{/admin/maintenance-schedule-manager/{id}/maintenance-schedule-detail(id=${m.id})}"
                            class="btn btn-primary">Chỉnh sửa</a>
                     </td>

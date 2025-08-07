@@ -39,4 +39,5 @@ public interface IncidentService {
     Boolean checkHandleIncidentByUser(User user, int incidentId);
 
     List<IncidentDTO> getMyIncidentHandle(User user);
+    
 }

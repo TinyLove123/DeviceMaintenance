@@ -144,6 +144,4 @@ public class RentedDevice implements Serializable {
         return "com.nhom4.pojo.RentedDevice[ id=" + id + " ]";
     }
 
-    
-    
 }

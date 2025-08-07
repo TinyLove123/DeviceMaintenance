@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -45,17 +46,18 @@ public class Repair implements Serializable {
     @Size(max = 20)
     @Column(name = "progress")
     private String progress;
-    @OneToMany(mappedBy = "repairId")
-    private Set<RepairDetail> repairDetailSet;
 
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @OneToMany(mappedBy = "repairId")
+    private Set<RepairDetail> repairDetailSet;
+
     @JoinColumn(name = "incident_id", referencedColumnName = "id")
-    @ManyToOne
+    @OneToOne
     private Incident incidentId;
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @ManyToOne
@@ -131,5 +133,42 @@ public class Repair implements Serializable {
         return "com.nhom4.pojo.Repair[ id=" + id + " ]";
     }
 
+    /**
+     * @return the serialVersionUID
+     */
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    /**
+     * @param aSerialVersionUID the serialVersionUID to set
+     */
+    public static void setSerialVersionUID(long aSerialVersionUID) {
+        serialVersionUID = aSerialVersionUID;
+    }
+
+    /**
+     * @return the repairDetailSet
+     */
+    public Set<RepairDetail> getRepairDetailSet() {
+        return repairDetailSet;
+    }
+
+    /**
+     * @param repairDetailSet the repairDetailSet to set
+     */
+    public void setRepairDetailSet(Set<RepairDetail> repairDetailSet) {
+        this.repairDetailSet = repairDetailSet;
+    }
+
+    
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
     
 }

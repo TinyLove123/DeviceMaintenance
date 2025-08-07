@@ -97,43 +97,71 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
         Session s = this.factory.getObject().getCurrentSession();
 
         if (m.getId() == null) {
-
+            // Tạo mới
+            if (m.getIsAutoAdd() == null) {
+                m.setIsAutoAdd(true); // Mặc định là true nếu chưa gán
+            }
             s.persist(m);
         } else {
 
-            if ("completed".equalsIgnoreCase(m.getProgress())) {
-                System.out.println("Đã hoàn thành, không cập nhật.");
-                return m;
-            }
-
+//            String newProgress = m.getProgress();
+            // Kiểm tra ngày bắt đầu không vượt quá hiện tại
             if (m.getStartDate() != null) {
-                LocalDate startDate = m.getStartDate().toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
+                java.util.Date utilDate = new java.util.Date(m.getStartDate().getTime());
+                LocalDate startDate = utilDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
                 if (startDate.isAfter(LocalDate.now())) {
                     System.out.println("Chưa đến ngày bắt đầu, không cho cập nhật.");
-                    return m;
+                    MaintenanceSchedule dbSchedule = s.get(MaintenanceSchedule.class, m.getId());
+                    m.setProgress(dbSchedule.getProgress());
                 }
             }
 
+            // Gán lại trạng thái thiết bị nếu có
             if (m.getDeviceId() != null) {
                 m.setReceptStatus(m.getDeviceId().getStatusDevice());
             }
 
-            s.update(m);  // đã có trong session, dùng update
-            return m;
+            // ✅ Nếu hoàn thành
+            if ("completed".equalsIgnoreCase(m.getProgress())) {
+                s.merge(m); // cập nhật lịch hiện tại
+
+                // Chỉ tạo lịch tiếp theo nếu được bật
+                if (Boolean.TRUE.equals(m.getIsAutoAdd())) {
+                    autoAddMaintenanceSchedule(m);
+                } else {
+                    System.out.println("️ Không tạo lịch tiếp theo vì autoAddSchedule = false.");
+                }
+            } else {
+                s.merge(m); // Nếu chưa completed vẫn cập nhật
+            }
         }
+
         return m;
     }
 
     @Override
-    public MaintenanceSchedule autoUpdateMaintenanceSchedule() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void autoAddMaintenanceSchedule(MaintenanceSchedule m) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Device device = m.getDeviceId();
+        Integer frequency = device.getFrequency();
 
-    @Override
-    public MaintenanceSchedule autoAddMaintenanceSchedule(MaintenanceSchedule m) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (frequency != null && frequency > 0) {
+            LocalDate nextStartDate = LocalDate.now().plusDays(frequency);
+            MaintenanceSchedule next = new MaintenanceSchedule();
+
+            next.setDeviceId(device);
+            next.setProgress("in_completed");
+            next.setReceptStatus(device.getStatusDevice());
+            next.setStartDate(java.sql.Date.valueOf(nextStartDate));
+            next.setIsAutoAdd(m.getIsAutoAdd());
+
+            s.persist(next);
+            System.out.println(" Đã tạo lịch bảo trì mới sau " + frequency + " ngày.");
+        } else {
+            System.out.println("️ Frequency không hợp lệ.");
+        }
+
     }
 
     @Override
@@ -205,4 +233,15 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
         return query.getResultList();
     }
 
+    @Override
+    public boolean hasMaintenanceReport(int maintenanceScheduleId) {
+        Session session = this.factory.getObject().getCurrentSession();
+        Query q = session.createQuery("SELECT COUNT(r) FROM MaintenanceScheduleReport r WHERE r.maintenanceScheduleId.id = :id");
+        q.setParameter("id", maintenanceScheduleId);
+        Long count = (Long) q.getSingleResult();
+        return count != null && count > 0;
+
+    }
+
+    
 }

@@ -31,12 +31,12 @@ import java.util.Date;
 @Entity
 @Table(name = "maintenance_schedule_report")
 @NamedQueries({
-    @NamedQuery(name = "MaintenanceScheduleReport.findAll", query = "SELECT m FROM MaintenanceScheduleReport m"),
-    @NamedQuery(name = "MaintenanceScheduleReport.findById", query = "SELECT m FROM MaintenanceScheduleReport m WHERE m.id = :id"),
-    @NamedQuery(name = "MaintenanceScheduleReport.findByReportDate", query = "SELECT m FROM MaintenanceScheduleReport m WHERE m.reportDate = :reportDate"),
-    @NamedQuery(name = "MaintenanceScheduleReport.findByPrice", query = "SELECT m FROM MaintenanceScheduleReport m WHERE m.price = :price"),
-    @NamedQuery(name = "MaintenanceScheduleReport.findByMaintenanceRate", query = "SELECT m FROM MaintenanceScheduleReport m WHERE m.maintenanceRate = :maintenanceRate")})
-public class MaintenanceScheduleReport implements Serializable {
+    @NamedQuery(name = "MaintenanceReport.findAll", query = "SELECT m FROM MaintenanceReport m"),
+    @NamedQuery(name = "MaintenanceReport.findById", query = "SELECT m FROM MaintenanceReport m WHERE m.id = :id"),
+    @NamedQuery(name = "MaintenanceReport.findByReportDate", query = "SELECT m FROM MaintenanceReport m WHERE m.reportDate = :reportDate"),
+    @NamedQuery(name = "MaintenanceReport.findByPrice", query = "SELECT m FROM MaintenanceReport m WHERE m.price = :price"),
+    @NamedQuery(name = "MaintenanceReport.findByMaintenanceRate", query = "SELECT m FROM MaintenanceReport m WHERE m.maintenanceRate = :maintenanceRate")})
+public class MaintenanceReport implements Serializable {
 
     @Basic(optional = false)
     @NotNull
@@ -70,14 +70,14 @@ public class MaintenanceScheduleReport implements Serializable {
     @ManyToOne(optional = false)
     private User employeeId;
 
-    public MaintenanceScheduleReport() {
+    public MaintenanceReport() {
     }
 
-    public MaintenanceScheduleReport(Integer id) {
+    public MaintenanceReport(Integer id) {
         this.id = id;
     }
 
-    public MaintenanceScheduleReport(Integer id, String description, double price, String maintenanceRate) {
+    public MaintenanceReport(Integer id, String description, double price, String maintenanceRate) {
         this.id = id;
         this.description = description;
         this.price = price;
@@ -135,10 +135,10 @@ public class MaintenanceScheduleReport implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MaintenanceScheduleReport)) {
+        if (!(object instanceof MaintenanceReport)) {
             return false;
         }
-        MaintenanceScheduleReport other = (MaintenanceScheduleReport) object;
+        MaintenanceReport other = (MaintenanceReport) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -166,5 +166,5 @@ public class MaintenanceScheduleReport implements Serializable {
         this.price = price;
     }
 
-    
+   
 }
