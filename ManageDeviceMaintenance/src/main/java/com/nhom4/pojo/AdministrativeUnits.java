@@ -173,6 +173,9 @@ public class AdministrativeUnits implements Serializable {
         return "com.nhom4.pojo.AdministrativeUnits[ id=" + id + " ]";
     }
 
+   
+    
+
     
     
     

@@ -6,6 +6,7 @@ package com.nhom4.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -24,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  *
@@ -44,12 +47,6 @@ import java.util.Date;
     @NamedQuery(name = "Incident.findByReceptStatus", query = "SELECT i FROM Incident i WHERE i.receptStatus = :receptStatus")})
 public class Incident implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -61,14 +58,26 @@ public class Incident implements Serializable {
     @Size(min = 1, max = 65535)
     @Column(name = "detail_describe")
     private String detailDescribe;
-    @Column(name = "report_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date reportDate;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 16)
     @Column(name = "status")
     private String status;
+    @Size(max = 50)
+    @Column(name = "recept_status")
+    private String receptStatus;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "incidentId")
+    private MaintenanceIncidentLink maintenanceIncidentLink;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Column(name = "report_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reportDate;
     @Column(name = "approval_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date approvalDate;
@@ -80,9 +89,6 @@ public class Incident implements Serializable {
     @Column(name = "end_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
-    @Size(max = 50)
-    @Column(name = "recept_status")
-    private String receptStatus;
     @JsonIgnore
     @OneToOne(mappedBy = "incidentId")
     private Repair repair;
@@ -257,5 +263,16 @@ public class Incident implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.Incident[ id=" + id + " ]";
     }
+
+
+    public MaintenanceIncidentLink getMaintenanceIncidentLink() {
+        return maintenanceIncidentLink;
+    }
+
+    public void setMaintenanceIncidentLink(MaintenanceIncidentLink maintenanceIncidentLink) {
+        this.maintenanceIncidentLink = maintenanceIncidentLink;
+    }
+
+
     
 }

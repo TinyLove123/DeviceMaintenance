@@ -14,10 +14,10 @@ public class IncidentDTO {
     private Boolean isEmergency;
     private Date startDate;
     private Date endDate;
-    private String receptStatus;
     private User approvedBy;
     private User employee;
     private User sender;
+    private String receptStatus;
 
     private DeviceDTO device;
 

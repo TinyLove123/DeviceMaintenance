@@ -39,12 +39,6 @@ import java.util.Set;
     @NamedQuery(name = "Repair.findByProgress", query = "SELECT r FROM Repair r WHERE r.progress = :progress")})
 public class Repair implements Serializable {
 
-    private static long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "end_date")
@@ -53,6 +47,16 @@ public class Repair implements Serializable {
     @Size(max = 20)
     @Column(name = "progress")
     private String progress;
+
+    private static long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @OneToMany(mappedBy = "repairId")
+    private Set<RepairDetail> repairDetailSet;
+
     @JoinColumn(name = "incident_id", referencedColumnName = "id")
     @JsonIgnore
     @OneToOne
@@ -60,8 +64,6 @@ public class Repair implements Serializable {
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @ManyToOne
     private User employeeId;
-    @OneToMany(mappedBy = "repairId")
-    private Set<RepairDetail> repairDetailSet;
 
     public Repair() {
     }
@@ -91,13 +93,6 @@ public class Repair implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getProgress() {
-        return progress;
-    }
-
-    public void setProgress(String progress) {
-        this.progress = progress;
-    }
 
     public Incident getIncidentId() {
         return incidentId;
@@ -166,6 +161,16 @@ public class Repair implements Serializable {
      */
     public void setRepairDetailSet(Set<RepairDetail> repairDetailSet) {
         this.repairDetailSet = repairDetailSet;
+    }
+
+    
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
     }
     
 }

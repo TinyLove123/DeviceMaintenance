@@ -116,6 +116,4 @@ public class RepairDetail implements Serializable {
         return "com.nhom4.pojo.RepairDetail[ id=" + id + " ]";
     }
 
-    
-    
 }

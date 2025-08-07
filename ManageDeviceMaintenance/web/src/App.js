@@ -16,6 +16,7 @@ import RepairDetailPage from "./components/repairDetailPage";
 import IncidentReportForm from "./components/reportRentedDevice";
 import { MyUserContext } from "./configs/Context";
 import MyUserReducer from "./reducers/MyUserReducer";
+import MyMaintenanceReport from "./components/myMaintenanceReport";
 
 const App = () => {
 
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/my-rented-device-detail/incident-report/:id" element={<MyRentedDeviceDetail/>} />
         <Route path="/incident-report/:id" element={<IncidentReportForm/>} />
         <Route path="/my-report-handle/" element={<MyReportHandle/>} />
+        <Route path="/my-maintenance-report/:id" element={<MyMaintenanceReport />} />
         <Route path="/incident/:id" element={<IncidentDetailPage />} />
         <Route path="/repair-detail/:id" element={<RepairDetailPage />} />
       </Routes>

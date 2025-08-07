@@ -23,4 +23,5 @@ public interface RentedDeviceService {
     RentedDevice getRentedDeviceById(User user, int rentedDeviceId);
 
     boolean checkDeviceOwnership(int deviceId, int userId);
+    
 }

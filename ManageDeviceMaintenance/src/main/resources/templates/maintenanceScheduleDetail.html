@@ -3,7 +3,7 @@
     <head>
         <title>Chi tiết lịch bảo trì</title>
     <th:block th:replace="base :: bootstrap"></th:block>
-   <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 
 </head>
 <body>
@@ -37,6 +37,10 @@
                             <span th:text="${maintenanceSchedule.employeeId != null ? maintenanceSchedule.employeeId.firstName + ' ' + maintenanceSchedule.employeeId.lastName : 'Chưa xếp'}"
                                   th:classappend="${maintenanceSchedule.employeeId == null} ? 'text-danger fw-bold' : ''"></span>
                         </div>
+                       <div class="info-item">
+                            <span class="info-label">Tự động cập nhật:</span>
+                            <span th:text="${maintenanceSchedule.isAutoAdd}"></span>
+                        </div>
 
                         <!-- Form cập nhật nhân viên -->
                         <div class="mt-3">
@@ -50,6 +54,17 @@
                                     </option>
                                 </select>
                                 <button type="submit" class="btn btn-success btn-sm">Lưu</button>
+                            </form>
+                        </div>
+
+                        <div class="mt-3">
+                            <form th:action="@{/admin/auto-add-schedule}" method="post">
+                                <input type="hidden" name="scheduleId" th:value="${maintenanceSchedule.id}" />
+                                <input type="hidden" name="currentState" th:value="${maintenanceSchedule.isAutoAdd}" />
+                                <button type="submit"
+                                        th:text="${maintenanceSchedule.isAutoAdd} ? 'Tắt tự động bảo trì' : 'Bật tự động bảo trì'"
+                                        th:class="${maintenanceSchedule.isAutoAdd} ? 'btn btn-danger' : 'btn btn-outline-success'">
+                                </button>
                             </form>
                         </div>
 
@@ -96,7 +111,7 @@
                     </div>
                     <div class="card-body">
                         <div class="text-center mb-3">
-                            <img class="avatar border" th:src="${maintenanceSchedule.employeeId.avatar}" alt="Ảnh nhân viên" />
+                            <img class="img-fluid rounded-circle border d-block mx-auto object-fit-cover" th:src="${maintenanceSchedule.employeeId.avatar}" alt="Ảnh nhân viên" />
                         </div>
                         <div class="info-item"><span class="info-label">Họ và tên:</span> <span th:text="${maintenanceSchedule.employeeId.firstName + ' ' + maintenanceSchedule.employeeId.lastName}"></span></div>
                         <div class="info-item"><span class="info-label">Email:</span> <span th:text="${maintenanceSchedule.employeeId.email}"></span></div>

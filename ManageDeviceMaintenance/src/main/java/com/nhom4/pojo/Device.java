@@ -265,6 +265,11 @@ public class Device implements Serializable {
 
    
 
+  
+
+    
+   
+
     public String getManufacturer() {
         return manufacturer;
     }
@@ -274,7 +279,6 @@ public class Device implements Serializable {
     }
 
    
-
     public String getImage() {
         return image;
     }

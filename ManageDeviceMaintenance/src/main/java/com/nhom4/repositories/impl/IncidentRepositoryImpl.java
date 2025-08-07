@@ -4,9 +4,10 @@
  */
 package com.nhom4.repositories.impl;
 
-import com.nhom4.configs.CustomSecurityException;
-import com.nhom4.dto.DeviceDTO;
-import com.nhom4.dto.IncidentDTO;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,11 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nhom4.configs.CustomSecurityException;
+import com.nhom4.dto.DeviceDTO;
+import com.nhom4.dto.IncidentDTO;
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Incident;
-import com.nhom4.pojo.Location;
 import com.nhom4.pojo.User;
 import com.nhom4.repositories.IncidentRepository;
 
@@ -32,12 +35,6 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -110,7 +107,7 @@ public class IncidentRepositoryImpl implements IncidentRepository {
         Root<Incident> root = cq.from(Incident.class);
 
         root.fetch("deviceId", JoinType.LEFT)
-                .fetch("repairCostSet", JoinType.LEFT);
+                .fetch("repairCostSet", JoinType.LEFT); 
 
         cq.select(root).where(cb.equal(root.get("id"), id));
 
@@ -256,6 +253,8 @@ public class IncidentRepositoryImpl implements IncidentRepository {
 
         return s.createQuery(cq).getSingleResult();
     }
+
+    
 
     @Override
     public List<IncidentDTO> getMyIncidentHandle(User user) {

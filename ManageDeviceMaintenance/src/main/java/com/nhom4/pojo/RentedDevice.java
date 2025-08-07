@@ -35,17 +35,18 @@ import java.util.Date;
     @NamedQuery(name = "RentedDevice.findByIsRented", query = "SELECT r FROM RentedDevice r WHERE r.isRented = :isRented")})
 public class RentedDevice implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "start_date")
+    @Temporal(TemporalType.DATE)
+    private Date startDate;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "start_date")
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
     @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
@@ -142,5 +143,5 @@ public class RentedDevice implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.RentedDevice[ id=" + id + " ]";
     }
-    
+
 }

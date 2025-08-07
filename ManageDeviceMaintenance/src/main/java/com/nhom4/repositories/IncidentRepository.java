@@ -39,4 +39,5 @@ public interface IncidentRepository {
     
     Boolean checkHandleIncidentByUser(User user, int incidentId);
 
+   
 }

@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,49 +66,102 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
                 predicates.add(b.equal(root.get("progress"), progress));
             }
 
-//            String cateId = params.get("categoryId");
-//            if (cateId != null && !cateId.isEmpty()) {
-//                predicates.add(b.equal(root.get("categoryId").as(Integer.class), cateId));
-//            }
             q.where(predicates.toArray(Predicate[]::new));
 
-            String orderBy = params.get("orderBy");
-            if (orderBy != null && !orderBy.isEmpty()) {
-                q.orderBy(b.asc(root.get(orderBy)));
-            }
+            // Tạm thời bỏ orderBy ở đây nếu có
+            // Nếu bạn cần thêm sắp xếp khác thì xử lý sau khi query
         }
 
         Query query = s.createQuery(q);
+        List<MaintenanceSchedule> result = query.getResultList();
 
-//        if (params != null && params.containsKey("page")) {
-//            int page = Integer.parseInt(params.get("page"));
-//            int start = (page - 1) * PAGE_SIZE;
-//
-//            query.setMaxResults(PAGE_SIZE);
-//            query.setFirstResult(start);
-//        }
-        return query.getResultList();
+        // 🔽 Sắp xếp theo tiến trình sau khi truy vấn xong
+        result.sort(Comparator.comparingInt(m -> {
+            switch (m.getProgress()) {
+                case "in_completed":
+                    return 0;
+                case "in_progress":
+                    return 1;
+                case "completed":
+                    return 2;
+                default:
+                    return 3;
+            }
+        }));
+
+        return result;
     }
 
     @Override
     public MaintenanceSchedule addOrUpdateMaintenanceSchedule(MaintenanceSchedule m) {
         Session s = this.factory.getObject().getCurrentSession();
+
         if (m.getId() == null) {
+            // Tạo mới
+            if (m.getIsAutoAdd() == null) {
+                m.setIsAutoAdd(true); // Mặc định là true nếu chưa gán
+            }
             s.persist(m);
         } else {
-            s.merge(m);
+
+//            String newProgress = m.getProgress();
+            // Kiểm tra ngày bắt đầu không vượt quá hiện tại
+            if (m.getStartDate() != null) {
+                java.util.Date utilDate = new java.util.Date(m.getStartDate().getTime());
+                LocalDate startDate = utilDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                if (startDate.isAfter(LocalDate.now())) {
+                    System.out.println("Chưa đến ngày bắt đầu, không cho cập nhật.");
+                    MaintenanceSchedule dbSchedule = s.get(MaintenanceSchedule.class, m.getId());
+                    m.setProgress(dbSchedule.getProgress());
+                }
+            }
+
+            // Gán lại trạng thái thiết bị nếu có
+            if (m.getDeviceId() != null) {
+                m.setReceptStatus(m.getDeviceId().getStatusDevice());
+            }
+
+            // ✅ Nếu hoàn thành
+            if ("completed".equalsIgnoreCase(m.getProgress())) {
+                s.merge(m); // cập nhật lịch hiện tại
+
+                // Chỉ tạo lịch tiếp theo nếu được bật
+                if (Boolean.TRUE.equals(m.getIsAutoAdd())) {
+                    autoAddMaintenanceSchedule(m);
+                } else {
+                    System.out.println("️ Không tạo lịch tiếp theo vì autoAddSchedule = false.");
+                }
+            } else {
+                s.merge(m); // Nếu chưa completed vẫn cập nhật
+            }
         }
+
         return m;
     }
 
     @Override
-    public MaintenanceSchedule autoUpdateMaintenanceSchedule() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void autoAddMaintenanceSchedule(MaintenanceSchedule m) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Device device = m.getDeviceId();
+        Integer frequency = device.getFrequency();
 
-    @Override
-    public MaintenanceSchedule autoAddMaintenanceSchedule(MaintenanceSchedule m) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (frequency != null && frequency > 0) {
+            LocalDate nextStartDate = LocalDate.now().plusDays(frequency);
+            MaintenanceSchedule next = new MaintenanceSchedule();
+
+            next.setDeviceId(device);
+            next.setProgress("in_completed");
+            next.setReceptStatus(device.getStatusDevice());
+            next.setStartDate(java.sql.Date.valueOf(nextStartDate));
+            next.setIsAutoAdd(m.getIsAutoAdd());
+
+            s.persist(next);
+            System.out.println(" Đã tạo lịch bảo trì mới sau " + frequency + " ngày.");
+        } else {
+            System.out.println("️ Frequency không hợp lệ.");
+        }
+
     }
 
     @Override
@@ -179,4 +233,15 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
         return query.getResultList();
     }
 
+    @Override
+    public boolean hasMaintenanceReport(int maintenanceScheduleId) {
+        Session session = this.factory.getObject().getCurrentSession();
+        Query q = session.createQuery("SELECT COUNT(r) FROM MaintenanceScheduleReport r WHERE r.maintenanceScheduleId.id = :id");
+        q.setParameter("id", maintenanceScheduleId);
+        Long count = (Long) q.getSingleResult();
+        return count != null && count > 0;
+
+    }
+
+    
 }

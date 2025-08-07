@@ -5,6 +5,10 @@
 package com.nhom4.controllers;
 
 import com.nhom4.dto.IncidentDTO;
+import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.User;
+import com.nhom4.services.IncidentService;
+import com.nhom4.services.UserService;
 import com.nhom4.dto.RepairDetailDTO;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.Repair;
@@ -74,7 +78,7 @@ public class ApiPersonalIncident {
         User user = this.userService.getUserByUsername(username);
         if (!this.incidentService.checkHandleIncidentByUser(user, incidentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("error", "Bạn không có quyền truy cập báo cáo này"));
+                    .body(Map.of("error", "Bạn không có quyền truy cập thiết bị này"));
         }
         Incident incident = this.incidentService.getIncidentById(incidentId);
         return new ResponseEntity<>(incident, HttpStatus.OK);

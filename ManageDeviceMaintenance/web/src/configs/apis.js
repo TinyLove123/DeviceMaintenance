@@ -14,6 +14,9 @@ export const endpoints={
     'profile':'/secure/profile',
     'deviceDetail': (id) => `devices/${id}`,
     'myRentedDevice':'secure/my-rented-devices',
+    // 'rentedDevice': (id) => `secure/devices/${id}/rented-device`,
+    // 'rentedDeviceDetail': (id,rentedId) => `secure/devices/${id}/rented-device/${rentedId}/`,
+    // 'rentedDevice': (id) => `/secure/my-rented-devices/${id}/detail-device`,
     'rentedDeviceDetail': (id) => `/secure/my-rented-devices/${id}/detail-device`,
     'rentedDevice': (id) => `/secure/my-rented-devices/${id}/detail-device`,
     'rentDeviceRequest': (id) => `/secure/devices/${id}/rented-device`,
@@ -29,6 +32,8 @@ export const endpoints={
     'getRepairCost':(id)=>`/secure/${id}/repair-cost`,
     'addRepairDetail':(id)=>`/secure/report-handle/${id}/add-repair-detail`,
     'deleteRepairDetail':(id)=>`/secure/my-report-handle/${id}/delete-repair-detail`
+    'myMaintenanceReport':(id) => `/secure/persional-maintenance-schedule/${id}/detail-maintenance-report`
+
 }
 
 export const authApis = () => axios.create({

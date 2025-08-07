@@ -35,7 +35,9 @@ public interface IncidentService {
     
     long countIncidentsToday();
     
-    List <IncidentDTO> getMyIncidentHandle(User user);
     
     Boolean checkHandleIncidentByUser(User user, int incidentId);
+
+    List<IncidentDTO> getMyIncidentHandle(User user);
+    
 }

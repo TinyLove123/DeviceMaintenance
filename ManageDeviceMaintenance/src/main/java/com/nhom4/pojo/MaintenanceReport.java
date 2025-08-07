@@ -31,22 +31,13 @@ import java.util.Date;
 @Entity
 @Table(name = "maintenance_schedule_report")
 @NamedQueries({
-    @NamedQuery(name = "MaintenanceScheduleReport.findAll", query = "SELECT m FROM MaintenanceScheduleReport m"),
-    @NamedQuery(name = "MaintenanceScheduleReport.findById", query = "SELECT m FROM MaintenanceScheduleReport m WHERE m.id = :id"),
-    @NamedQuery(name = "MaintenanceScheduleReport.findByReportDate", query = "SELECT m FROM MaintenanceScheduleReport m WHERE m.reportDate = :reportDate"),
-    @NamedQuery(name = "MaintenanceScheduleReport.findByPrice", query = "SELECT m FROM MaintenanceScheduleReport m WHERE m.price = :price"),
-    @NamedQuery(name = "MaintenanceScheduleReport.findByMaintenanceRate", query = "SELECT m FROM MaintenanceScheduleReport m WHERE m.maintenanceRate = :maintenanceRate")})
-public class MaintenanceScheduleReport implements Serializable {
+    @NamedQuery(name = "MaintenanceReport.findAll", query = "SELECT m FROM MaintenanceReport m"),
+    @NamedQuery(name = "MaintenanceReport.findById", query = "SELECT m FROM MaintenanceReport m WHERE m.id = :id"),
+    @NamedQuery(name = "MaintenanceReport.findByReportDate", query = "SELECT m FROM MaintenanceReport m WHERE m.reportDate = :reportDate"),
+    @NamedQuery(name = "MaintenanceReport.findByPrice", query = "SELECT m FROM MaintenanceReport m WHERE m.price = :price"),
+    @NamedQuery(name = "MaintenanceReport.findByMaintenanceRate", query = "SELECT m FROM MaintenanceReport m WHERE m.maintenanceRate = :maintenanceRate")})
+public class MaintenanceReport implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @Column(name = "report_date")
-    @Temporal(TemporalType.DATE)
-    private Date reportDate;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -62,6 +53,16 @@ public class MaintenanceScheduleReport implements Serializable {
     @Size(min = 1, max = 20)
     @Column(name = "maintenance_rate")
     private String maintenanceRate;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Column(name = "report_date")
+    @Temporal(TemporalType.DATE)
+    private Date reportDate;
     @JoinColumn(name = "maintenance_schedule_id", referencedColumnName = "id")
     @OneToOne(optional = false)
     private MaintenanceSchedule maintenanceScheduleId;
@@ -69,14 +70,14 @@ public class MaintenanceScheduleReport implements Serializable {
     @ManyToOne(optional = false)
     private User employeeId;
 
-    public MaintenanceScheduleReport() {
+    public MaintenanceReport() {
     }
 
-    public MaintenanceScheduleReport(Integer id) {
+    public MaintenanceReport(Integer id) {
         this.id = id;
     }
 
-    public MaintenanceScheduleReport(Integer id, String description, double price, String maintenanceRate) {
+    public MaintenanceReport(Integer id, String description, double price, String maintenanceRate) {
         this.id = id;
         this.description = description;
         this.price = price;
@@ -99,21 +100,6 @@ public class MaintenanceScheduleReport implements Serializable {
         this.reportDate = reportDate;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 
     public String getMaintenanceRate() {
         return maintenanceRate;
@@ -149,10 +135,10 @@ public class MaintenanceScheduleReport implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MaintenanceScheduleReport)) {
+        if (!(object instanceof MaintenanceReport)) {
             return false;
         }
-        MaintenanceScheduleReport other = (MaintenanceScheduleReport) object;
+        MaintenanceReport other = (MaintenanceReport) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -163,5 +149,22 @@ public class MaintenanceScheduleReport implements Serializable {
     public String toString() {
         return "com.nhom4.pojo.MaintenanceScheduleReport[ id=" + id + " ]";
     }
-    
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+   
 }

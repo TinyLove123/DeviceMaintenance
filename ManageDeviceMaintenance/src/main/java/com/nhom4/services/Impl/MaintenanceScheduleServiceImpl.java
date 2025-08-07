@@ -11,6 +11,7 @@ import com.nhom4.repositories.MaintenanceScheduleRepository;
 import com.nhom4.services.MaintenanceScheduleService;
 import java.util.List;
 import java.util.Map;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,10 +35,7 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
        return this.maintenanceScheduleRepo.addOrUpdateMaintenanceSchedule(m);
     }
 
-    @Override
-    public MaintenanceSchedule autoUpdateMaintenanceSchedule() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
 
     @Override
     public MaintenanceSchedule getMaintenanceScheduleById(int id) {
@@ -58,5 +56,16 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
     public List<MaintenanceSchedule> getTodayMaintenanceSchedule() {
         return this.maintenanceScheduleRepo.getTodayMaintenanceSchedule();
     }
+
+    @Override
+    public boolean hasMaintenanceReport(int maintenanceScheduleId) {
+        return this.maintenanceScheduleRepo.hasMaintenanceReport(maintenanceScheduleId);
+    }
+
+    @Override
+    public void autoAddMaintenanceSchedule(MaintenanceSchedule m) {
+         this.maintenanceScheduleRepo.autoAddMaintenanceSchedule(m);
+    }
+
     
 }

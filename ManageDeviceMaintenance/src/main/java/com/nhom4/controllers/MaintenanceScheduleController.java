@@ -82,4 +82,15 @@ public class MaintenanceScheduleController {
         }
         return "redirect:/admin/maintenance-schedule-manager";
     }
+    
+    @PostMapping("/auto-add-schedule")
+    public String AutoAddSchedule(@RequestParam("scheduleId") int scheduleId,
+                                @RequestParam("currentState") boolean currentState) {
+        MaintenanceSchedule ms = maintenanceScheduleService.getMaintenanceScheduleById(scheduleId);
+        if (ms != null) {
+            ms.setIsAutoAdd(!currentState);
+            maintenanceScheduleService.addOrUpdateMaintenanceSchedule(ms);
+        }
+        return "redirect:/admin/maintenance-schedule-manager" ;
+    }
 }

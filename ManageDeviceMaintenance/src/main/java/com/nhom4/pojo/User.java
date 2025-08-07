@@ -64,9 +64,11 @@ public class User implements Serializable {
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 100)
     @Column(name = "email")
     private String email;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
@@ -96,11 +98,14 @@ public class User implements Serializable {
     @Column(name = "avatar")
     private String avatar;
     @JsonIgnore
+    @OneToMany(mappedBy = "customerId")
+    private Set<RentedDevice> rentedDeviceSet;
+    @JsonIgnore
     @OneToMany(mappedBy = "employeeId")
     private Set<MaintenanceSchedule> maintenanceScheduleSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
     @JsonIgnore
-    private Set<MaintenanceScheduleReport> maintenanceScheduleReportSet;
+    private Set<MaintenanceReport> maintenanceScheduleReportSet;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -261,21 +266,42 @@ public class User implements Serializable {
         this.maintenanceScheduleSet = maintenanceScheduleSet;
     }
 
-    public Set<MaintenanceScheduleReport> getMaintenanceScheduleReportSet() {
+    public Set<MaintenanceReport> getMaintenanceScheduleReportSet() {
         return maintenanceScheduleReportSet;
     }
 
-    public void setMaintenanceScheduleReportSet(Set<MaintenanceScheduleReport> maintenanceScheduleReportSet) {
+    public void setMaintenanceScheduleReportSet(Set<MaintenanceReport> maintenanceScheduleReportSet) {
         this.maintenanceScheduleReportSet = maintenanceScheduleReportSet;
     }
 
 
    
 
+    
+
+
+    public Set<RentedDevice> getRentedDeviceSet() {
+        return rentedDeviceSet;
+    }
+
+    public void setRentedDeviceSet(Set<RentedDevice> rentedDeviceSet) {
+        this.rentedDeviceSet = rentedDeviceSet;
+    }
+
+    /**
+     * @return the email
+     */
+    
+    /**
+     * @return the sex
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * @param sex the sex to set
+     */
     public void setEmail(String email) {
         this.email = email;
     }
@@ -296,7 +322,7 @@ public class User implements Serializable {
         this.sex = sex;
     }
 
-   
+    
 
     public String getUsername() {
         return username;

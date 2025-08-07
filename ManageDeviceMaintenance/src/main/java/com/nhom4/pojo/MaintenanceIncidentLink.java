@@ -36,6 +36,11 @@ import java.util.Date;
     @NamedQuery(name = "MaintenanceIncidentLink.findByLinkedAt", query = "SELECT m FROM MaintenanceIncidentLink m WHERE m.linkedAt = :linkedAt")})
 public class MaintenanceIncidentLink implements Serializable {
 
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "note")
+    private String note;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,10 +50,6 @@ public class MaintenanceIncidentLink implements Serializable {
     @Column(name = "linked_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date linkedAt;
-    @Lob
-    @Size(max = 65535)
-    @Column(name = "note")
-    private String note;
     @JoinColumn(name = "incident_id", referencedColumnName = "id")
     @OneToOne(optional = false)
     private Incident incidentId;
@@ -79,13 +80,6 @@ public class MaintenanceIncidentLink implements Serializable {
         this.linkedAt = linkedAt;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
 
     public Incident getIncidentId() {
         return incidentId;
@@ -126,6 +120,14 @@ public class MaintenanceIncidentLink implements Serializable {
     @Override
     public String toString() {
         return "com.nhom4.controllers.MaintenanceIncidentLink[ id=" + id + " ]";
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
     
 }
