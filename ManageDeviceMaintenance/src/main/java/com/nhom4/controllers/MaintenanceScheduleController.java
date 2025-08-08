@@ -4,20 +4,11 @@
  */
 package com.nhom4.controllers;
 
-import com.nhom4.pojo.Device;
-import com.nhom4.pojo.MaintenanceSchedule;
-import com.nhom4.pojo.RepairCost;
-import com.nhom4.pojo.RepairType;
-import com.nhom4.pojo.User;
-import com.nhom4.repositories.MaintenanceScheduleRepository;
-import com.nhom4.services.DeviceService;
-import com.nhom4.services.MaintenanceScheduleService;
-import com.nhom4.services.UserService;
-import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -30,7 +21,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nhom4.pojo.MaintenanceSchedule;
+import com.nhom4.pojo.User;
+import com.nhom4.repositories.MaintenanceScheduleRepository;
+import com.nhom4.services.DeviceService;
+import com.nhom4.services.MaintenanceScheduleService;
+import com.nhom4.services.UserService;
 
 /**
  *
@@ -154,4 +151,5 @@ public class MaintenanceScheduleController {
 //        mailService.sendMail("2251052036hieu@ou.edu.vn", "Hello!", "Nội dung test nè!");
 //        return "Đã gửi email!";
 //    }
+
 }

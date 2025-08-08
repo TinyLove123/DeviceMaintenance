@@ -43,9 +43,7 @@ public class MaintenanceSchedule implements Serializable {
     @Size(max = 20)
     @Column(name = "progress")
     private String progress;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
+    @Size(max = 20)
     @Column(name = "recept_status")
     private String receptStatus;
     @Column(name = "is_auto_add")
@@ -123,7 +121,6 @@ public class MaintenanceSchedule implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof MaintenanceSchedule)) {
             return false;
         }
@@ -194,10 +191,5 @@ public class MaintenanceSchedule implements Serializable {
     public void setProgress(String progress) {
         this.progress = progress;
     }
-
-   
-
-    
-   
-    
+ 
 }

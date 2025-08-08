@@ -18,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
 /**
  *
  * @author Administrator
@@ -59,5 +60,4 @@ public class WebAppContextConfigs implements WebMvcConfigurer {
 
         return mailSender;
     }
-
 }

@@ -4,22 +4,13 @@
  */
 package com.nhom4.controllers;
 
-import com.nhom4.pojo.Incident;
-import com.nhom4.pojo.User;
-import com.nhom4.services.IncidentService;
-import com.nhom4.services.MailService;
-import com.nhom4.services.RepairService;
-import com.nhom4.services.UserService;
-import jakarta.ws.rs.PathParam;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import static java.time.LocalDateTime.now;
 import java.util.Date;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -28,10 +19,16 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.User;
+import com.nhom4.services.IncidentService;
+import com.nhom4.services.MailService;
+import com.nhom4.services.RepairService;
+import com.nhom4.services.UserService;
 
 /**
  *
@@ -49,9 +46,10 @@ public class IncidentController {
 
     @Autowired
     private RepairService repairService;
-
+    
     @Autowired
     private MailService mailService;
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -103,20 +101,12 @@ public class IncidentController {
             incident.setStartDate(incidentForm.getStartDate());
             incident.setEndDate(incidentForm.getEndDate());
         }
-        if (incident.getEmployeeId() != null && incident.getEmployeeId().getEmail() != null) {
-            String email = incident.getEmployeeId().getEmail();
-            String subject = "Bạn được giao xử lý sự cố";
-            String body = "Bạn được phân công xử lý sự cố thiết bị: "
-                    + incidentForm.getDeviceId().getNameDevice()
-                    + ". Thời gian bắt đầu: ";
-            try {
-                mailService.sendMail("trongtin12022003@gmail.com", subject, body);
-            } catch (Exception e) {
-                System.out.println("loi gui mail: " + e.getMessage());
-            }
-        }
+        
+           
+        
 
         this.incidentService.addOrUpdateIncident(incident, incidentForm.getDeviceId().getId(), adminUser);
+        
 
         return "redirect:/admin/incident-manager";
     }

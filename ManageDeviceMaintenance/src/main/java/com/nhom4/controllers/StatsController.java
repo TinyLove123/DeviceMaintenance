@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 /**
  *
  * @author Administrator
@@ -28,6 +29,7 @@ public class StatsController {
         model.addAttribute("incidentStats", statsRepository.statsRevenueByIncident());
         model.addAttribute("maintenanceStats", statsRepository.statsRevenueByMaintenanceSchedule());
         model.addAttribute("maintenanceIncidentStats", statsRepository.statsRevenueByMaintenanceScheduleHaveIncident());
+
         return "stats";
     }
 }
