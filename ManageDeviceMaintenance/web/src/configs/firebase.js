@@ -3,15 +3,15 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, push, ref } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB6B4qwTyQIs-HOTmdn8kwPMAAle79J3y0",
-  authDomain: "chats-fd917.firebaseapp.com",
-  databaseURL: "https://chats-fd917-default-rtdb.firebaseio.com",
-  projectId: "chats-fd917",
-  storageBucket: "chats-fd917.appspot.com",
-  messagingSenderId: "174728471714",
-  appId: "1:174728471714:web:683ed1f602c309527923fb",
-  measurementId: "G-P9F5EYVFJL"
-};
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+  };
 
 const app = initializeApp(firebaseConfig);
 
