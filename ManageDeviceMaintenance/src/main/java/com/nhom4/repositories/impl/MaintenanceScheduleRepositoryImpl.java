@@ -4,35 +4,36 @@
  */
 package com.nhom4.repositories.impl;
 
-import com.nhom4.dto.MaintenanceScheduleDTO;
-import com.nhom4.pojo.Device;
-import com.nhom4.pojo.Incident;
-import com.nhom4.pojo.MaintenanceIncidentLink;
-import com.nhom4.pojo.MaintenanceSchedule;
-import com.nhom4.pojo.User;
-import com.nhom4.repositories.DeviceRepository;
-import com.nhom4.repositories.MaintenanceScheduleRepository;
-import com.nhom4.services.IncidentService;
-import jakarta.persistence.Query;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.nhom4.dto.MaintenanceScheduleDTO;
+import com.nhom4.pojo.Device;
+import com.nhom4.pojo.Incident;
+import com.nhom4.pojo.MaintenanceIncidentLink;
+import com.nhom4.pojo.MaintenanceReport;
+import com.nhom4.pojo.MaintenanceSchedule;
+import com.nhom4.pojo.User;
+import com.nhom4.repositories.DeviceRepository;
+import com.nhom4.repositories.MaintenanceScheduleRepository;
+import com.nhom4.services.IncidentService;
+
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 /**
  *
@@ -52,36 +53,39 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
     @Autowired
     private IncidentService incidentService;
 
+    @Override
     public List<MaintenanceSchedule> getMaintenanceSchedules(Map<String, String> params) {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<MaintenanceSchedule> q = b.createQuery(MaintenanceSchedule.class);
-        Root root = q.from(MaintenanceSchedule.class);
+        Root<MaintenanceSchedule> root = q.from(MaintenanceSchedule.class);
         q.select(root);
 
-        if (params != null) {
-            List<Predicate> predicates = new ArrayList<>();
+        List<Predicate> predicates = new ArrayList<>();
 
+        if (params != null) {
             String startDate = params.get("startDate");
             if (startDate != null && !startDate.isEmpty()) {
-                predicates.add(b.equal(root.get("startDate").as(Integer.class), startDate));
+                predicates.add(b.equal(root.get("startDate").as(String.class), startDate));
             }
 
             String progress = params.get("progress");
-            if (progress != null && !progress.isEmpty()) {
-                predicates.add(b.equal(root.get("progress"), progress));
+            if (progress == null || progress.isEmpty()) {
+                progress = "in_completed"; 
             }
 
-            q.where(predicates.toArray(Predicate[]::new));
+            predicates.add(b.equal(root.get("progress"), progress));
+        } else {
+            predicates.add(b.equal(root.get("progress"), "in_completed"));
+        }
 
-            // Tạm thời bỏ orderBy ở đây nếu có
-            // Nếu bạn cần thêm sắp xếp khác thì xử lý sau khi query
+        if (!predicates.isEmpty()) {
+            q.where(predicates.toArray(Predicate[]::new));
         }
 
         Query query = s.createQuery(q);
         List<MaintenanceSchedule> result = query.getResultList();
 
-        // 🔽 Sắp xếp theo tiến trình sau khi truy vấn xong
         result.sort(Comparator.comparingInt(m -> {
             switch (m.getProgress()) {
                 case "in_completed":
@@ -103,15 +107,35 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
         Session s = this.factory.getObject().getCurrentSession();
 
         if (m.getId() == null) {
-            // Tạo mới
-            if (m.getIsAutoAdd() == null) {
-                m.setIsAutoAdd(true); // Mặc định là true nếu chưa gán
+
+            CriteriaBuilder cb = s.getCriteriaBuilder();
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            Root<MaintenanceSchedule> root = cq.from(MaintenanceSchedule.class);
+
+            cq.select(cb.count(root));
+            cq.where(
+                    cb.and(
+                            cb.equal(root.get("deviceId").get("id"), m.getDeviceId().getId()),
+                            cb.equal(root.get("startDate"), m.getStartDate())
+                    )
+            );
+
+            Long count = s.createQuery(cq).uniqueResult();
+
+            if (count != null && count > 0) {
+                throw new RuntimeException("Lịch bảo trì cho thiết bị này vào ngày này đã tồn tại!");
             }
+            if (m.getIsAutoAdd() == null) {
+                m.setIsAutoAdd(true); 
+            }
+
+            if (m.getProgress() == null || m.getProgress().isEmpty()) {
+                m.setProgress("in_completed");
+            }
+
             s.persist(m);
         } else {
 
-//            String newProgress = m.getProgress();
-            // Kiểm tra ngày bắt đầu không vượt quá hiện tại
             if (m.getStartDate() != null) {
                 java.util.Date utilDate = new java.util.Date(m.getStartDate().getTime());
                 LocalDate startDate = utilDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -123,23 +147,20 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
                 }
             }
 
-            // Gán lại trạng thái thiết bị nếu có
             if (m.getDeviceId() != null) {
                 m.setReceptStatus(m.getDeviceId().getStatusDevice());
             }
 
-            // ✅ Nếu hoàn thành
             if ("completed".equalsIgnoreCase(m.getProgress())) {
-                s.merge(m); // cập nhật lịch hiện tại
+                s.merge(m); 
 
-                // Chỉ tạo lịch tiếp theo nếu được bật
                 if (Boolean.TRUE.equals(m.getIsAutoAdd())) {
                     autoAddMaintenanceSchedule(m);
                 } else {
                     System.out.println("️ Không tạo lịch tiếp theo vì autoAddSchedule = false.");
                 }
             } else {
-                s.merge(m); // Nếu chưa completed vẫn cập nhật
+                s.merge(m);
             }
         }
 
@@ -232,7 +253,7 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
         Date startOfDay = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date endOfDay = Date.from(today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        Predicate testPredicate = cb.lessThan(root.get("startDate"), new Date()); // lấy tất cả ngày trước hiện tại
+        Predicate testPredicate = cb.lessThan(root.get("startDate"), new Date());
         cq.select(root).where(testPredicate);
 
         Query query = s.createQuery(cq);
@@ -241,12 +262,32 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
 
     @Override
     public boolean hasMaintenanceReport(int maintenanceScheduleId) {
-        Session session = this.factory.getObject().getCurrentSession();
-        Query q = session.createQuery("SELECT COUNT(r) FROM MaintenanceScheduleReport r WHERE r.maintenanceScheduleId.id = :id");
-        q.setParameter("id", maintenanceScheduleId);
-        Long count = (Long) q.getSingleResult();
-        return count != null && count > 0;
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<MaintenanceReport> root = cq.from(MaintenanceReport.class);
 
+        cq.select(cb.count(root));
+
+        cq.where(cb.equal(root.get("maintenanceScheduleId").get("id"), maintenanceScheduleId));
+
+        Long count = s.createQuery(cq).getSingleResult();
+        return count != null && count > 0;
+    }
+
+    @Override
+    public void deleteMaintenanceSchedule(MaintenanceSchedule m) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            MaintenanceSchedule schedule = s.get(MaintenanceSchedule.class, m.getId());
+            if (schedule != null && "in_completed".equalsIgnoreCase(schedule.getProgress())) {
+                s.remove(schedule);
+            } else {
+                System.out.println("Không thể xóa lịch không ở trạng thái 'in_completed'");
+            }
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
     @Override
@@ -255,14 +296,13 @@ public class MaintenanceScheduleRepositoryImpl implements MaintenanceScheduleRep
 
         MaintenanceSchedule maintenance = this.getMaintenanceScheduleById(maintenanceId);
 
-
         Incident incidentSave = this.incidentService.addOrUpdateIncident(incident, maintenance.getDeviceId().getId(), user);
 
         MaintenanceIncidentLink link = new MaintenanceIncidentLink();
         link.setIncidentId(incidentSave);
         link.setMaintenanceScheduleId(maintenance);
         link.setNote(note);
-        link.setLinkedAt(linkedAt); 
+        link.setLinkedAt(linkedAt);
 
         s.persist(link);
     }

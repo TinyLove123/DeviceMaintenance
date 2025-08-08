@@ -4,7 +4,15 @@
  */
 package com.nhom4.filters;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.nhom4.utils.JwtUtils;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,11 +20,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  *
@@ -43,7 +46,7 @@ public class JwtFilter implements Filter {
 
             try {
                 String username = JwtUtils.validateTokenAndGetUsername(token);
-                String role = JwtUtils.getRoleFromToken(token);  // lấy role
+                String role = JwtUtils.getRoleFromToken(token);
                 System.out.print(role+username);
 
                 if (username != null && role != null) {

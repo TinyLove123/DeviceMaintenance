@@ -107,7 +107,7 @@ public class IncidentRepositoryImpl implements IncidentRepository {
         Root<Incident> root = cq.from(Incident.class);
 
         root.fetch("deviceId", JoinType.LEFT)
-                .fetch("repairCostSet", JoinType.LEFT); 
+                .fetch("repairCostSet", JoinType.LEFT);
 
         cq.select(root).where(cb.equal(root.get("id"), id));
 
@@ -125,7 +125,7 @@ public class IncidentRepositoryImpl implements IncidentRepository {
                     "SELECT i FROM Incident i WHERE i.deviceId.id = :deviceId AND i.status <> 'RESOLVED'",
                     Incident.class
             );
-            query.setParameter("deviceId", deviceId); // <-- đúng!
+            query.setParameter("deviceId", deviceId); 
             List<Incident> unresolvedIncidents = query.getResultList();
 
             if (!unresolvedIncidents.isEmpty()) {
@@ -224,14 +224,13 @@ public class IncidentRepositoryImpl implements IncidentRepository {
         Predicate datePredicate = cb.lessThan(root.get("reportDate"), startOfTodayDate);
         Predicate statusPredicate = cb.equal(root.get("status"), "PENDING_APPROVAL");
 
-        // Kết hợp các điều kiện
         cq.select(root)
                 .where(cb.and(datePredicate, statusPredicate));
 
         cq.orderBy(
-                cb.desc(root.get("isEmergency")), // Emergency first
-                cb.asc(root.get("reportDate")), // Oldest first
-                cb.asc(root.get("id")) // Additional ordering if needed
+                cb.desc(root.get("isEmergency")), 
+                cb.asc(root.get("reportDate")), 
+                cb.asc(root.get("id")) 
         );
 
         return session.createQuery(cq).getResultList();
@@ -253,8 +252,6 @@ public class IncidentRepositoryImpl implements IncidentRepository {
 
         return s.createQuery(cq).getSingleResult();
     }
-
-    
 
     @Override
     public List<IncidentDTO> getMyIncidentHandle(User user) {
@@ -321,6 +318,69 @@ public class IncidentRepositoryImpl implements IncidentRepository {
         Long count = s.createQuery(cq).uniqueResult();
         return count != null && count > 0;
 
+    }
+
+    @Override
+    public List<Incident> historyIncident(int deviceId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+        CriteriaQuery<Incident> cq = cb.createQuery(Incident.class);
+        Root<Incident> root = cq.from(Incident.class);
+
+        Predicate condition = cb.equal(root.get("device").get("id"), deviceId);
+
+
+        cq.where(condition);
+        cq.orderBy(cb.desc(root.get("reportDate")));
+
+        Query query = s.createQuery(cq);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<IncidentDTO> getMyIncidentReport(User user) {
+        Session session = factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<IncidentDTO> cq = cb.createQuery(IncidentDTO.class);
+        Root<Incident> root = cq.from(Incident.class);
+        Join<Incident, Device> deviceJoin = root.join("deviceId");
+
+        cq.select(cb.construct(
+                IncidentDTO.class,
+                root.get("id"),
+                root.get("title"),
+                root.get("detailDescribe"),
+                root.get("status"),
+                root.get("reportDate"),
+                root.get("approvalDate"),
+                root.get("isEmergency"),
+                root.get("startDate"),
+                root.get("endDate"),
+                root.get("approvedBy"),
+                root.get("employeeId"),
+                root.get("senderId"),
+                cb.construct(
+                        DeviceDTO.class,
+                        deviceJoin.get("id"),
+                        deviceJoin.get("nameDevice"),
+                        deviceJoin.get("manufacturer"),
+                        deviceJoin.get("statusDevice"),
+                        deviceJoin.get("purchaseDate"),
+                        deviceJoin.get("frequency"),
+                        deviceJoin.get("image"),
+                        deviceJoin.get("price"),
+                        deviceJoin.get("currentLocationId")
+                )));
+
+        Predicate predicate = cb.equal(root.get("senderId").get("id"), user.getId());
+
+
+        cq.where(cb.and(predicate));
+
+        cq.orderBy(cb.asc(root.get("reportDate")));
+
+        return session.createQuery(cq).getResultList();
     }
 
 }

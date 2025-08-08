@@ -68,12 +68,41 @@
                         <span th:if="${incident.isEmergency != true}" class="badge bg-secondary">Bình thường</span>
                     </td>
                     <td>
-                        <a th:href="@{/admin/incident-manager/{id}/incident-detail(id=${incident.id})}" class="btn btn-primary">Xem thêm</a>
+                        <a th:href="@{/admin/incident-manager/{id}/incident-detail(id=${incident.id})}" class="btn btn-primary mb-1">Xem thêm</a>
+
+                        <!-- Nếu trạng thái là APPROVED thì hiện nút gửi mail -->
+                        <button type="button" class="btn btn-warning"
+                                th:if="${incident.status == 'APPROVED'}"
+                                th:attr="onclick=|sendIncidentMail(${incident.id})|">
+                            Gửi mail
+                        </button>
+
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
+    <script>
+        function sendIncidentMail(incidentId) {
+            const contextPath = window.location.pathname.split('/')[1]; // Lấy context path
+            const url = `/${contextPath}/admin/send-incident-mail/${incidentId}/incident`;
+            fetch(url, {
+                method: 'POST'
+            })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error("Gửi thất bại");
+                        }
+                        return res.text();
+                    })
+                    .then(message => {
+                        alert(message); // ✅ Gửi thành công
+                    })
+                    .catch(err => {
+                        alert("Lỗi khi gửi mail: " + err.message);
+                    });
+        }
+    </script>
 
     <div th:replace="base :: footer"></div>
 </body>

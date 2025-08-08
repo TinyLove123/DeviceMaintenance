@@ -5,14 +5,12 @@ import java.util.Date;
 
 public class MaintenanceScheduleDTO {
     private Integer id;
-    private String startDate; // Định dạng thành String để hiển thị đẹp
+    private String startDate;
     private String progress;
 
-    // Thông tin thiết bị
     private Integer deviceId;
     private String deviceName;
 
-    // Thông tin nhân viên
     private Integer employeeId;
     private String employeeName;
 

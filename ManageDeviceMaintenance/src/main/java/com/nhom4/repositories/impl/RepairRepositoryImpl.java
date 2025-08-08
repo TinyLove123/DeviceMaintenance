@@ -58,6 +58,8 @@ public class RepairRepositoryImpl implements RepairRepository {
 
         return s.createQuery(cq).uniqueResult();
     }
+    
+    
 
     @Override
     public void addOrUpdateRepairByIncidentId(Repair repair, Incident incident,
@@ -131,7 +133,8 @@ public class RepairRepositoryImpl implements RepairRepository {
         Session s = this.factory.getObject().getCurrentSession();
         return s.get(RepairDetail.class, repairDetailId);
     }
-    
+
+ 
     
 
 }

@@ -4,14 +4,7 @@
  */
 package com.nhom4.services.Impl;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
-import com.nhom4.pojo.User;
-import com.nhom4.repositories.UserRepository;
-import com.nhom4.services.UserService;
 import java.io.IOException;
-import static java.lang.Math.log;
-import static java.lang.StrictMath.log;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +22,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.nhom4.pojo.User;
+import com.nhom4.repositories.UserRepository;
+import com.nhom4.services.UserService;
 
 /**
  *
@@ -55,27 +55,22 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("User not found: " + username);
         }
 
-        // Kiểm tra tài khoản bị xóa mềm
         if (u.getIsDel() == Boolean.TRUE) {
             throw new DisabledException("Account is disabled");
         }
 
         Set<GrantedAuthority> authorities = new HashSet<>();
 
-        // Chuẩn hóa role: thêm ROLE_ nếu chưa có và chuyển sang uppercase
         String role = u.getUserRole().toUpperCase();
         if (!role.startsWith("ROLE_")) {
             role = "ROLE_" + role;
         }
         authorities.add(new SimpleGrantedAuthority(role));
 
-        // Log để debug
-//        log.info("User {} authenticated with role: {}", username, role);
-
         return new org.springframework.security.core.userdetails.User(
                 u.getUsername(),
                 u.getPassword(),
-                true, // enabled
+                true,
                 true, // accountNonExpired
                 true, // credentialsNonExpired
                 true, // accountNonLocked
@@ -97,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
         String role = params.get("userRole");
         if (role != null) {
-            u.setUserRole(role.toUpperCase()); // đảm bảo trùng giá trị DB yêu cầu
+            u.setUserRole(role.toUpperCase()); 
         }
         if (!avatar.isEmpty()) {
             try {

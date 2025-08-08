@@ -38,5 +38,10 @@ public interface IncidentRepository {
     List <IncidentDTO> getMyIncidentHandle(User user);
     
     Boolean checkHandleIncidentByUser(User user, int incidentId);
+    
+    List<Incident> historyIncident(int deviceId);
+    
+    List <IncidentDTO> getMyIncidentReport(User user);
+   
 
 }

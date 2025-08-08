@@ -57,6 +57,7 @@ public class Repair implements Serializable {
     @OneToMany(mappedBy = "repairId")
     private Set<RepairDetail> repairDetailSet;
 
+    
     @JoinColumn(name = "incident_id", referencedColumnName = "id")
     @JsonIgnore
     @OneToOne

@@ -38,7 +38,9 @@ public interface MaintenanceScheduleRepository {
 
     boolean hasMaintenanceReport(int maintenanceScheduleId);
     
+    void deleteMaintenanceSchedule(MaintenanceSchedule m);
+    
     void addMaintenanceIncidentLinkByEmployee(User user, int maintenanceId ,Incident incident, String note, Date linkedBy);
 
-    
+  
 }

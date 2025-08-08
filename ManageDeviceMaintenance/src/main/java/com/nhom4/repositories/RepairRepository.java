@@ -28,5 +28,7 @@ public interface RepairRepository {
     void deleteRepairDetail(int repairDetailId);
     
     RepairDetail getRepairDetailById(int repairDetailId);
+    
+
 
 }

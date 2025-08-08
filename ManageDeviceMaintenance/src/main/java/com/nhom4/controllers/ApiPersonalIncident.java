@@ -136,7 +136,7 @@ public class ApiPersonalIncident {
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
         } catch (Exception ex) {
-            ex.printStackTrace(); // in stack trace ra log
+            ex.printStackTrace(); 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau."));
         }

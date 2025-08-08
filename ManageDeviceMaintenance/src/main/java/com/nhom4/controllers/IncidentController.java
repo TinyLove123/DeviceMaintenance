@@ -7,6 +7,7 @@ package com.nhom4.controllers;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.User;
 import com.nhom4.services.IncidentService;
+import com.nhom4.services.MailService;
 import com.nhom4.services.RepairService;
 import com.nhom4.services.UserService;
 import jakarta.ws.rs.PathParam;
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -26,8 +28,10 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -42,9 +46,12 @@ public class IncidentController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private RepairService repairService;
+
+    @Autowired
+    private MailService mailService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -74,7 +81,7 @@ public class IncidentController {
     public String updateIncidentStatus(
             @ModelAttribute("Incident") Incident incidentForm,
             Principal principal) {
-        
+
         String username = principal.getName();
         User adminUser = this.userService.getUserByUsername(username);
 
@@ -96,21 +103,70 @@ public class IncidentController {
             incident.setStartDate(incidentForm.getStartDate());
             incident.setEndDate(incidentForm.getEndDate());
         }
+        if (incident.getEmployeeId() != null && incident.getEmployeeId().getEmail() != null) {
+            String email = incident.getEmployeeId().getEmail();
+            String subject = "Bạn được giao xử lý sự cố";
+            String body = "Bạn được phân công xử lý sự cố thiết bị: "
+                    + incidentForm.getDeviceId().getNameDevice()
+                    + ". Thời gian bắt đầu: ";
+            try {
+                mailService.sendMail("trongtin12022003@gmail.com", subject, body);
+            } catch (Exception e) {
+                System.out.println("loi gui mail: " + e.getMessage());
+            }
+        }
 
         this.incidentService.addOrUpdateIncident(incident, incidentForm.getDeviceId().getId(), adminUser);
 
         return "redirect:/admin/incident-manager";
     }
-    
+
     @GetMapping("/incident-manager/{id}/detail-repair")
     public String getIncidentRepair(
-           Model model,@PathVariable("id") Integer incidentId,
+            Model model, @PathVariable("id") Integer incidentId,
             Principal principal) {
         model.addAttribute("Repair", this.repairService.getRepairByIncident(incidentId));
-        
+
         return "repairDetail";
     }
+
+    @PostMapping("/send-incident-mail/{id}/incident")
+    @ResponseBody
+    public String sendIncidentMail(@PathVariable("id") Integer incidentId, Principal principal) {
         
-    
+        String username = principal.getName();
+        User adminUser = this.userService.getUserByUsername(username);
+        Incident incident = this.incidentService.getIncidentById(incidentId);
+        if (incident == null) {
+            return "Dữ liệu sự cố không hợp lệ";
+        }
+
+        String toEmail = adminUser.getEmail(); // giả sử Sender là người nhận
+        String subject = "[Báo cáo sự cố] " + incident.getTitle();
+
+        StringBuilder content = new StringBuilder();
+        content.append("<h3>Thông tin sự cố</h3>");
+        content.append("<p><strong>Tiêu đề:</strong> ").append(incident.getTitle()).append("</p>");
+        content.append("<p><strong>Mô tả:</strong> ").append(incident.getDetailDescribe()).append("</p>");
+
+        if (incident.getDeviceId() != null) {
+            content.append("<p><strong>Thiết bị:</strong> ").append(incident.getDeviceId().getNameDevice()).append("</p>");
+        }
+
+        content.append("<p><strong>Trạng thái:</strong> ").append(incident.getStatus()).append("</p>");
+        content.append("<p><strong>Người gửi:</strong> ")
+                .append(incident.getSenderId().getFirstName()).append(" ")
+                .append(incident.getSenderId().getLastName()).append("</p>");
+
+        if (incident.getEmployeeId() != null) {
+            content.append("<p><strong>Nhân viên xử lý:</strong> ")
+                    .append(incident.getEmployeeId().getFirstName()).append(" ")
+                    .append(incident.getEmployeeId().getLastName()).append("</p>");
+        }
+
+        mailService.sendHtmlMail(toEmail, subject, content.toString());
+
+        return "Đã gửi email thành công!";
+    }
 
 }

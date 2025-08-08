@@ -4,6 +4,7 @@ import { MyUserContext } from "../configs/Context";
 
 const Profile = () => {
   const [user] = useContext(MyUserContext);
+  console.log(user);
 
   if (!user)
     return <Navigate to="/login" replace />; // chưa login thì chuyển hướng đến login

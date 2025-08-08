@@ -11,6 +11,7 @@ const MyRentedDevice = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+       
         const loadRentedDevices = async () => {
             setLoading(true);
             try {

@@ -1,7 +1,8 @@
 package com.nhom4.dto;
 
-import com.nhom4.pojo.User;
 import java.util.Date;
+
+import com.nhom4.pojo.User;
 
 public class IncidentDTO {
 
@@ -43,27 +44,7 @@ public class IncidentDTO {
         this.device = device;
         this.receptStatus = device.getStatusDevice();
     }
-//    public IncidentDTO(Integer id, String title, String detailDescribe, String status,
-//            Date reportDate, Date approvalDate, Boolean isEmergency,
-//            Date startDate, Date endDate,
-//            User approvedBy, User employee, User sender) {
-//        this.id = id;
-//        this.title = title;
-//        this.detailDescribe = detailDescribe;
-//        this.status = status;
-//        this.reportDate = reportDate;
-//        this.approvalDate = approvalDate;
-//        this.isEmergency = isEmergency;
-//        this.startDate = startDate;
-//        this.endDate = endDate;
-//        this.approvedBy = approvedBy;
-//        this.employee = employee;
-//        this.sender = sender;
-//        this.device = device;
-//        this.receptStatus = device.getStatusDevice();
-//    }
 
-    // --- Getters & Setters ---
     public Integer getId() {
         return id;
     }

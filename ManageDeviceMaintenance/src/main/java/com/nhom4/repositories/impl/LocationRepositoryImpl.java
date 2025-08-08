@@ -81,7 +81,6 @@ public class LocationRepositoryImpl implements LocationRepository {
     public void addLocation(int deviceId, Location newLocation) {
         Session session = this.factory.getObject().getCurrentSession();
 
-        // Lấy vị trí hiện tại và set nó về false
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Location> query = cb.createQuery(Location.class);
         Root<Location> root = query.from(Location.class);

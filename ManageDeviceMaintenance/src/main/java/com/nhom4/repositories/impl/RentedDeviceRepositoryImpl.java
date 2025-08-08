@@ -4,6 +4,7 @@
  */
 package com.nhom4.repositories.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -27,7 +28,6 @@ import jakarta.persistence.criteria.Fetch;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
-import java.util.Date;
 
 /**
  *
@@ -57,7 +57,6 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
 
             s.persist(rentedDevice);
 
-            // Cập nhật trạng thái thiết bị nếu muốn, ví dụ thành "rented"
             this.locationService.addLocation(deviceId, location);
             device.setStatusDevice("rented");       
             s.merge(device);
@@ -76,7 +75,7 @@ public class RentedDeviceRepositoryImpl implements RentedDeviceRepository {
         CriteriaBuilder cb = s.getCriteriaBuilder();
         CriteriaQuery<RentedDeviceDTO> cq = cb.createQuery(RentedDeviceDTO.class);
         Root<RentedDevice> root = cq.from(RentedDevice.class);
-        Join<Object, Object> deviceJoin = root.join("deviceId");
+        Join<RentedDevice, Device> deviceJoin = root.join("deviceId");
         cq.select(cb.construct(
                 RentedDeviceDTO.class,
                 root.get("id"),

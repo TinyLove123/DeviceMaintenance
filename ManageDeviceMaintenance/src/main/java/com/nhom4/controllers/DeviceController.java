@@ -2,6 +2,7 @@ package com.nhom4.controllers;
 
 import com.nhom4.pojo.Category;
 import com.nhom4.pojo.Device;
+import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RepairCost;
 import com.nhom4.pojo.RepairType;
@@ -9,6 +10,7 @@ import com.nhom4.pojo.Wards;
 import com.nhom4.repositories.LocationRepository;
 import com.nhom4.services.CategoryService;
 import com.nhom4.services.DeviceService;
+import com.nhom4.services.IncidentService;
 import com.nhom4.services.LocationService;
 import com.nhom4.services.RepairTypeService;
 import java.security.Principal;
@@ -47,6 +49,9 @@ public class DeviceController {
 
     @Autowired
     private LocationService locationService;
+    
+    @Autowired
+    private IncidentService incidentService;
 
     @GetMapping
     @Transactional
@@ -180,5 +185,15 @@ public class DeviceController {
         model.addAttribute("LocationHistory", historyLocation);
         return "deviceHistoryLocation";
     }
+    
+    @GetMapping("/device/{id}/incident-history")
+    public String getHistoryIncident(Model model, @PathVariable("id") Integer deviceId,
+            Principal principal) {
+        List<Incident> incidentHistory = this.incidentService.historyIncident(deviceId);
+        model.addAttribute("incidentHistory", incidentHistory);
+        return "incidentHistory";
+    }
+    
+    
 
 }

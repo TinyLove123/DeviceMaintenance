@@ -70,6 +70,12 @@ public class MaintenanceScheduleServiceImpl implements MaintenanceScheduleServic
     }
 
     @Override
+    public void deleteMaintenanceSchedule(MaintenanceSchedule m) {
+        this.maintenanceScheduleRepo.deleteMaintenanceSchedule(m);
+        
+    }
+    
+    @Override
     public void addMaintenanceIncidentLinkByEmployee(User user, int maintenanceId, Incident incident, String note, Date linkedBy) {
         this.maintenanceScheduleRepo.addMaintenanceIncidentLinkByEmployee(user, maintenanceId, incident, note, linkedBy);
     }

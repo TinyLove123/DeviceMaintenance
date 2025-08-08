@@ -41,7 +41,7 @@ const Header = () => {
                                 <Nav.Link as={Link} to="/my-rented-devices" active={pathname === '/my-rented-devices'}>
                                     Thiết bị đã thuê
                                 </Nav.Link>
-                                <Nav.Link as={Link} to="/report-incident" active={pathname === '/report-incident'}>
+                                <Nav.Link as={Link} to="/my-incident-report" active={pathname === '/my-incident-report'}>
                                     Báo cáo sự cố
                                 </Nav.Link>
 
@@ -62,6 +62,9 @@ const Header = () => {
                                 </Nav.Link>
                                 <Nav.Link disabled>
                                     Lịch sửa chữa
+                                </Nav.Link>
+                                <Nav.Link as={Link} to="/chat-room" active={pathname === '/chat-room'}>
+                                    Diễn đàn thảo luận
                                 </Nav.Link>
                             </>
                         )}

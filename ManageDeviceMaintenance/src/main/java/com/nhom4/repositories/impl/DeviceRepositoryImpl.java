@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.MaintenanceSchedule;
-import com.nhom4.pojo.RentedDevice;
 import com.nhom4.pojo.RepairCost;
 import com.nhom4.repositories.DeviceRepository;
 import com.nhom4.repositories.MaintenanceScheduleRepository;
@@ -123,6 +122,7 @@ public class DeviceRepositoryImpl implements DeviceRepository {
             cal.add(Calendar.DATE, d.getFrequency());
             Date calulatedDate = cal.getTime();
             ms.setStartDate(calulatedDate);
+            ms.setReceptStatus(d.getStatusDevice());
             ms.setDeviceId(d);
             ms.setProgress("in_completed");
             s.persist(d);
@@ -149,7 +149,6 @@ public class DeviceRepositoryImpl implements DeviceRepository {
         q.select(root);
 
         List<Predicate> predicates = new ArrayList<>();
-        // Thiết bị thuộc category có id cụ thể
         predicates.add(b.equal(root.get("categoryId").get("id"), id));
 
         if (params != null) {
@@ -157,7 +156,6 @@ public class DeviceRepositoryImpl implements DeviceRepository {
 
             if (kw != null && !kw.isEmpty()) {
 
-                // Điều kiện tìm kiếm theo category.type gần giống
                 predicates.add(b.like(
                         b.lower(root.get("categoryId").get("type")),
                         "%" + kw.toLowerCase() + "%"
@@ -165,7 +163,6 @@ public class DeviceRepositoryImpl implements DeviceRepository {
             }
         }
 
-        // Gộp tất cả điều kiện
         q.where(b.and(predicates.toArray(new Predicate[0])));
 
         return s.createQuery(q).getResultList();

@@ -5,6 +5,7 @@
 package com.nhom4.controllers;
 
 import com.nhom4.pojo.User;
+import com.nhom4.services.MailService;
 import com.nhom4.services.UserService;
 import com.nhom4.utils.JwtUtils;
 import java.security.Principal;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,9 @@ public class ApiUserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MailService mailService;
+
     @PostMapping(
             path = "/users",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -44,7 +49,7 @@ public class ApiUserController {
         User u = this.userService.addUser(info, avatar);
         return new ResponseEntity<>(u, HttpStatus.CREATED);
     }
-    
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User u) {
         if (this.userService.authenticate(u.getUsername(), u.getPassword())) {
@@ -58,11 +63,18 @@ public class ApiUserController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sai thông tin đăng nhập");
     }
-    
+
     @RequestMapping("/secure/profile")
     @ResponseBody
     @CrossOrigin
     public ResponseEntity<User> getProfile(Principal principal) {
         return new ResponseEntity<>(this.userService.getUserByUsername(principal.getName()), HttpStatus.OK);
+    }
+
+    @GetMapping("/send-mail")
+    @ResponseBody
+    public String testSendMail() {
+        mailService.sendMail("2251052036hieu@ou.edu.vn", "Hello!", "Nội dung test nè!");
+        return "Đã gửi email!";
     }
 }

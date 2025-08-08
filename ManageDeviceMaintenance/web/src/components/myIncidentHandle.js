@@ -5,7 +5,8 @@ import { authApis, endpoints } from "../configs/Apis";
 import { MyUserContext } from "../configs/Context";
 
 const MyReportHandle = () => {
-    const [user] = useContext(MyUserContext);
+    const {user} = useContext(MyUserContext);
+    console.log(user)
     const [incidentHandles, setIncidentHandles] = useState([]);
 
     useEffect(() => {

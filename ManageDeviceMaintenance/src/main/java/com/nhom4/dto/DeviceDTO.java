@@ -1,9 +1,11 @@
 package com.nhom4.dto;
 
+import java.util.Date;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.nhom4.pojo.Device;
 import com.nhom4.pojo.Location;
-import java.util.Date;
-import org.springframework.web.multipart.MultipartFile;
 
 public class DeviceDTO {
 
@@ -15,17 +17,17 @@ public class DeviceDTO {
     private Integer frequency;
     private String image;
     private Double price;
-    private Integer categoryId; // chỉ lấy id để tránh lồng object
-    private MultipartFile file; // dùng để upload ảnh
+    private Integer categoryId; 
+    private MultipartFile file;
     private Location location;
 
     // Constructors
     public DeviceDTO() {
     }
-//       
+       
 
     public DeviceDTO(Integer id, String nameDevice, String manufacturer, 
-            String statusDeviceDate,Date purchaseDate, Integer frequency,
+            String statusDevice,Date purchaseDate, Integer frequency,
             String image, Double price,Location currentLocationId) {
         this.id = id;
         this.nameDevice = nameDevice;

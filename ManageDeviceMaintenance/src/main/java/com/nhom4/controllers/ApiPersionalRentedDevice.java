@@ -6,15 +6,18 @@ package com.nhom4.controllers;
 
 import com.nhom4.configs.CustomSecurityException;
 import com.nhom4.dto.DeviceDTO;
+import com.nhom4.dto.IncidentDTO;
 import com.nhom4.dto.RentedDeviceDTO;
 import com.nhom4.dto.RentedDeviceRequestDTO;
 import com.nhom4.pojo.Incident;
 import com.nhom4.pojo.Location;
 import com.nhom4.pojo.RentedDevice;
+import com.nhom4.pojo.Repair;
 import com.nhom4.pojo.User;
 import com.nhom4.services.DeviceService;
 import com.nhom4.services.IncidentService;
 import com.nhom4.services.RentedDeviceService;
+import com.nhom4.services.RepairService;
 import com.nhom4.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import java.security.Principal;
@@ -53,6 +56,9 @@ public class ApiPersionalRentedDevice {
 
     @Autowired
     private IncidentService incidentService;
+    
+    @Autowired
+    private RepairService repairService;
 
     @PostMapping("/secure/devices/{id}/rented-device")
     public ResponseEntity<String> addRentedDevice(@PathVariable("id") int deviceId,
@@ -80,6 +86,8 @@ public class ApiPersionalRentedDevice {
         List<RentedDeviceDTO> rentedDeviceDTO = this.rentedDeviceService.getMyRentedDevice(user);
         return new ResponseEntity<>(rentedDeviceDTO, HttpStatus.OK);
     }
+    
+    
 
     @GetMapping("/secure/my-rented-devices/{id}/detail-device")
     public ResponseEntity<?> getMyRentedDeviceById(@PathVariable("id") int rentedDeviceId, Principal principal) {
@@ -123,5 +131,22 @@ public class ApiPersionalRentedDevice {
             return ResponseEntity.internalServerError()
                     .body(Map.of("error", "Lỗi hệ thống"));
         }
+    }
+    
+    @GetMapping("/secure/my-incident")
+    public ResponseEntity<List<IncidentDTO>> getMyIncidentReport(Principal principal) {
+        String username = principal.getName();
+        User user = this.userService.getUserByUsername(username);
+
+        List<IncidentDTO> incidentDTO = this.incidentService.getMyIncidentReport(user);
+        return new ResponseEntity<>(incidentDTO, HttpStatus.OK);
+    }
+    
+    @GetMapping("/secure/my-incident/{id}/detail")
+     public ResponseEntity<?> getRepair( @PathVariable("id") int incidentId,Principal principal) {
+        String username = principal.getName();
+        User user = this.userService.getUserByUsername(username);
+        Repair repair = this.repairService.getRepairByIncident(incidentId);
+        return new ResponseEntity<>(repair, HttpStatus.OK);
     }
 }

@@ -33,7 +33,9 @@ export const endpoints={
     'addRepairDetail':(id)=>`/secure/report-handle/${id}/add-repair-detail`,
     'deleteRepairDetail':(id)=>`/secure/my-report-handle/${id}/delete-repair-detail`,
     'myMaintenanceReport':(id) => `/secure/persional-maintenance-schedule/${id}/detail-maintenance-report`,
-    'addIncidentByMaintenanceSchedule':(id)=>`/secure/persional-maintenance-schedule/maintenance-schedule/${id}/add-link`
+    'addIncidentByMaintenanceSchedule':(id)=>`/secure/persional-maintenance-schedule/maintenance-schedule/${id}/add-link`,
+    'getMyIncidentReport':`/secure/my-incident`,
+    'repairDetail':(id)=>`/secure/my-incident/${id}/detail`
 
 }
 

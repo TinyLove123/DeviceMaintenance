@@ -28,16 +28,19 @@ public interface IncidentService {
     List<Incident> GetIncidentByDeviceId(int deviceId);
 
     Incident getNewIncident(int DeviceId);
-    
+
     List<Device> getListDeviceHadIncidentReport();
-    
+
     List<Incident> getPreviousIncidentNotApproved();
-    
+
     long countIncidentsToday();
-    
-    
+
     Boolean checkHandleIncidentByUser(User user, int incidentId);
 
     List<IncidentDTO> getMyIncidentHandle(User user);
-    
+
+    List<Incident> historyIncident(int deviceId);
+
+    List<IncidentDTO> getMyIncidentReport(User user);
+
 }

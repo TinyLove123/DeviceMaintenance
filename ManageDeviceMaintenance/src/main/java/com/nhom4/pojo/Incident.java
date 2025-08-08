@@ -66,6 +66,7 @@ public class Incident implements Serializable {
     @Size(max = 50)
     @Column(name = "recept_status")
     private String receptStatus;
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "incidentId")
     private MaintenanceIncidentLink maintenanceIncidentLink;
 

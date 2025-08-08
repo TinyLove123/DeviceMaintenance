@@ -11,6 +11,8 @@ import java.util.List;
  * @author Administrator
  */
 public interface StatsRepository {
-    List<Object[]> statsRevenueByProduct();
+    List<Object[]> statsRevenueByIncident();
+    List<Object[]> statsRevenueByMaintenanceSchedule();
+    List<Object[]> statsRevenueByMaintenanceScheduleHaveIncident();
     List<Object[]> statsRevenueByTime(String time, int year);
 }

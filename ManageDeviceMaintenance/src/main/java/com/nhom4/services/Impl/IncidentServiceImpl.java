@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class IncidentServiceImpl implements IncidentService{
-    
+public class IncidentServiceImpl implements IncidentService {
+
     @Autowired
     private IncidentRepository incidentRepo;
 
@@ -38,8 +38,8 @@ public class IncidentServiceImpl implements IncidentService{
     }
 
     @Override
-    public Incident addOrUpdateIncident(Incident I, int DeviceId,User user) {
-        return this.incidentRepo.addOrUpdateIncident(I,DeviceId,user);
+    public Incident addOrUpdateIncident(Incident I, int DeviceId, User user) {
+        return this.incidentRepo.addOrUpdateIncident(I, DeviceId, user);
     }
 
     @Override
@@ -82,11 +82,14 @@ public class IncidentServiceImpl implements IncidentService{
         return this.incidentRepo.checkHandleIncidentByUser(user, incidentId);
     }
 
-    
-    
-    
-   
+    @Override
+    public List<Incident> historyIncident(int deviceId) {
+        return this.incidentRepo.GetIncidentByDeviceId(deviceId);
+    }
 
-   
-    
+    @Override
+    public List<IncidentDTO> getMyIncidentReport(User user) {
+       return this.incidentRepo.getMyIncidentReport(user);
+    }
+
 }

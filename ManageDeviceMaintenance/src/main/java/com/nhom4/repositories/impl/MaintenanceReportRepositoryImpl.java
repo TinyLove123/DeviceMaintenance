@@ -43,7 +43,7 @@ public class MaintenanceReportRepositoryImpl implements MaintenanceReportReposit
     public MaintenanceReport addOrUpdateMaintenanceReport(MaintenanceReport r) {
         Session s = this.factory.getObject().getCurrentSession();
 
-        // Dùng CriteriaBuilder để kiểm tra lịch bảo trì đã có báo cáo hay chưa
+        
         CriteriaBuilder cb = s.getCriteriaBuilder();
         CriteriaQuery<MaintenanceReport> cq = cb.createQuery(MaintenanceReport.class);
         Root<MaintenanceReport> root = cq.from(MaintenanceReport.class);
@@ -62,7 +62,7 @@ public class MaintenanceReportRepositoryImpl implements MaintenanceReportReposit
 
             s.persist(r);
         } else {
-            // Nếu chưa có ID, gán từ bản ghi cũ để merge cập nhật thay vì tạo mới
+   
             if (r.getId() == null && !existingReports.isEmpty()) {
                 r.setId(existingReports.get(0).getId());
             }

@@ -1,5 +1,6 @@
 import { useReducer } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ChatRoom from "./components/chatRoom";
 import DeviceDetail from "./components/deviceDetail";
 import Devices from "./components/devices";
 import Home from "./components/home";
@@ -8,6 +9,8 @@ import Header from "./components/layout/header";
 import Login from "./components/login";
 import MyReportHandle from "./components/myIncidentHandle";
 import IncidentDetailPage from "./components/myIncidentHandleDetail";
+import MyIncidentReport from "./components/myIncidentReport";
+import MyMaintenanceReport from "./components/myMaintenanceReport";
 import MyMaintenanceSchedule from "./components/myMaintenanceSchedule";
 import MyRentedDevice from "./components/myRentedDevice";
 import MyRentedDeviceDetail from "./components/myRentedDeviceDetail";
@@ -16,7 +19,6 @@ import RepairDetailPage from "./components/repairDetailPage";
 import IncidentReportForm from "./components/reportRentedDevice";
 import { MyUserContext } from "./configs/Context";
 import MyUserReducer from "./reducers/MyUserReducer";
-import MyMaintenanceReport from "./components/myMaintenanceReport";
 
 const App = () => {
 
@@ -40,6 +42,9 @@ const App = () => {
         <Route path="/my-maintenance-report/:id" element={<MyMaintenanceReport />} />
         <Route path="/incident/:id" element={<IncidentDetailPage />} />
         <Route path="/repair-detail/:id" element={<RepairDetailPage />} />
+        <Route path="/my-incident-report" element={<MyIncidentReport />} />
+        <Route path="/chat-room" element={<ChatRoom />} />
+
       </Routes>
       <Footer />
     </BrowserRouter>

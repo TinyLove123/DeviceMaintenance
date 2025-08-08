@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Quản lý sự cố</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <div class="container mt-4">
+        <main class="container mt-4">
+            <h2>Quản lý sự cố của thiết bị</h2>
+
+
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tiêu đề</th>
+                        <th>Mô tả</th>
+                        <th>Trạng thái nhận</th>
+                        <th>Trạng thái</th>
+                        <th>Người gửi</th>
+                        <th>Ngày gửi</th>
+                        <th>Người duyệt</th>
+                        <th>Ngày duyệt</th>     
+                        <th>Ngày thực hiện</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Khẩn cấp</th>
+                        <td>Hành động</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="incident : ${incidentHistory}">
+                        <td th:text="${incident.id}"></td>
+                        <td th:text="${incident.title}"></td>
+                        <td th:text="${incident.detailDescribe}"></td>
+                        <td th:text="${incident.receptStatus!=null? incident.receptStatus:'Chưa cập nhật'}"></td>
+                        <td th:text="${incident.status}"></td>
+                        <td th:text="${incident.senderId != null ? incident.senderId.firstName + ' ' + incident.senderId.lastName : 'N/A'}"></td>
+                        <td th:text="${#dates.format(incident.reportDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${incident.employeeId != null ? incident.employeeId.firstName + ' ' + incident.employeeId.lastName : 'Chưa cập nhật'}"></td>
+                        <td th:text="${incident.approvalDate != null ? #dates.format(incident.approvalDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+                        <td th:text="${incident.startDate != null ? #dates.format(incident.startDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+                        <td th:text="${incident.endDate != null ? #dates.format(incident.endDate, 'yyyy-MM-dd HH:mm:ss') : ''}"></td>
+                        <td>
+                            <span th:if="${incident.isEmergency == true}" class="badge bg-danger">Khẩn</span>
+                            <span th:if="${incident.isEmergency != true}" class="badge bg-secondary">Bình thường</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/incident-manager/{id}/incident-detail(id=${incident.id})}" class="btn btn-primary">Xem thêm</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+
+        <div th:replace="base :: footer"></div>
+</body>
+</html>

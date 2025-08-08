@@ -4,41 +4,38 @@
  */
 package com.nhom4.controllers;
 
-import com.nhom4.dto.AddIncidentLinkRequestDTO;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nhom4.dto.MaintenanceScheduleDTO;
+import com.nhom4.dto.AddIncidentLinkRequestDTO;
 import com.nhom4.dto.MaintenanceReportDTO;
+import com.nhom4.dto.MaintenanceScheduleDTO;
 import com.nhom4.pojo.Incident;
-import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.MaintenanceReport;
-import com.nhom4.pojo.RentedDevice;
+import com.nhom4.pojo.MaintenanceSchedule;
 import com.nhom4.pojo.User;
 import com.nhom4.services.IncidentService;
+import com.nhom4.services.MaintenanceReportService;
 import com.nhom4.services.MaintenanceScheduleService;
 import com.nhom4.services.UserService;
-import static jakarta.ws.rs.client.Entity.entity;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestBody;
-import com.nhom4.services.MaintenanceReportService;
-import java.text.ParseException;
 
 /**
  *
@@ -134,22 +131,17 @@ public class ApiPersonalMaintenantSchedule {
             @PathVariable(value = "id") int id,
             Principal principal) {
 
-        // Lấy username hiện tại
         String username = principal.getName();
 
-        // Lấy thông tin user từ username
         User user = this.userService.getUserByUsername(username);
 
-        // Kiểm tra quyền: có phải nhân viên của lịch này không?
         if (!this.maintenanceScheduleService.isMaintenanceStaff(user, id)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
         }
 
-        // Lấy báo cáo từ lịch bảo trì
         MaintenanceReport report = this.maintenanceReportService
                 .getMaintenanceReportByScheduleId(id);
 
-        // Nếu không có báo cáo nào thì trả về 404
         if (report == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -161,7 +153,6 @@ public class ApiPersonalMaintenantSchedule {
         dto.setMaintenanceRate(report.getMaintenanceRate());
         dto.setReportDate(report.getReportDate());
 
-        // Trả về báo cáo
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
@@ -186,7 +177,6 @@ public class ApiPersonalMaintenantSchedule {
                     .body(Map.of("error", "Không tìm thấy lịch bảo trì"));
         }
 
-        // Gán các thông tin liên quan vào báo cáo
         r.setMaintenanceScheduleId(schedule);
         r.setEmployeeId(user);
 
@@ -194,7 +184,6 @@ public class ApiPersonalMaintenantSchedule {
             r.setReportDate(new Date());
         }
 
-        // Thêm hoặc cập nhật
         try {
             MaintenanceReport saved = this.maintenanceReportService.addOrUpdateMaintenanceReport(r);
             return ResponseEntity.ok(saved);

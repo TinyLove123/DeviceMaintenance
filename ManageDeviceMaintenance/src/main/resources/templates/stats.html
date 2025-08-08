@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <title>Thống kê thiết bị</title>
+    <th:block th:replace="base :: bootstrap"></th:block>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 40px;
+            color: #2c3e50;
+            font-weight: 700;
+            text-align: center;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto 50px auto;
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+            text-align: center;
+        }
+        select {
+            height: 45px;
+            width: 100%;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid #ced4da;
+        }
+        .chart-container-horizontal {
+            max-width: 1000px;
+            margin: 40px auto 60px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <h2>Thống kê thiết bị</h2>
+
+    <div class="form-container">
+        <label for="chartType">Chọn loại biểu đồ:</label>
+        <select id="chartType" onchange="updateChart()">
+            <option value="incident">Sự cố theo thiết bị</option>
+            <option value="maintenance">Lịch bảo trì theo thiết bị</option>
+            <option value="maintenanceIncident">Lịch bảo trì có sự cố</option>
+        </select>
+    </div>
+
+    <div class="chart-container-horizontal">
+        <canvas id="deviceChart" height="100"></canvas>
+    </div>
+
+    <div th:replace="base :: footer"></div>
+
+    <script th:inline="javascript">
+        const incidentData = /*[[${incidentStats}]]*/ [];
+        const maintenanceData = /*[[${maintenanceStats}]]*/ [];
+        const maintenanceIncidentData = /*[[${maintenanceIncidentStats}]]*/ [];
+
+        let chartInstance;
+
+        function renderChart(data, label) {
+            const ctx = document.getElementById('deviceChart').getContext('2d');
+            const labels = data.map(item => item[1]); // nameDevice
+            const counts = data.map(item => item[2]); // count
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: counts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            const type = document.getElementById("chartType").value;
+            switch (type) {
+                case "incident":
+                    renderChart(incidentData, "Số lượng sự cố");
+                    break;
+                case "maintenance":
+                    renderChart(maintenanceData, "Số lần bảo trì");
+                    break;
+                case "maintenanceIncident":
+                    renderChart(maintenanceIncidentData, "Bảo trì có sự cố");
+                    break;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", updateChart);
+    </script>
+</body>
+</html>
+

@@ -97,11 +97,11 @@ const IncidentDetailPage = () => {
                 <Row>
                     <Col md={4} className="d-flex justify-content-center align-items-start">
                         <Image
-                            src={user?.avatar || "https://via.placeholder.com/100x100?text=Avatar"}
+                            src={user?.avatar || "https://dummyimage.com/100x100/cccccc/000000&text=No+Image"}
                             roundedCircle
                             width={100}
                             height={100}
-                            onError={(e) => e.target.src = "https://via.placeholder.com/100x100?text=No+Image"}
+                            onError={(e) => e.target.src = "https://dummyimage.com/100x100/cccccc/000000&text=No+Image"}
                         />
                     </Col>
                     <Col md={8}>
@@ -122,7 +122,7 @@ const IncidentDetailPage = () => {
                     <Col md={4}>
                         <Card.Img
                             src={device?.image}
-                            onError={(e) => e.target.src = "https://via.placeholder.com/200x200?text=No+Image"}
+                            onError={(e) => e.target.src = "https://dummyimage.com/100x100/cccccc/000000&text=No+Image"}
                             style={{ borderRadius: "8px" }}
                         />
                     </Col>
